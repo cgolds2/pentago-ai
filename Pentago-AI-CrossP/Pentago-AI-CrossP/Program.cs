@@ -88,7 +88,7 @@ namespace PentagoAICrossP {
 				}
 				gameBoard[xVal, yVal] = isXTurn ? TileVals.X : TileVals.O;
 				printBoard(gameBoard);
-				int square = TryGetInt("index of square to rotate", 0, 3);
+				int square = TryGetInt("index of square to rotate:\n0 1\n2 3", 0, 3);
 				string rot = "";
 				Console.WriteLine("Enter (L)eft or (R)ight for rotation");
 				rot = Console.ReadLine();
@@ -160,7 +160,7 @@ namespace PentagoAICrossP {
 				}
 			}
 			Console.WriteLine("\n--------------");
-			Console.WriteLine((isXTurn ? "X" : "O") + "'s turn");
+			Console.WriteLine((isXTurn ? "Player 1\'s" : "Player 2\'s") + "'s turn");
 			Console.WriteLine("--------------\n");
 		}
 		static int TryGetInt(string prompt, int min, int max) {
