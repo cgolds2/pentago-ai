@@ -4,50 +4,51 @@ namespace Pentago_console
 {
     class Program
     {
-        static bool isOver(TileVals[,] board)
-        {
-            for (int i = 0; i < 6; i++)
-            {
-                int val = 0;
-                for (int j = 0; j < 6; j++)
-                {
-                    val += board[i, j];
-                }
-                if (val == 5) { return true; }
-            }
-            for (int i = 1; i < 7; i++)
-            {
-                int val = 0;
-                for (int j = 1; j < 7; j++)
-                {
-                    val += board[i, j];
-                }
-                if (val == 5) { return true; }
-            }
-            for (int i = 0; i < 6; i++)
-            {
-                int val = 0;
-                for (int j = 0; j < 6; j++)
-                {
-                    val += board[j, i];
-                }
-                if (val == 5) { return true; }
-            }
-            for (int i = 1; i < 7; i++)
-            {
-                int val = 0;
-                for (int j = 1; j < 7; j++)
-                {
-                    val += board[j, i];
-                }
-                if (val == 5) { return true; }
-            }
+        //static bool isOver(TileVals[,] board)
+        //{
+        //    for (int i = 0; i < 6; i++)
+        //    {
+        //        int val = 0;
+        //        for (int j = 0; j < 6; j++)
+        //        {
+        //            val += board[i, j];
+        //        }
+        //        if (val == 5) { return true; }
+        //    }
+        //    for (int i = 1; i < 7; i++)
+        //    {
+        //        int val = 0;
+        //        for (int j = 1; j < 7; j++)
+        //        {
+        //            val += board[i, j];
+        //        }
+        //        if (val == 5) { return true; }
+        //    }
+        //    for (int i = 0; i < 6; i++)
+        //    {
+        //        int val = 0;
+        //        for (int j = 0; j < 6; j++)
+        //        {
+        //            val += board[j, i];
+        //        }
+        //        if (val == 5) { return true; }
+        //    }
+        //    for (int i = 1; i < 7; i++)
+        //    {
+        //        int val = 0;
+        //        for (int j = 1; j < 7; j++)
+        //        {
+        //            val += board[j, i];
+        //        }
+        //        if (val == 5) { return true; }
+        //    }
             
-        }
+        //}
         static void Main(string[] args)
         {
             TileVals[,] gameBoard = new TileVals[6, 6];
             bool isXTurn = false;
+            printBoard(gameBoard);
             while (true)
             {
                 isXTurn = !isXTurn;
@@ -183,10 +184,15 @@ namespace Pentago_console
         }
         static void printBoard(TileVals[,] board)
         {
+            Console.WriteLine("   1 2 3     4 5 6");
             for (int i = 0; i < 6; i++)
             {
                 for (int j = 0; j < 6; j++)
                 {
+                    if (j == 0)
+                    {
+                        Console.Write(i + " ");
+                    }
                     if (j == 3)
                     {
                         Console.Write("|   ");
