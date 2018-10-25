@@ -17,6 +17,15 @@ namespace PentagoAICrossP {
 										0, 6, 12
 								};
 		static bool isXTurn = false;
+		static TileVals[,] rotateBoard(TileVals[,] board, int n) {
+			TileVals[,] ret = new TileVals[n, n];
+			for (int i = 0; i < n; i++) {
+				for (int j = 0; j < n; j++) {
+					ret[i, j] = board[n - j - 1, i];
+				}
+			}
+			return ret;
+		}
 		static bool IsOver(TileVals[,] board) {
 			for (int i = 0; i < 5; i++) {
 				int val = 0;
@@ -46,6 +55,17 @@ namespace PentagoAICrossP {
 				}
 				if (val == 5) { return true; }
 			}
+			int x = 0;
+			for (int k = 0; k < 4; k++) {
+				x = (int)board[0, 0] + (int)board[1, 1] + (int)board[2, 2] + (int)board[3, 3] + (int)board[4, 4];
+				if (x == 5 || x == 50) { return true; }
+				x = (int)board[1, 1] + (int)board[2, 2] + (int)board[3, 3] + (int)board[4, 4] + (int)board[5, 5];
+				if (x == 5 || x == 50) { return true; }
+				x = (int)board[0, 1] + (int)board[1, 2] + (int)board[2, 3] + (int)board[3, 4] + (int)board[4, 5];
+				if (x == 5 || x == 50) { return true; }
+				x = (int)board[1, 0] + (int)board[2, 1] + (int)board[3, 2] + (int)board[4, 3] + (int)board[5, 4];
+				board = rotateBoard(board, 6);
+			}
 			return false;
 		}
 		static void Main(string[] args) {
@@ -70,7 +90,7 @@ namespace PentagoAICrossP {
 				printBoard(gameBoard);
 				int square = TryGetInt("index of square to rotate", 0, 3);
 				string rot = "";
-				Console.WriteLine("Enter left or right for rotation");
+				Console.WriteLine("Enter (L)eft or (R)ight for rotation");
 				rot = Console.ReadLine();
 				while (!(rot == "right" ||
 								 rot == "left" ||
