@@ -19,43 +19,45 @@ namespace PentagoAICrossP {
                     1, 7, 13,
                     0, 6, 12
                 };
-		static bool IsOver(TileVals[,] board) {
-			for (int i = 0; i < 5; i++) {
-				int val = 0;
-				for (int j = 0; j < 5; j++) {
-					val += (int)board[i, j];
-				}
-				if (val == 5) { return true; }
-			}
-			for (int i = 1; i < 6; i++) {
-				int val = 0;
-				for (int j = 1; j < 6; j++) {
-					val += (int)board[i, j];
-				}
-				if (val == 5) { return true; }
-			}
-			for (int i = 0; i < 5; i++) {
-				int val = 0;
-				for (int j = 0; j < 5; j++) {
-					val += (int)board[j, i];
-				}
-				if (val == 5) { return true; }
-			}
-			for (int i = 1; i < 6; i++) {
-				int val = 0;
-				for (int j = 1; j < 6; j++) {
-					val += (int)board[j, i];
-				}
-				if (val == 5) { return true; }
-			}
-			return false;
-		}
+        static bool isXTurn = false;
+
+        static bool IsOver(TileVals[,] board) {
+            for (int i = 0; i < 5; i++) {
+                int val = 0;
+                for (int j = 0; j < 5; j++) {
+                    val += (int)board[i, j];
+                }
+                if (val == 5) { return true; }
+            }
+            for (int i = 1; i < 6; i++) {
+                int val = 0;
+                for (int j = 1; j < 6; j++) {
+                    val += (int)board[i, j];
+                }
+                if (val == 5) { return true; }
+            }
+            for (int i = 0; i < 5; i++) {
+                int val = 0;
+                for (int j = 0; j < 5; j++) {
+                    val += (int)board[j, i];
+                }
+                if (val == 5) { return true; }
+            }
+            for (int i = 1; i < 6; i++) {
+                int val = 0;
+                for (int j = 1; j < 6; j++) {
+                    val += (int)board[j, i];
+                }
+                if (val == 5) { return true; }
+            }
+            return false;
+        }
         static void Main(string[] args) {
             TileVals[,] gameBoard = new TileVals[6, 6];
-            bool isXTurn = false;
             printBoard(gameBoard);
             while (true) {
                 isXTurn = !isXTurn;
+                printBoard(gameBoard);
                 var xVal = -1;
                 var yVal = -1;
 
@@ -118,9 +120,9 @@ namespace PentagoAICrossP {
 
 
 
-                printBoard(gameBoard);
-				if (IsOver(gameBoard)) {
-					Console.Write("Game Over.\n");
+                if (IsOver(gameBoard)) {
+                    printBoard(gameBoard);
+                    Console.Write("Game Over.\n");
                     break;
                 }
 
@@ -152,6 +154,10 @@ namespace PentagoAICrossP {
 
                 }
             }
+            Console.WriteLine("\n--------------");
+            Console.WriteLine((isXTurn ? "X" : "O") + "'s turn");
+            Console.WriteLine("--------------\n");
+
         }
 
         static int TryGetInt(string prompt, int min, int max) {
