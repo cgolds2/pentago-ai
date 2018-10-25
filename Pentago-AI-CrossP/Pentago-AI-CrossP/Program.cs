@@ -19,31 +19,31 @@ namespace PentagoAICrossP {
                     1, 7, 13,
                     0, 6, 12
                 };
-		static bool isOver(TileVals[,] board) {
-			for (int i = 0; i < 6; i++) {
+		static bool IsOver(TileVals[,] board) {
+			for (int i = 0; i < 5; i++) {
 				int val = 0;
-				for (int j = 0; j < 6; j++) {
+				for (int j = 0; j < 5; j++) {
 					val += (int)board[i, j];
 				}
 				if (val == 5) { return true; }
 			}
-			for (int i = 1; i < 7; i++) {
+			for (int i = 1; i < 6; i++) {
 				int val = 0;
-				for (int j = 1; j < 7; j++) {
+				for (int j = 1; j < 6; j++) {
 					val += (int)board[i, j];
 				}
 				if (val == 5) { return true; }
 			}
-			for (int i = 0; i < 6; i++) {
+			for (int i = 0; i < 5; i++) {
 				int val = 0;
-				for (int j = 0; j < 6; j++) {
+				for (int j = 0; j < 5; j++) {
 					val += (int)board[j, i];
 				}
 				if (val == 5) { return true; }
 			}
-			for (int i = 1; i < 7; i++) {
+			for (int i = 1; i < 6; i++) {
 				int val = 0;
-				for (int j = 1; j < 7; j++) {
+				for (int j = 1; j < 6; j++) {
 					val += (int)board[j, i];
 				}
 				if (val == 5) { return true; }
@@ -119,7 +119,7 @@ namespace PentagoAICrossP {
 
 
                 printBoard(gameBoard);
-				if (isOver(gameBoard)) {
+				if (IsOver(gameBoard)) {
 					Console.Write("Game Over.\n");
                     break;
                 }
