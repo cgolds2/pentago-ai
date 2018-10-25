@@ -79,7 +79,14 @@ namespace PentagoAICrossP {
 				string rot = "";
 				Console.WriteLine("Enter left or right for rotation");
 				rot = Console.ReadLine();
-				while (!(rot == "left" || rot == "right")) {
+				while (!(rot == "right" ||
+								 rot == "left" ||
+								 rot == "Right" ||
+								 rot == "Left" ||
+								 rot == "r" ||
+								 rot == "l" ||
+								 rot == "R" ||
+								 rot == "L")) {
 					Console.WriteLine("rotate not valid");
 					rot = Console.ReadLine();
 				}
@@ -104,7 +111,7 @@ namespace PentagoAICrossP {
 					int fromY = fromSpot / 6;
 					tempTiles[i] = gameBoard[fromX, fromY];
 				}
-				if (rot == "left") {
+				if (rot == "left" || rot == "Left" || rot == "l" || rot == "L") {
 					for (int i = 0; i < 9; i++) {
 						int x = (leftRotIndex[i] + baseForIndex) % 6;
 						int y = (leftRotIndex[i] + baseForIndex) / 6;
@@ -190,7 +197,7 @@ namespace PentagoAICrossP {
 					return "error";
 			}
 		}
-		static bool didItWin(TileVals[,] board) {
+		static bool isOver(TileVals[,] board) {
 			return false;
 		}
 
