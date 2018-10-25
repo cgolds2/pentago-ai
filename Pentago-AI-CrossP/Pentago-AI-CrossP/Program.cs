@@ -1,5 +1,4 @@
 ﻿using System;
-
 namespace PentagoAICrossP {
 	class Program {
 		static readonly int[] rotIndex = {
@@ -7,20 +6,17 @@ namespace PentagoAICrossP {
 										6, 7, 8,
 										12, 13, 14
 								};
-
 		static readonly int[] leftRotIndex = {
 										12, 6, 0,
 										13, 7, 1,
 										14, 8, 2
 								};
-
 		static readonly int[] rightRotIndex = {
 										2, 8, 14,
 										1, 7, 13,
 										0, 6, 12
 								};
 		static bool isXTurn = false;
-
 		static bool IsOver(TileVals[,] board) {
 			for (int i = 0; i < 5; i++) {
 				int val = 0;
@@ -60,11 +56,9 @@ namespace PentagoAICrossP {
 				printBoard(gameBoard);
 				var xVal = -1;
 				var yVal = -1;
-
 				while (true) {
 					xVal = TryGetInt("x value", 0, 5);
 					yVal = TryGetInt("y value", 0, 5);
-
 					if (gameBoard[xVal, yVal] != TileVals.Blank) {
 						printBoard(gameBoard);
 						Console.WriteLine("Square already taken\n");
@@ -75,7 +69,6 @@ namespace PentagoAICrossP {
 				gameBoard[xVal, yVal] = isXTurn ? TileVals.X : TileVals.O;
 				printBoard(gameBoard);
 				int square = TryGetInt("index of square to rotate", 0, 3);
-
 				string rot = "";
 				Console.WriteLine("Enter left or right for rotation");
 				rot = Console.ReadLine();
@@ -91,7 +84,6 @@ namespace PentagoAICrossP {
 					rot = Console.ReadLine();
 				}
 				Console.WriteLine("You entered " + rot);
-
 				//rotation
 				int baseForIndex = 0;
 				if (square > 1) {
@@ -100,11 +92,7 @@ namespace PentagoAICrossP {
 				if (square == 1 || square == 3) {
 					baseForIndex += 3;
 				}
-
-
-
 				TileVals[] tempTiles = new TileVals[9];
-
 				for (int i = 0; i < 9; i++) {
 					int fromSpot = rotIndex[i] + baseForIndex;
 					int fromX = fromSpot % 6;
@@ -125,20 +113,12 @@ namespace PentagoAICrossP {
 
 					}
 				}
-
-
-
 				if (IsOver(gameBoard)) {
 					printBoard(gameBoard);
 					Console.Write("Game Over.\n");
 					break;
 				}
-
-
 			}
-
-
-
 		}
 		static void printBoard(TileVals[,] board) {
 			Console.Clear();
@@ -154,20 +134,15 @@ namespace PentagoAICrossP {
 					}
 					Console.Write("|" + TileToString(board[j, i]));
 				}
-
-
 				Console.WriteLine("|");
 				if (i == 2) {
 					Console.WriteLine("");
-
 				}
 			}
 			Console.WriteLine("\n--------------");
 			Console.WriteLine((isXTurn ? "X" : "O") + "'s turn");
 			Console.WriteLine("--------------\n");
-
 		}
-
 		static int TryGetInt(string prompt, int min, int max) {
 			int ret;
 			Console.WriteLine("Enter " + prompt);
@@ -177,10 +152,8 @@ namespace PentagoAICrossP {
 					if (ret >= min && ret <= max) {
 						break;
 					}
-
 				}
 				Console.WriteLine("Enter valid " + prompt);
-
 			}
 			Console.WriteLine("You entered " + ret);
 			return ret;
@@ -200,13 +173,10 @@ namespace PentagoAICrossP {
 		static bool isOver(TileVals[,] board) {
 			return false;
 		}
-
-
 	}
 	enum TileVals {
 		X = 1,
 		O = 10,
 		Blank = 0
 	}
-
 }
