@@ -160,7 +160,7 @@ namespace PentagoAICrossP {
 				}
 			}
 			Console.WriteLine("\n--------------");
-			Console.WriteLine((isXTurn ? "Player 1\'s" : "Player 2\'s") + "'s turn");
+			Console.WriteLine((isXTurn ? "Player 1" : "Player 2") + "'s turn");
 			Console.WriteLine("--------------\n");
 		}
 		static int TryGetInt(string prompt, int min, int max) {
