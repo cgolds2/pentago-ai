@@ -6,11 +6,13 @@ public class PointController : MonoBehaviour {
 
     public char type;
     private Renderer _matColor;
+    private ControllerManager cm;
 
     private void Start()
     {
         type = ' ';
         _matColor = GetComponent<Renderer>();
+        cm = GameObject.FindGameObjectWithTag("GameController").GetComponent<ControllerManager>();
     }
 
     void OnMouseDown()
@@ -31,6 +33,12 @@ public class PointController : MonoBehaviour {
                 GameController.isRotating = true;
                 GameController.isPointFrozen = true;
             }
+            cm.ScanBlocks();
         }
+    }
+
+    public char ReturnType()
+    {
+        return type;
     }
 }

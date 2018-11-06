@@ -6,11 +6,13 @@ public class RotationController : MonoBehaviour {
 
     public bool isRight;
     public GameObject rotation;
+    private ControllerManager cm;
     private Renderer rend;
 
     private void Start()
     {
         rend = GetComponent<Renderer>();
+        cm = GameObject.FindGameObjectWithTag("GameController").GetComponent<ControllerManager>();
     }
 
     private void Update()
@@ -33,6 +35,7 @@ public class RotationController : MonoBehaviour {
                 rotation.transform.Rotate(0, 0, 90);
                 GameController.SwitchPlayer();
             }
+            cm.ScanBlocks();
         }
     }
 }
