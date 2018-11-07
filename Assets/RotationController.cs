@@ -28,7 +28,6 @@ public class RotationController : MonoBehaviour {
             {
                 rotation.transform.Rotate(0, 0, -90);
                 GameController.SwitchPlayer();
-                
             }
             else
             {
