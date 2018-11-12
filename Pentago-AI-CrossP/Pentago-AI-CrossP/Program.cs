@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace PentagoAICrossP {
 	class Program {
@@ -212,6 +213,112 @@ namespace PentagoAICrossP {
         //keeps track of which player is allowed to move
         static bool isXTurn = false;
 
+        static int[] winValues = new int[32];
+        /*
+         * 00-11: horizontal
+         * 12-23: verticle
+         * 24-27: top left bot right diag
+         * 28-31: top right bot left diag
+         */
+
+        static void UpdateBoard(TileVals[,] board)
+        {
+            //update horizontal (6)
+            //update verticle (6)
+            //update diag (4)
+            //update one othe diag (1)
+
+
+        }
+
+        static void UpdateHorizontal(TileVals[,] board, int quad)
+        {
+
+            int additive = (quad < 2) ? 0 : 3;
+
+            for (int i = additive; i < 3 + additive; i++)
+            {
+                // Iterate through the second dimension
+                TileVals[] x = CustomArray<TileVals>.GetRowMinusLast(board, i);
+                TileVals[] y = CustomArray<TileVals>.GetRowMinusFirst(board, i);
+                var xSum = Array.ConvertAll(x, value => (int)value).Sum();
+                var ySum = Array.ConvertAll(y, value => (int)value).Sum();
+
+                Console.WriteLine("X1: " + xSum);
+                Console.WriteLine("X2: " + ySum);
+
+            }
+
+        }
+        static void UpdateVerticle(TileVals[,] board, int quad)
+        {
+            int additive = (quad == 0 || quad == 2) ? 0 : 3;
+
+            for (int i = additive; i < 3 + additive; i++)
+            {
+                TileVals[] x = CustomArray<TileVals>.GetColumnMinusLast(board, i);
+                TileVals[] y = CustomArray<TileVals>.GetColumnMinusFirst(board, i);
+                var xSum = Array.ConvertAll(x, value => (int)value).Sum();
+                var ySum = Array.ConvertAll(y, value => (int)value).Sum();
+
+                Console.WriteLine("Y1: " + xSum);
+                Console.WriteLine("Y2: " + ySum);
+            }
+
+        }
+        static void UpdateDiagonal(TileVals[,] board, int quad)
+        {
+            if (quad == 0 || quad == 4)
+            {
+                List<TupleList<int, int>> diags = new List<TupleList<int, int>>();
+
+                var oneDiag = new TupleList<int, int>
+                    {
+                      { 1,1},{ 5, 1 },{ 3, 1 },{ 1,1 },{ 1,1 }
+                    };
+                var twoDiag = new TupleList<int, int>
+                    {
+                      { 1,1},{ 5, 1 },{ 3, 1 },{ 1,1 },{ 1,1 }
+                    };
+                var threeDiag = new TupleList<int, int>
+                    {
+                      { 1,1},{ 5, 1 },{ 3, 1 },{ 1,1 },{ 1,1 }
+                    };
+                var fourDiag = new TupleList<int, int>
+                    {
+                      { 1,1},{ 5, 1 },{ 3, 1 },{ 1,1 },{ 1,1 }
+                    };
+
+
+                diags.Add(oneDiag);
+                diags.Add(twoDiag);
+                diags.Add(threeDiag);
+                diags.Add(fourDiag);
+
+            }
+            else
+            {
+
+            }
+        }
+        static void UpdateOther(TileVals[,] board, int quad)
+        {
+            switch (quad)
+            {
+                case 0:
+                    break;
+                case 1:
+                    break;
+                case 2:
+                    break;
+                case 3:
+                    break;
+                default:
+                    throw new ArgumentException("quad greater than 3");
+            }
+        }
+
+
 
         static TileVals[,] RotateBoard(TileVals[,] board, int n)
         {
@@ -331,6 +438,11 @@ namespace PentagoAICrossP {
 
                 Console.WriteLine("You entered " + rot);
 
+                for (int i = 0; i < 3; i++)
+                {
+                    UpdateHorizontal(gameBoard, i);
+
+                }
                 //rotation
                 int baseForIndex = 0;
 
@@ -346,7 +458,8 @@ namespace PentagoAICrossP {
                     baseForIndex += 3;
                 }
 
-                //initilize a temp square to map to
+                //initilize a temp square to map to and 
+                //dup the values to it
                 TileVals[] tempTiles = new TileVals[9];
                 for (int i = 0; i < 9; i++)
                 {
@@ -458,5 +571,60 @@ namespace PentagoAICrossP {
         X = 1,
         O = 10,
         Blank = 0
+    }
+
+
+}
+
+public class CustomArray<T>
+{
+    public static T[] GetColumn(T[,] matrix, int columnNumber)
+    {
+        return Enumerable.Range(0, matrix.GetLength(0))
+                .Select(x => matrix[x, columnNumber])
+                .ToArray();
+    }
+
+    public static T[] GetRow(T[,] matrix, int rowNumber)
+    {
+        return Enumerable.Range(0, matrix.GetLength(1))
+                .Select(x => matrix[rowNumber, x])
+                .ToArray();
+    }
+
+    public static T[] GetColumnMinusLast(T[,] matrix, int columnNumber)
+    {
+        return Enumerable.Range(0, matrix.GetLength(0) - 1)
+                .Select(x => matrix[x, columnNumber])
+                .ToArray();
+    }
+
+    public static T[] GetRowMinusLast(T[,] matrix, int rowNumber)
+    {
+        return Enumerable.Range(0, matrix.GetLength(1) - 1)
+                .Select(x => matrix[rowNumber, x])
+                .ToArray();
+    }
+
+    public static T[] GetColumnMinusFirst(T[,] matrix, int columnNumber)
+    {
+        return Enumerable.Range(1, matrix.GetLength(0) - 1)
+                .Select(x => matrix[x, columnNumber])
+                .ToArray();
+    }
+
+    public static T[] GetRowMinusFirst(T[,] matrix, int rowNumber)
+    {
+        return Enumerable.Range(1, matrix.GetLength(1) - 1)
+                .Select(x => matrix[rowNumber, x])
+                .ToArray();
+    }
+}
+
+public class TupleList<T1, T2> : List<Tuple<T1, T2>>
+{
+    public void Add(T1 item, T2 item2)
+    {
+        Add(new Tuple<T1, T2>(item, item2));
     }
 }
