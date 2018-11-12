@@ -1,6 +1,10 @@
 ﻿using System;
+using System.Collections.Generic;
+
 namespace PentagoAICrossP {
 	class Program {
+		static int[] lastTurn = new int[85];
+		static List<int[]> turns = new List<int[]>();
 		static readonly int[] rotIndex = {
 										0, 1, 2,
 										6, 7, 8,
@@ -25,6 +29,28 @@ namespace PentagoAICrossP {
 				}
 			}
 			return ret;
+		}
+		static List<int[]> getTurns() {
+			return turns;
+		}
+		static void addTurn(int[] t) {
+			if (t.Length != 85) {
+				throw new ArgumentException("Array did not have 85 elements");
+			}
+			turns.Add(t);
+		}
+		static void trackPlacement(int x, int y) {
+			lastTurn[x * 6 + y] = 1;
+		}
+		static void trackRotation(int x, String y) {
+			if (y == "right" || y == "Right" || y == "r" || y == "R")
+				lastTurn[84 - (x * 2)] = 1;
+			else
+				lastTurn[84 - ((x * 2) + 1)] = 1;
+		}
+		static void updateTurn() {
+			addTurn(lastTurn);
+			lastTurn = new int[85];
 		}
 		static bool IsOver(TileVals[,] board) {
 			for (int i = 0; i < 5; i++) {
@@ -86,7 +112,9 @@ namespace PentagoAICrossP {
 						break;
 					}
 				}
+
 				gameBoard[xVal, yVal] = isXTurn ? TileVals.X : TileVals.O;
+				trackPlacement(xVal, yVal);
 				printBoard(gameBoard);
 				int square = TryGetInt("index of square to rotate:\n0 1\n2 3", 0, 3);
 				string rot = "";
@@ -104,6 +132,13 @@ namespace PentagoAICrossP {
 					rot = Console.ReadLine();
 				}
 				Console.WriteLine("You entered " + rot);
+				trackRotation(square, rot);
+				//Console.WriteLine("Last turn:");
+				//foreach (var item in lastTurn) {
+				//	Console.Write(item.ToString());
+				//}
+				//Console.WriteLine();
+				updateTurn();
 				//rotation
 				int baseForIndex = 0;
 				if (square > 1) {
