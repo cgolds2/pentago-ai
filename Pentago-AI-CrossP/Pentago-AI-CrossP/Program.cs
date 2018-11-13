@@ -21,6 +21,7 @@ namespace PentagoAICrossP {
 										0, 6, 12
 								};
 		static bool isXTurn = false;
+        static int turnCounter = 0;
 		static TileVals[,] rotateBoard(TileVals[,] board, int n) {
 			TileVals[,] ret = new TileVals[n, n];
 			for (int i = 0; i < n; i++) {
@@ -99,6 +100,9 @@ namespace PentagoAICrossP {
 			printBoard(gameBoard);
 			while (true) {
 				isXTurn = !isXTurn;
+                if(isXTurn){
+                    turnCounter++;
+                }
 				printBoard(gameBoard);
 				var xVal = -1;
 				var yVal = -1;
