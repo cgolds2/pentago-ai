@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 
 namespace PentagoAICrossP {
@@ -251,6 +251,120 @@ namespace PentagoAICrossP {
 		static bool isOver(TileVals[,] board) {
 			return false;
 		}
+		static int[,] pentagoHeuristic(board)
+		{
+			int[,] ret;
+			//first turn
+			if (turnCounter == 1) {
+				board[xVal, yVal] == TileVals.X;
+				Random startQuadrant = new Random()
+				for (int i = 0; i < 1; i++)
+				{
+					startQuadrant.Next(0,4) = startQuadrant;
+				}
+				if (startQuadrant == 0) {
+					xVal = 2;
+					yVal = 2;
+					//rotateBoard(board, 3);
+				}
+				else if (startQuadrant == 1) {
+					xVal = 3;
+					yVal = 2;
+					//rotateBoard(board, 2);
+				}
+				else if (startQuadrant == 2) {
+					xVal = 2;
+					yVal = 3;
+					//rotateBoard(board, 1);
+				}
+				else if (startQuadrant == 3) {
+					xVal = 3;
+					yVal = 3;
+					//rotateBoard(board, 0);
+				}
+			}
+			//second turn minus rotations
+			if (turnCounter == 2) {
+				if (startQuadrant == 0) {
+					if ((int)board[2,0] == 0) {
+						xVal = 2;
+						yVal = 0;
+
+					}
+					else {
+						xVal = 0;
+						yVal = 2;
+					}
+				}
+				if (startQuadrant == 1) {
+					if ((int)board[3,0] == 0) {
+						xVal = 3;
+						yVal = 0;
+					}
+					else {
+						xVal = 5;
+						yVal = 2;
+					}
+				}
+				if (startQuadrant == 2) {
+					if ((int)board[2,5] == 0) {
+						xVal = 2;
+						yVal = 5;
+					}
+					else {
+						xVal = 0;
+						yVal = 3;
+					}
+				}
+				if (startQuadrant == 3) {
+					if ((int)board[3,5] == 0) {
+						xVal = 3;
+						yVal = 5;
+					}
+					else {
+						xVal = 5;
+						yVal = 3;
+					}
+				}
+			}
+			// /*
+			if (turnCounter == 3) {
+
+			}
+			if (turnCounter == 4) {
+				if (startQuadrant == 0 || startQuadrant == 3) {
+					//half of diagonal edge cases
+					if ((int)board[3,2] + (int)board[2,3] == 20) {
+						if ((int)board[4,1] == 10) {
+							xVal = 1;
+							yVal = 4;
+						}
+						else if ((int)board[1,4] == 10) {
+							xVal = 4;
+							yVal = 1;
+						}
+					}
+					else {
+
+					}
+				}
+				else {
+					//second half of diagonal edge cases
+					if ((int)board[2,2] + (int)board[3,3] == 20) {
+						if ((int)board[4,4] == 10) {
+							xVal = 1;
+							yVal = 1;
+						}
+						else if ((int)board[1,1] == 10) {
+							xVal = 4;
+							yVal = 4;
+						}
+					}
+				}
+			}
+			// */
+		}
+		
 	}
 	enum TileVals {
 		X = 1,
