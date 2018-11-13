@@ -22,7 +22,8 @@ namespace PentagoAICrossP {
 								};
 		static bool isXTurn = false;
         static int turnCounter = 0;
-		static TileVals[,] rotateBoard(TileVals[,] board, int n) {
+	
+        static TileVals[,] rotateBoard(TileVals[,] board, int n) {
 			TileVals[,] ret = new TileVals[n, n];
 			for (int i = 0; i < n; i++) {
 				for (int j = 0; j < n; j++) {
@@ -34,7 +35,50 @@ namespace PentagoAICrossP {
 		static List<int[]> getTurns() {
 			return turns;
 		}
-		static void addTurn(int[] t) {
+
+        static TileVals[,] RotateSquare(TileVals[,] board, int squareToRotate, bool rotLeft)
+        {
+            int baseForIndex = 0;
+            if (squareToRotate > 1)
+            {
+                baseForIndex += 18;
+            }
+            if (squareToRotate == 1 || squareToRotate == 3)
+            {
+                baseForIndex += 3;
+            }
+            TileVals[] tempTiles = new TileVals[9];
+            for (int i = 0; i < 9; i++)
+            {
+                int fromSpot = rotIndex[i] + baseForIndex;
+                int fromX = fromSpot % 6;
+                int fromY = fromSpot / 6;
+                tempTiles[i] = board[fromX, fromY];
+            }
+            if (rotLeft)
+            {
+                for (int i = 0; i < 9; i++)
+                {
+                    int x = (leftRotIndex[i] + baseForIndex) % 6;
+                    int y = (leftRotIndex[i] + baseForIndex) / 6;
+                    board[x, y] = tempTiles[i];
+                }
+            }
+            else
+            {
+                for (int i = 0; i < 9; i++)
+                {
+                    int x = (rightRotIndex[i] + baseForIndex) % 6;
+                    int y = (rightRotIndex[i] + baseForIndex) / 6;
+                    board[x, y] = tempTiles[i];
+
+                }
+            }
+            return board;
+
+        }
+
+        static void addTurn(int[] t) {
 			if (t.Length != 85) {
 				throw new ArgumentException("Array did not have 85 elements");
 			}
@@ -135,6 +179,7 @@ namespace PentagoAICrossP {
 					Console.WriteLine("rotate not valid");
 					rot = Console.ReadLine();
 				}
+
 				Console.WriteLine("You entered " + rot);
 				trackRotation(square, rot);
 				//Console.WriteLine("Last turn:");
@@ -144,34 +189,8 @@ namespace PentagoAICrossP {
 				//Console.WriteLine();
 				updateTurn();
 				//rotation
-				int baseForIndex = 0;
-				if (square > 1) {
-					baseForIndex += 18;
-				}
-				if (square == 1 || square == 3) {
-					baseForIndex += 3;
-				}
-				TileVals[] tempTiles = new TileVals[9];
-				for (int i = 0; i < 9; i++) {
-					int fromSpot = rotIndex[i] + baseForIndex;
-					int fromX = fromSpot % 6;
-					int fromY = fromSpot / 6;
-					tempTiles[i] = gameBoard[fromX, fromY];
-				}
-				if (rot == "left" || rot == "Left" || rot == "l" || rot == "L") {
-					for (int i = 0; i < 9; i++) {
-						int x = (leftRotIndex[i] + baseForIndex) % 6;
-						int y = (leftRotIndex[i] + baseForIndex) / 6;
-						gameBoard[x, y] = tempTiles[i];
-					}
-				} else {
-					for (int i = 0; i < 9; i++) {
-						int x = (rightRotIndex[i] + baseForIndex) % 6;
-						int y = (rightRotIndex[i] + baseForIndex) / 6;
-						gameBoard[x, y] = tempTiles[i];
-
-					}
-				}
+                RotateSquare(gameBoard, square, rot.ToLower() == "left" || rot.ToLower() == "l");
+			
 				if (IsOver(gameBoard)) {
 					printBoard(gameBoard);
 					Console.Write("Game Over.\n");
