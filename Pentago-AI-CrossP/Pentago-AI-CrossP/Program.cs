@@ -221,12 +221,17 @@ namespace PentagoAICrossP {
          * 28-31: top right bot left diag
          */
 
-        static void UpdateBoard(TileVals[,] board)
+        static void UpdateBoard(TileVals[,] board, int quad)
         {
             //update horizontal (6)
             //update verticle (6)
             //update diag (4)
             //update one othe diag (1)
+            printBoard(board);
+            UpdateHorizontal(board, quad);
+            UpdateVerticle(board, quad);
+            UpdateDiagonal(board, quad);
+            UpdateOther(board, quad);
 
 
         }
@@ -243,6 +248,9 @@ namespace PentagoAICrossP {
                 TileVals[] y = CustomArray<TileVals>.GetRowMinusFirst(board, i);
                 var xSum = Array.ConvertAll(x, value => (int)value).Sum();
                 var ySum = Array.ConvertAll(y, value => (int)value).Sum();
+
+                winValues[i*2] = xSum;
+                winValues[i * 2 + 1] = ySum;
 
                 Console.WriteLine("X1: " + xSum);
                 Console.WriteLine("X2: " + ySum);
@@ -261,6 +269,9 @@ namespace PentagoAICrossP {
                 var xSum = Array.ConvertAll(x, value => (int)value).Sum();
                 var ySum = Array.ConvertAll(y, value => (int)value).Sum();
 
+                winValues[12 + i * 2] = xSum;
+                winValues[12 + i * 2 + 1] = ySum;
+
                 Console.WriteLine("Y1: " + xSum);
                 Console.WriteLine("Y2: " + ySum);
             }
@@ -270,48 +281,74 @@ namespace PentagoAICrossP {
         {
             if (quad == 0 || quad == 4)
             {
-                List<TupleList<int, int>> diags = new List<TupleList<int, int>>();
+                TupleList<int, int>[] diags = new TupleList<int, int>[4];
+                diags[0] = (DiagFromPoint(0, 1, true));
+                diags[1] = (DiagFromPoint(0, 0, true));
+                diags[2] = (DiagFromPoint(1, 1, true));
+                diags[3] = (DiagFromPoint(1, 0, true));
+                for (int i = 0; i < 4; i++)
+                {
+                    winValues[24 + i] = sumDiag(board, diags[i]);
+                }
 
-                var oneDiag = new TupleList<int, int>
-                    {
-                      { 1,1},{ 5, 1 },{ 3, 1 },{ 1,1 },{ 1,1 }
-                    };
-                var twoDiag = new TupleList<int, int>
-                    {
-                      { 1,1},{ 5, 1 },{ 3, 1 },{ 1,1 },{ 1,1 }
-                    };
-                var threeDiag = new TupleList<int, int>
-                    {
-                      { 1,1},{ 5, 1 },{ 3, 1 },{ 1,1 },{ 1,1 }
-                    };
-                var fourDiag = new TupleList<int, int>
-                    {
-                      { 1,1},{ 5, 1 },{ 3, 1 },{ 1,1 },{ 1,1 }
-                    };
-
-
-                diags.Add(oneDiag);
-                diags.Add(twoDiag);
-                diags.Add(threeDiag);
-                diags.Add(fourDiag);
 
             }
             else
             {
-
+                TupleList<int, int>[] diags = new TupleList<int, int>[4];
+                diags[0] = (DiagFromPoint(4, 0, false));
+                diags[1] = (DiagFromPoint(5, 0, false));
+                diags[2] = (DiagFromPoint(4, 1, false));
+                diags[3] = (DiagFromPoint(5, 1, false));
+                for (int i = 0; i < 4; i++)
+                {
+                    winValues[28 + i] = sumDiag(board, diags[i]);
+                }
             }
+
+        }
+
+        static int sumDiag(TileVals[,] board, TupleList<int, int> diags)
+        {
+            int retVal = 0;
+
+            foreach (var item in diags)
+            {
+                retVal += (int)board[item.Item1, item.Item2];
+            }
+            return retVal;
+        }
+
+        static TupleList<int, int> DiagFromPoint(int x, int y, bool leftToRight)
+        {
+            var diag = new TupleList<int, int>();
+            diag.Add(x, y);
+            for (int i = 0; i < 4; i++)
+            {
+                x = leftToRight ? x++ : x--;
+                y--;
+                diag.Add(x, y);
+            }
+            return diag;
+
         }
         static void UpdateOther(TileVals[,] board, int quad)
         {
             switch (quad)
             {
                 case 0:
+                    winValues[28] = sumDiag(board, DiagFromPoint(4, 0, false));
                     break;
                 case 1:
+                    winValues[24+3] = sumDiag(board, DiagFromPoint(1, 0, true));
+
                     break;
                 case 2:
+                    winValues[24+0] = sumDiag(board, DiagFromPoint(0, 1, true));
+
                     break;
                 case 3:
+                    winValues[28+3] = sumDiag(board, DiagFromPoint(5, 1, false));
                     break;
                 default:
                     throw new ArgumentException("quad greater than 3");
@@ -489,6 +526,7 @@ namespace PentagoAICrossP {
 
                     }
                 }
+                UpdateBoard(gameBoard, square);
                 if (IsOver(gameBoard))
                 {
                     printBoard(gameBoard);
@@ -580,44 +618,73 @@ public class CustomArray<T>
 {
     public static T[] GetColumn(T[,] matrix, int columnNumber)
     {
-        return Enumerable.Range(0, matrix.GetLength(0))
+        return Enumerable.Range(0, matrix.GetLength(0)-1)
                 .Select(x => matrix[x, columnNumber])
                 .ToArray();
     }
 
     public static T[] GetRow(T[,] matrix, int rowNumber)
     {
-        return Enumerable.Range(0, matrix.GetLength(1))
+        return Enumerable.Range(0, matrix.GetLength(1)-1)
                 .Select(x => matrix[rowNumber, x])
                 .ToArray();
     }
 
     public static T[] GetColumnMinusLast(T[,] matrix, int columnNumber)
     {
-        return Enumerable.Range(0, matrix.GetLength(0) - 1)
-                .Select(x => matrix[x, columnNumber])
-                .ToArray();
+        //return Enumerable.Range(0, matrix.GetLength(0) - 1)
+        //.Select(x => matrix[x, columnNumber])
+        //.ToArray();
+        var colLength = matrix.GetLength(0)-1;
+        var colVector = new T[colLength];
+
+        for (var i = 0; i < colLength; i++)
+            colVector[i] = matrix[columnNumber, i];
+
+        return colVector;
     }
 
     public static T[] GetRowMinusLast(T[,] matrix, int rowNumber)
     {
-        return Enumerable.Range(0, matrix.GetLength(1) - 1)
-                .Select(x => matrix[rowNumber, x])
-                .ToArray();
+        //return Enumerable.Range(0, matrix.GetLength(1) - 1)
+        //.Select(x => matrix[rowNumber, x])
+        //.ToArray();
+        var rowLength = matrix.GetLength(1)-1;
+        var rowVector = new T[rowLength];
+
+        for (var i = 0; i < rowLength; i++)
+            rowVector[i] = matrix[i, rowNumber];
+
+        return rowVector;
     }
+
 
     public static T[] GetColumnMinusFirst(T[,] matrix, int columnNumber)
     {
-        return Enumerable.Range(1, matrix.GetLength(0) - 1)
-                .Select(x => matrix[x, columnNumber])
-                .ToArray();
+        //return Enumerable.Range(1, matrix.GetLength(0) - 1)
+        //.Select(x => matrix[x, columnNumber])
+        //.ToArray();
+        var colLength = matrix.GetLength(0)-1;
+        var colVector = new T[colLength];
+
+        for (var i = 0; i < colLength; i++)
+            colVector[i] = matrix[columnNumber, i+1];
+
+        return colVector;
     }
 
     public static T[] GetRowMinusFirst(T[,] matrix, int rowNumber)
     {
-        return Enumerable.Range(1, matrix.GetLength(1) - 1)
-                .Select(x => matrix[rowNumber, x])
-                .ToArray();
+        //return Enumerable.Range(1, matrix.GetLength(1) - 1)
+        //.Select(x => matrix[rowNumber, x])
+        //.ToArray();
+        var rowLength = matrix.GetLength(1)-1;
+        var rowVector = new T[rowLength];
+
+        for (var i = 0; i < rowLength; i++)
+            rowVector[i] = matrix[i+1, rowNumber];
+
+        return rowVector;
     }
 }
 
