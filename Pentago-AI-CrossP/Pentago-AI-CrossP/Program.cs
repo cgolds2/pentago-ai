@@ -6,6 +6,40 @@ namespace PentagoAICrossP
 {
     class Program
     {
+        static int[] lastTurn = new int[85];
+        static List<int[]> turns = new List<int[]>();
+        static int turnCounter = 0;
+        static List<int[]> GetTurns()
+        {
+            return turns;
+        }
+        static void AddTurn(int[] t)
+        {
+            if (t.Length != 85)
+            {
+                throw new ArgumentException("Array did not have 85 elements");
+            }
+            turns.Add(t);
+        }
+        static void TrackPlacement(int x, int y)
+        {
+            lastTurn[x * 6 + y] = 1;
+        }
+        static void TrackRotation(int x, String y)
+        {
+            if (y == "right" || y == "Right" || y == "r" || y == "R")
+                lastTurn[84 - (x * 2)] = 1;
+            else
+                lastTurn[84 - ((x * 2) + 1)] = 1;
+        }
+        static void UpdateTurn()
+        {
+            AddTurn(lastTurn);
+            lastTurn = new int[85];
+        }
+
+
+
         //rotational index of values in squares
         static readonly int[] rotIndex = {
                                         0, 1, 2,
@@ -396,6 +430,7 @@ namespace PentagoAICrossP
                 //place an X or O depending on whos turn it is
                 gameBoard[xVal, yVal] = isXTurn ? TileVals.X : TileVals.O;
                 UpdatePoint(gameBoard, xVal, yVal);
+                TrackPlacement(xVal, yVal);
                 int square = TryGetInt("index of square to rotate:\n0 1\n2 3", 0, 3);
                 string rot = "";
                 Console.WriteLine("Enter (L)eft or (R)ight for rotation");
@@ -403,6 +438,7 @@ namespace PentagoAICrossP
 
                 //list of valid values for rotation
                 var rotationInput = new List<string> { "right", "left", "r", "l" };
+
                 while (!rotationInput.Contains(rot.ToLower()))
                 {
                     Console.WriteLine("rotate not valid");
@@ -410,6 +446,7 @@ namespace PentagoAICrossP
                 }
 
                 Console.WriteLine("You entered " + rot);
+                TrackRotation(square, rot);
 
                 //rotation
                 int baseForIndex = 0;
@@ -458,6 +495,7 @@ namespace PentagoAICrossP
                     }
                 }
                 UpdateBoard(gameBoard, square);
+                UpdateTurn();
                 if (BetterItsOver(gameBoard))
                 {
                     printBoard(gameBoard);
