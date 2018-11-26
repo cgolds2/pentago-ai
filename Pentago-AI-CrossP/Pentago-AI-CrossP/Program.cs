@@ -35,7 +35,109 @@ namespace PentagoAICrossP
          * 24-27: top left bot right diag
          * 28-31: top right bot left diag
          */
+        static void UpdatePoint(TileVals[,] board, int x, int y)
+        {
+            //update horizontal (2)
+            if (x != 0)
+            {
+                //update leftmost to right
+                TileVals[] xTiles = CustomArray<TileVals>.GetRowMinusFirst(board, y);
+                var xSum = Array.ConvertAll(xTiles, value => (int)value).Sum();
+                winValues[y * 2 + 1] = xSum;
+            }
+            if (x != 5)
+            {
+                //update left to rightmost
+                TileVals[] xTiles = CustomArray<TileVals>.GetRowMinusLast(board, y);
+                var xSum = Array.ConvertAll(xTiles, value => (int)value).Sum();
+                winValues[y * 2] = xSum;
+            }
+            //update verticle (2)
+            if (y != 0)
+            {
+                //update topmost to bot
+                TileVals[] yTiles = CustomArray<TileVals>.GetColumnMinusFirst(board, y);
+                var ySum = Array.ConvertAll(yTiles, value => (int)value).Sum();
+                winValues[12 + x * 2] = ySum;
+            }
+            if (y != 5)
+            {
+                //update top to botmost
+                TileVals[] yTiles = CustomArray<TileVals>.GetColumnMinusLast(board, y);
+                var ySum = Array.ConvertAll(yTiles, value => (int)value).Sum();
+                winValues[12 + x * 2 + 1] = ySum;
+            }
+            //update diag (2)
 
+            //left to right
+            int tmpX = x;
+            int tmpY = y;
+            while (tmpX != 0 && tmpY != 0)
+            {
+                tmpX--;
+                tmpY--;
+            }
+            if (tmpX == 0 && tmpY == 0)
+            {
+                //top left point
+                var diagOne = (DiagFromPoint(0, 0, true));
+                var diagTwo = (DiagFromPoint(1, 1, true));
+                winValues[24 + 1] = sumDiag(board, diagOne);
+                winValues[24 + 2] = sumDiag(board, diagTwo);
+
+            }
+            if ((tmpX + tmpY) == 1)
+            {
+                //other 2 left to right
+                var diag = DiagFromPoint(tmpX, tmpY, true);
+                TupleList<int, int>[] diags = new TupleList<int, int>[4];
+                var diagOne = (DiagFromPoint(0, 1, true));
+                var diagTwo = (DiagFromPoint(1, 0, true));
+                winValues[24 + 0] = sumDiag(board, diagOne);
+                winValues[24 + 3] = sumDiag(board, diagTwo);
+
+            }
+
+            //right to left
+
+            tmpX = x;
+            tmpY = y;
+            while (tmpX != 5 && tmpY != 0)
+            {
+                tmpX++;
+                tmpY--;
+            }
+            if (tmpX == 5 && tmpY == 0)
+            {
+                //top right point
+                var diagOne = (DiagFromPoint(5, 0, false));
+                var diagTwo = (DiagFromPoint(4, 1, false));
+                winValues[28 + 1] = sumDiag(board, diagOne);
+                winValues[28 + 2] = sumDiag(board, diagTwo);
+            }
+            else if (tmpX == 4 && tmpY == 0)
+            {
+                //diags[0] = (DiagFromPoint(4, 0, false));
+                //diags[1] = (DiagFromPoint(5, 0, false));
+                //diags[2] = (DiagFromPoint(4, 1, false));
+                //diags[3] = (DiagFromPoint(5, 1, false));
+                //winValues[24 + i] = sumDiag(board, diags[i]);
+
+                var diagOne = (DiagFromPoint(4, 0, false));
+                winValues[28 + 0] = sumDiag(board, diagOne);
+            }
+            else if (tmpX == 5 && tmpY == 1)
+            {
+                var diagOne = (DiagFromPoint(5, 1, false));
+                winValues[28 + 3] = sumDiag(board, diagOne);
+            }
+
+
+            printBoard(board);
+
+
+
+        }
         static void UpdateBoard(TileVals[,] board, int quad)
         {
             //update horizontal (6)
@@ -64,7 +166,7 @@ namespace PentagoAICrossP
                 var xSum = Array.ConvertAll(x, value => (int)value).Sum();
                 var ySum = Array.ConvertAll(y, value => (int)value).Sum();
 
-                winValues[i*2] = xSum;
+                winValues[i * 2] = xSum;
                 winValues[i * 2 + 1] = ySum;
 
                 Console.WriteLine("X1: " + xSum);
@@ -140,8 +242,8 @@ namespace PentagoAICrossP
             diag.Add(x, y);
             for (int i = 0; i < 4; i++)
             {
-                x = leftToRight ? x++ : x--;
-                y--;
+                x = leftToRight ? x + 1 : x - 1;
+                y++;
                 diag.Add(x, y);
             }
             return diag;
@@ -155,15 +257,15 @@ namespace PentagoAICrossP
                     winValues[28] = sumDiag(board, DiagFromPoint(4, 0, false));
                     break;
                 case 1:
-                    winValues[24+3] = sumDiag(board, DiagFromPoint(1, 0, true));
+                    winValues[24 + 3] = sumDiag(board, DiagFromPoint(1, 0, true));
 
                     break;
                 case 2:
-                    winValues[24+0] = sumDiag(board, DiagFromPoint(0, 1, true));
+                    winValues[24 + 0] = sumDiag(board, DiagFromPoint(0, 1, true));
 
                     break;
                 case 3:
-                    winValues[28+3] = sumDiag(board, DiagFromPoint(5, 1, false));
+                    winValues[28 + 3] = sumDiag(board, DiagFromPoint(5, 1, false));
                     break;
                 default:
                     throw new ArgumentException("quad greater than 3");
@@ -186,7 +288,26 @@ namespace PentagoAICrossP
         }
 
 
+        static bool BetterItsOver(TileVals[,] board)
+        {
+            bool didXWin = false;
+            bool didOWin = false;
+            foreach (var item in winValues)
+            {
+                if (item == 50)
+                {
+                    didOWin = true;
+                    Console.WriteLine("O won");
+                }
+                if (item == 5)
+                {
+                    didXWin = true;
+                    Console.WriteLine("X won");
+                }
+            }
 
+            return didXWin || didOWin;
+        }
         //screams
         static bool IsOver(TileVals[,] board)
         {
@@ -274,7 +395,7 @@ namespace PentagoAICrossP
                 }
                 //place an X or O depending on whos turn it is
                 gameBoard[xVal, yVal] = isXTurn ? TileVals.X : TileVals.O;
-                printBoard(gameBoard);
+                UpdatePoint(gameBoard, xVal, yVal);
                 int square = TryGetInt("index of square to rotate:\n0 1\n2 3", 0, 3);
                 string rot = "";
                 Console.WriteLine("Enter (L)eft or (R)ight for rotation");
@@ -290,11 +411,6 @@ namespace PentagoAICrossP
 
                 Console.WriteLine("You entered " + rot);
 
-                for (int i = 0; i < 3; i++)
-                {
-                    UpdateHorizontal(gameBoard, i);
-
-                }
                 //rotation
                 int baseForIndex = 0;
 
@@ -342,7 +458,7 @@ namespace PentagoAICrossP
                     }
                 }
                 UpdateBoard(gameBoard, square);
-                if (IsOver(gameBoard))
+                if (BetterItsOver(gameBoard))
                 {
                     printBoard(gameBoard);
                     Console.Write("Game Over.\n");
@@ -433,14 +549,14 @@ public class CustomArray<T>
 {
     public static T[] GetColumn(T[,] matrix, int columnNumber)
     {
-        return Enumerable.Range(0, matrix.GetLength(0)-1)
+        return Enumerable.Range(0, matrix.GetLength(0) - 1)
                 .Select(x => matrix[x, columnNumber])
                 .ToArray();
     }
 
     public static T[] GetRow(T[,] matrix, int rowNumber)
     {
-        return Enumerable.Range(0, matrix.GetLength(1)-1)
+        return Enumerable.Range(0, matrix.GetLength(1) - 1)
                 .Select(x => matrix[rowNumber, x])
                 .ToArray();
     }
@@ -450,7 +566,7 @@ public class CustomArray<T>
         //return Enumerable.Range(0, matrix.GetLength(0) - 1)
         //.Select(x => matrix[x, columnNumber])
         //.ToArray();
-        var colLength = matrix.GetLength(0)-1;
+        var colLength = matrix.GetLength(0) - 1;
         var colVector = new T[colLength];
 
         for (var i = 0; i < colLength; i++)
@@ -464,7 +580,7 @@ public class CustomArray<T>
         //return Enumerable.Range(0, matrix.GetLength(1) - 1)
         //.Select(x => matrix[rowNumber, x])
         //.ToArray();
-        var rowLength = matrix.GetLength(1)-1;
+        var rowLength = matrix.GetLength(1) - 1;
         var rowVector = new T[rowLength];
 
         for (var i = 0; i < rowLength; i++)
@@ -479,11 +595,11 @@ public class CustomArray<T>
         //return Enumerable.Range(1, matrix.GetLength(0) - 1)
         //.Select(x => matrix[x, columnNumber])
         //.ToArray();
-        var colLength = matrix.GetLength(0)-1;
+        var colLength = matrix.GetLength(0) - 1;
         var colVector = new T[colLength];
 
         for (var i = 0; i < colLength; i++)
-            colVector[i] = matrix[columnNumber, i+1];
+            colVector[i] = matrix[columnNumber, i + 1];
 
         return colVector;
     }
@@ -493,11 +609,11 @@ public class CustomArray<T>
         //return Enumerable.Range(1, matrix.GetLength(1) - 1)
         //.Select(x => matrix[rowNumber, x])
         //.ToArray();
-        var rowLength = matrix.GetLength(1)-1;
+        var rowLength = matrix.GetLength(1) - 1;
         var rowVector = new T[rowLength];
 
         for (var i = 0; i < rowLength; i++)
-            rowVector[i] = matrix[i+1, rowNumber];
+            rowVector[i] = matrix[i + 1, rowNumber];
 
         return rowVector;
     }
