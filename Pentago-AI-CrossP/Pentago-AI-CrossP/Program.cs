@@ -71,7 +71,8 @@ namespace PentagoAICrossP
          */
         static void UpdatePoint(TileVals[,] board, int x, int y)
         {
-            //update horizontal (2)
+
+            #region Update Horizontal
             if (x != 0)
             {
                 //update leftmost to right
@@ -86,7 +87,9 @@ namespace PentagoAICrossP
                 var xSum = Array.ConvertAll(xTiles, value => (int)value).Sum();
                 winValues[y * 2] = xSum;
             }
-            //update verticle (2)
+            #endregion
+           
+            #region Update Verticle
             if (y != 0)
             {
                 //update topmost to bot
@@ -101,11 +104,15 @@ namespace PentagoAICrossP
                 var ySum = Array.ConvertAll(yTiles, value => (int)value).Sum();
                 winValues[12 + x * 2 + 1] = ySum;
             }
-            //update diag (2)
+            #endregion
 
-            //left to right
-            int tmpX = x;
-            int tmpY = y;
+            //update diag (2)
+            int tmpX;
+            int tmpY;
+
+            #region Update Top left to Bot right diag
+            tmpX = x;
+            tmpY = y;
             while (tmpX != 0 && tmpY != 0)
             {
                 tmpX--;
@@ -116,8 +123,8 @@ namespace PentagoAICrossP
                 //top left point
                 var diagOne = (DiagFromPoint(0, 0, true));
                 var diagTwo = (DiagFromPoint(1, 1, true));
-                winValues[24 + 1] = sumDiag(board, diagOne);
-                winValues[24 + 2] = sumDiag(board, diagTwo);
+                winValues[24 + 1] = SumDiag(board, diagOne);
+                winValues[24 + 2] = SumDiag(board, diagTwo);
 
             }
             if ((tmpX + tmpY) == 1)
@@ -127,13 +134,13 @@ namespace PentagoAICrossP
                 TupleList<int, int>[] diags = new TupleList<int, int>[4];
                 var diagOne = (DiagFromPoint(0, 1, true));
                 var diagTwo = (DiagFromPoint(1, 0, true));
-                winValues[24 + 0] = sumDiag(board, diagOne);
-                winValues[24 + 3] = sumDiag(board, diagTwo);
+                winValues[24 + 0] = SumDiag(board, diagOne);
+                winValues[24 + 3] = SumDiag(board, diagTwo);
 
             }
-
-            //right to left
-
+            #endregion
+            
+            #region Update Top right to Bot left diag
             tmpX = x;
             tmpY = y;
             while (tmpX != 5 && tmpY != 0)
@@ -146,8 +153,8 @@ namespace PentagoAICrossP
                 //top right point
                 var diagOne = (DiagFromPoint(5, 0, false));
                 var diagTwo = (DiagFromPoint(4, 1, false));
-                winValues[28 + 1] = sumDiag(board, diagOne);
-                winValues[28 + 2] = sumDiag(board, diagTwo);
+                winValues[28 + 1] = SumDiag(board, diagOne);
+                winValues[28 + 2] = SumDiag(board, diagTwo);
             }
             else if (tmpX == 4 && tmpY == 0)
             {
@@ -158,27 +165,30 @@ namespace PentagoAICrossP
                 //winValues[24 + i] = sumDiag(board, diags[i]);
 
                 var diagOne = (DiagFromPoint(4, 0, false));
-                winValues[28 + 0] = sumDiag(board, diagOne);
+                winValues[28 + 0] = SumDiag(board, diagOne);
             }
             else if (tmpX == 5 && tmpY == 1)
             {
                 var diagOne = (DiagFromPoint(5, 1, false));
-                winValues[28 + 3] = sumDiag(board, diagOne);
+                winValues[28 + 3] = SumDiag(board, diagOne);
             }
+            #endregion
 
 
-            printBoard(board);
+            PrintBoard(board);
 
 
 
         }
-        static void UpdateBoard(TileVals[,] board, int quad)
+
+        #region Update wins on square rotation
+        static void UpdateRotation(TileVals[,] board, int quad)
         {
             //update horizontal (6)
             //update verticle (6)
             //update diag (4)
             //update one othe diag (1)
-            printBoard(board);
+            PrintBoard(board);
             UpdateHorizontal(board, quad);
             UpdateVerticle(board, quad);
             UpdateDiagonal(board, quad);
@@ -186,7 +196,6 @@ namespace PentagoAICrossP
 
 
         }
-
         static void UpdateHorizontal(TileVals[,] board, int quad)
         {
 
@@ -239,7 +248,7 @@ namespace PentagoAICrossP
                 diags[3] = (DiagFromPoint(1, 0, true));
                 for (int i = 0; i < 4; i++)
                 {
-                    winValues[24 + i] = sumDiag(board, diags[i]);
+                    winValues[24 + i] = SumDiag(board, diags[i]);
                 }
 
 
@@ -253,34 +262,9 @@ namespace PentagoAICrossP
                 diags[3] = (DiagFromPoint(5, 1, false));
                 for (int i = 0; i < 4; i++)
                 {
-                    winValues[28 + i] = sumDiag(board, diags[i]);
+                    winValues[28 + i] = SumDiag(board, diags[i]);
                 }
             }
-
-        }
-
-        static int sumDiag(TileVals[,] board, TupleList<int, int> diags)
-        {
-            int retVal = 0;
-
-            foreach (var item in diags)
-            {
-                retVal += (int)board[item.Item1, item.Item2];
-            }
-            return retVal;
-        }
-
-        static TupleList<int, int> DiagFromPoint(int x, int y, bool leftToRight)
-        {
-            var diag = new TupleList<int, int>();
-            diag.Add(x, y);
-            for (int i = 0; i < 4; i++)
-            {
-                x = leftToRight ? x + 1 : x - 1;
-                y++;
-                diag.Add(x, y);
-            }
-            return diag;
 
         }
         static void UpdateOther(TileVals[,] board, int quad)
@@ -288,126 +272,35 @@ namespace PentagoAICrossP
             switch (quad)
             {
                 case 0:
-                    winValues[28] = sumDiag(board, DiagFromPoint(4, 0, false));
+                    winValues[28] = SumDiag(board, DiagFromPoint(4, 0, false));
                     break;
                 case 1:
-                    winValues[24 + 3] = sumDiag(board, DiagFromPoint(1, 0, true));
+                    winValues[24 + 3] = SumDiag(board, DiagFromPoint(1, 0, true));
 
                     break;
                 case 2:
-                    winValues[24 + 0] = sumDiag(board, DiagFromPoint(0, 1, true));
+                    winValues[24 + 0] = SumDiag(board, DiagFromPoint(0, 1, true));
 
                     break;
                 case 3:
-                    winValues[28 + 3] = sumDiag(board, DiagFromPoint(5, 1, false));
+                    winValues[28 + 3] = SumDiag(board, DiagFromPoint(5, 1, false));
                     break;
                 default:
                     throw new ArgumentException("quad greater than 3");
             }
         }
-
-
-
-        static TileVals[,] RotateBoard(TileVals[,] board, int n)
-        {
-            TileVals[,] ret = new TileVals[n, n];
-            for (int i = 0; i < n; i++)
-            {
-                for (int j = 0; j < n; j++)
-                {
-                    ret[i, j] = board[n - j - 1, i];
-                }
-            }
-            return ret;
-        }
-
-
-        static bool BetterItsOver(TileVals[,] board)
-        {
-            bool didXWin = false;
-            bool didOWin = false;
-            foreach (var item in winValues)
-            {
-                if (item == 50)
-                {
-                    didOWin = true;
-                    Console.WriteLine("O won");
-                }
-                if (item == 5)
-                {
-                    didXWin = true;
-                    Console.WriteLine("X won");
-                }
-            }
-
-            return didXWin || didOWin;
-        }
-        //screams
-        static bool IsOver(TileVals[,] board)
-        {
-            for (int i = 0; i < 5; i++)
-            {
-                int val = 0;
-                for (int j = 0; j < 5; j++)
-                {
-                    val += (int)board[i, j];
-                }
-                if (val == 5) { return true; }
-            }
-            for (int i = 1; i < 6; i++)
-            {
-                int val = 0;
-                for (int j = 1; j < 6; j++)
-                {
-                    val += (int)board[i, j];
-                }
-                if (val == 5) { return true; }
-            }
-            for (int i = 0; i < 5; i++)
-            {
-                int val = 0;
-                for (int j = 0; j < 5; j++)
-                {
-                    val += (int)board[j, i];
-                }
-                if (val == 5) { return true; }
-            }
-            for (int i = 1; i < 6; i++)
-            {
-                int val = 0;
-                for (int j = 1; j < 6; j++)
-                {
-                    val += (int)board[j, i];
-                }
-                if (val == 5) { return true; }
-            }
-            int x = 0;
-            for (int k = 0; k < 4; k++)
-            {
-                x = (int)board[0, 0] + (int)board[1, 1] + (int)board[2, 2] + (int)board[3, 3] + (int)board[4, 4];
-                if (x == 5 || x == 50) { return true; }
-                x = (int)board[1, 1] + (int)board[2, 2] + (int)board[3, 3] + (int)board[4, 4] + (int)board[5, 5];
-                if (x == 5 || x == 50) { return true; }
-                x = (int)board[0, 1] + (int)board[1, 2] + (int)board[2, 3] + (int)board[3, 4] + (int)board[4, 5];
-                if (x == 5 || x == 50) { return true; }
-                x = (int)board[1, 0] + (int)board[2, 1] + (int)board[3, 2] + (int)board[4, 3] + (int)board[5, 4];
-                board = RotateBoard(board, 6);
-            }
-            return false;
-        }
-
-
+        #endregion
         static void Main(string[] args)
         {
             TileVals[,] gameBoard = new TileVals[6, 6];
-            printBoard(gameBoard);
+            PrintBoard(gameBoard);
 
             //main game loop
             while (true)
             {
                 //change turn
                 isXTurn = !isXTurn;
-                printBoard(gameBoard);
+                PrintBoard(gameBoard);
 
                 //set vals to illegal by default
                 var xVal = -1;
@@ -419,7 +312,7 @@ namespace PentagoAICrossP
                     //make sure the value selected is actually open
                     if (gameBoard[xVal, yVal] != TileVals.Blank)
                     {
-                        printBoard(gameBoard);
+                        PrintBoard(gameBoard);
                         Console.WriteLine("Square already taken\n");
                     }
                     else
@@ -494,17 +387,73 @@ namespace PentagoAICrossP
 
                     }
                 }
-                UpdateBoard(gameBoard, square);
+                UpdateRotation(gameBoard, square);
                 UpdateTurn();
-                if (BetterItsOver(gameBoard))
+                if (IsGameWon(gameBoard))
                 {
-                    printBoard(gameBoard);
+                    PrintBoard(gameBoard);
                     Console.Write("Game Over.\n");
                     break;
                 }
             }
         }
-        static void printBoard(TileVals[,] board)
+
+        static int SumDiag(TileVals[,] board, TupleList<int, int> diags)
+        {
+            int retVal = 0;
+
+            foreach (var item in diags)
+            {
+                retVal += (int)board[item.Item1, item.Item2];
+            }
+            return retVal;
+        }
+        static TupleList<int, int> DiagFromPoint(int x, int y, bool leftToRight)
+        {
+            var diag = new TupleList<int, int>();
+            diag.Add(x, y);
+            for (int i = 0; i < 4; i++)
+            {
+                x = leftToRight ? x + 1 : x - 1;
+                y++;
+                diag.Add(x, y);
+            }
+            return diag;
+
+        }
+        static TileVals[,] RotateBoard(TileVals[,] board, int n)
+        {
+            TileVals[,] ret = new TileVals[n, n];
+            for (int i = 0; i < n; i++)
+            {
+                for (int j = 0; j < n; j++)
+                {
+                    ret[i, j] = board[n - j - 1, i];
+                }
+            }
+            return ret;
+        }
+        static bool IsGameWon(TileVals[,] board)
+        {
+            bool didXWin = false;
+            bool didOWin = false;
+            foreach (var item in winValues)
+            {
+                if (item == 50)
+                {
+                    didOWin = true;
+                    Console.WriteLine("O won");
+                }
+                if (item == 5)
+                {
+                    didXWin = true;
+                    Console.WriteLine("X won");
+                }
+            }
+
+            return didXWin || didOWin;
+        }
+        static void PrintBoard(TileVals[,] board)
         {
             Console.Clear();
             Console.WriteLine("   0 1 2     3 4 5");
@@ -533,7 +482,6 @@ namespace PentagoAICrossP
             Console.WriteLine((isXTurn ? "Player 1" : "Player 2") + "'s turn");
             Console.WriteLine("--------------\n");
         }
-
         static int TryGetInt(string prompt, int min, int max)
         {
             int ret;
@@ -553,7 +501,6 @@ namespace PentagoAICrossP
             Console.WriteLine("You entered " + ret);
             return ret;
         }
-
         static string TileToString(TileVals t)
         {
             switch (t)
@@ -568,11 +515,9 @@ namespace PentagoAICrossP
                     return "error";
             }
         }
-        static bool isOver(TileVals[,] board)
-        {
-            return false;
-        }
     }
+
+
     enum TileVals
     {
         X = 1,
@@ -583,6 +528,7 @@ namespace PentagoAICrossP
 
 }
 
+#region Classes for helping with win conditions
 public class CustomArray<T>
 {
     public static T[] GetColumn(T[,] matrix, int columnNumber)
@@ -664,3 +610,4 @@ public class TupleList<T1, T2> : List<Tuple<T1, T2>>
         Add(new Tuple<T1, T2>(item, item2));
     }
 }
+#endregion
