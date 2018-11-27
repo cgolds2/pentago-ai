@@ -8,7 +8,6 @@ namespace PentagoAICrossP
     {
         static int[] lastTurn = new int[85];
         static List<int[]> turns = new List<int[]>();
-        static int turnCounter = 0;
         static List<int[]> GetTurns()
         {
             return turns;
@@ -239,7 +238,7 @@ namespace PentagoAICrossP
         }
         static void UpdateDiagonal(TileVals[,] board, int quad)
         {
-            if (quad == 0 || quad == 4)
+            if (quad == 0 || quad == 3)
             {
                 TupleList<int, int>[] diags = new TupleList<int, int>[4];
                 diags[0] = (DiagFromPoint(0, 1, true));
