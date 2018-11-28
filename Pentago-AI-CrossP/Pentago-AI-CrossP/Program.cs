@@ -251,9 +251,9 @@ namespace PentagoAICrossP {
 		static bool isOver(TileVals[,] board) {
 			return false;
 		}
-		static int[,] pentagoHeuristic(board)
-		{
+		static int[,] pentagoHeuristic(board) {
 			int[,] ret;
+			//EARLY GAME
 			//first turn
 			if (turnCounter == 1) {
 				board[xVal, yVal] == TileVals.X;
@@ -265,36 +265,36 @@ namespace PentagoAICrossP {
 				if (startQuadrant == 0) {
 					xVal = 2;
 					yVal = 2;
-					//rotateBoard(board, 3);
+					RotateSquare(board, 3, true);
 				}
 				else if (startQuadrant == 1) {
 					xVal = 3;
 					yVal = 2;
-					//rotateBoard(board, 2);
+					RotateSquare(board, 2, true);
 				}
 				else if (startQuadrant == 2) {
 					xVal = 2;
 					yVal = 3;
-					//rotateBoard(board, 1);
+					RotateSquare(board, 1, true);
 				}
 				else if (startQuadrant == 3) {
 					xVal = 3;
 					yVal = 3;
-					//rotateBoard(board, 0);
+					RotateSquare(board, 0, true);
 				}
 			}
-			//second turn minus rotations
+			//second turn
 			if (turnCounter == 2) {
 				if (startQuadrant == 0) {
 					if ((int)board[2,0] == 0) {
 						xVal = 2;
 						yVal = 0;
-
 					}
 					else {
 						xVal = 0;
 						yVal = 2;
 					}
+					RotateSquare(board, 3, true);
 				}
 				if (startQuadrant == 1) {
 					if ((int)board[3,0] == 0) {
@@ -305,6 +305,7 @@ namespace PentagoAICrossP {
 						xVal = 5;
 						yVal = 2;
 					}
+					RotateSquare(board, 2, true);
 				}
 				if (startQuadrant == 2) {
 					if ((int)board[2,5] == 0) {
@@ -315,6 +316,7 @@ namespace PentagoAICrossP {
 						xVal = 0;
 						yVal = 3;
 					}
+					RotateSquare(board, 1, true);
 				}
 				if (startQuadrant == 3) {
 					if ((int)board[3,5] == 0) {
@@ -325,12 +327,78 @@ namespace PentagoAICrossP {
 						xVal = 5;
 						yVal = 3;
 					}
+					RotateSquare(board, 0, true);
 				}
 			}
-			// /*
+			//third turn
 			if (turnCounter == 3) {
-
+				if (startQuadrant == 0) {
+					if ((int)board[0,0] == 0) {
+						xVal = 0;
+						yVal = 0;
+						RotateSquare(board, 1, true);
+					}
+					else if ((int)board[0,2] == 0) {
+						xVal = 0;
+						yVal = 2;
+						RotateSquare(board, 1, true)
+					}
+					else {
+						xVal = 0;
+						yVal = 5;
+						RotateSquare(board, 2, true);
+					}
+				if (startQuadrant == 1) {
+					if ((int)board[5,0] == 0) {
+						xVal = 5;
+						yVal = 0;
+						RotateSquare(board, 2, true);
+					}
+					else if ((int)board[5, 2] == 0) {
+						xVal = 5;
+						yVal = 2;
+						RotateSquare(board, 2, true)
+					}
+					else {
+						xVal = 5;
+						yVal = 5;
+						RotateSquare(board, 3, false);
+					}
+				}
+				if (startQuadrant == 2) {
+					if ((int)board[0,5] == 0) {
+						xVal = 0;
+						yVal = 5;
+						RotateSquare(board, 1, true);
+					}
+					else if ((int)board[0,3] == 0) {
+						xVal = 5;
+						yVal = 2;
+						RotateSquare(board, 1, true)
+					}
+					else {
+						xVal = 0;
+						yVal = 0;
+						RotateSquare(board, 0, false);
+					}
 			}
+				if (startQuadrant == 3) {
+					if ((int)board[5,5] == 0) {
+						xVal = 5;
+						yVal = 5;
+						RotateSquare(board, 2, true);
+					}
+					else if ((int)board[5, 3] == 0) {
+						xVal = 5;
+						yVal = 2;
+						RotateSquare(board, 2, true)
+					}
+					else {
+						xVal = 5;
+						yVal = 0;
+						RotateSquare(board, 3, true);
+					}
+			//fourth turn
 			if (turnCounter == 4) {
 				if (startQuadrant == 0 || startQuadrant == 3) {
 					//half of diagonal edge cases
@@ -344,10 +412,40 @@ namespace PentagoAICrossP {
 							yVal = 1;
 						}
 					}
+					else if (startQuadrant == 0) {
+						if ((int)board[2, 1] == 0) {
+							xVal = 2;
+							yval = 1;
+							RotateSquare(board, 3, true);
+						}
+						else if ((int)board[1,0] == 0) {
+								xVal = 1;
+								yval = 0;
+								RotateSquare(board, 0, false);
+							}
+							else {
+								xVal = 2;
+								yval = 4;
+								RotateSquare(board, 0, false);
+							}
+						}
 					else {
-
-					}
-				}
+						if ((int)board[3,4] == 0) {
+							xVal = 3;
+							yval = 4;
+							RotateSquare(board, 0, true);
+						}
+						else if ((int)board[4,5] == 0) {
+								xVal = 4;
+								yval = 5;
+								RotateSquare(board, 3, false);
+							}
+							else {
+								xVal = 3;
+								yval = 1;
+								RotateSquare(board, 0, true);
+							}
+						}
 				else {
 					//second half of diagonal edge cases
 					if ((int)board[2,2] + (int)board[3,3] == 20) {
@@ -360,11 +458,47 @@ namespace PentagoAICrossP {
 							yVal = 4;
 						}
 					}
+					else if (startQuadrant == 0) {
+						if ((int)board[2, 1] == 0) {
+							xVal = 2;
+							yval = 1;
+							RotateSquare(board, 3, true);
+						}
+						else if ((int)board[1,0] == 0) {
+								xVal = 1;
+								yval = 0;
+								RotateSquare(board, 0, false);
+							}
+							else {
+								xVal = 2;
+								yval = 4;
+								RotateSquare(board, 0, false);
+							}
+						}
+					else {
+						if ((int)board[3,4] == 0) {
+							xVal = 3;
+							yval = 4;
+							RotateSquare(board, 0, true);
+						}
+						else if ((int)board[4,5] == 0) {
+								xVal = 4;
+								yval = 5;
+								RotateSquare(board, 3, false);
+							}
+							else {
+								xVal = 3;
+								yval = 1;
+								RotateSquare(board, 0, true);
+							}
+						}
+					}
 				}
 			}
-			// */
+				//MID GAME
+			}
+			return ret;
 		}
-		
 	}
 	enum TileVals {
 		X = 1,
