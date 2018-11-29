@@ -600,9 +600,9 @@ namespace PentagoAICrossP
                     return "error";
             }
         }
-        static MyTuple<T1, T2>(item1, item2) pentagoHeuristic(board)
+        static TupleList<T1, T2>(item1, item2) PentagoHeuristic(board)
         {
-            MyTuple<T1, T2> ret = new MyTuple<T1, T2>(int[xVal, yval], RotateSquare(board, int i, bool b));
+            TupleList<T1, T2> ret = new TupleList<T1, T2>(int[xVal, yval], RotateSquare(board, int i, bool b));
             //EARLY GAME
             //first turn
             if (turnCounter == 1)
@@ -997,47 +997,49 @@ namespace PentagoAICrossP
                 }
             }
             //MID GAME
+            int[int[ ,]] zerothQuadrantEdges = [(int)[2, 0], (int)[2, 1], (int)[2, 2], (int)[1, 2], (int)[0, 2]];
+            int[int[ ,]] firstQuadrantEdges = [(int)[3, 0], (int)[3, 1], (int)[3, 2], (int)[4, 2], (int)[5, 2]];
+            int[int[ ,]] secondQuadrantEdges = [(int)[0, 3], (int)[1, 3], (int)[2, 3], (int)[2, 4], (int)[2, 5]];
+            int[int[ ,]] thirdQuadrantEdges = [(int)[5, 5], (int)[4, 5], (int)[3, 5], (int)[3, 4], (int)[3, 3]];
             if (4 < turnCounter < 11)
             {
-                int[int[ ,]] zerothQuadrantEdges = [(int)[2, 0], (int) [2, 1], (int) [2, 2], (int)[1, 2], (int)[0, 2]];
-                int[int[ ,]] firstQuadrantEdges = [(int)[3, 0], (int) [3, 1], (int) [3, 2], (int)[4, 2], (int)[5, 2]];
-                int[int[ ,]] secondQuadrantEdges = [(int)[0, 3], (int) [1, 3], (int) [2, 3], (int)[2, 4], (int)[2, 5]];
-                int[int[ ,]] thirdQuadrantEdges = [(int)[5, 5], (int) [4, 5], (int) [3, 5], (int)[3, 4], (int)[3, 3]];
                 for (int i = 0; 2 < int possibleWin < 23; i++)
                 {
                     possibleWin = (int)winValues[i];
                 }
-                int[,] temp = winValuesPosition(i);
+                TupleList<int, int> possibleWinPoints = PointsFromWinCondition(i);
                 //winValuesPosition does not exist, but something like it needs to
-                for (int j = 0; (int)temp == 0; j++)
+                for (int j = 0; (int)temp[j] == 0; j++)
                 {
                     temp[j];
                 }
                 //determining rotations
-                if (-1 < temp[j].xVal < 3 && -1 < temp[j].yVal < 3 || 4 < temp[j].xVal < 6 && 4 < temp[j].yVal < 6)
+                int var1 = temp[j].Item1;
+                int var2 = temp[j].Item2;
+                if (((-1 < var1 < 3) && (-1 < var2 < 3)) || ((4 < var1 < 6) && (4 < var2 < 6)))
                 {
                     int sum1 = firstQuadrantEdges.Sum();
                     int sum2 = secondQuadrantEdges.Sum();
                     if (sum1 < sum2)
                     {
-                        ret = ([temp[j].xVal, temp[j].yVal], RotateSquare(, 1, false));
+                        ret = (temp[j], RotateSquare(, 1, false));
                     }
                     else
                     {
-                        ret = ([temp[j].xVal, temp[j].yVal], RotateSquare(, 2, false));
+                        ret = (temp[j], RotateSquare(, 2, false));
                     }
                 }
-                else if ((4 < temp[j].xVal < 6 && -1 < temp[j].yVal < 3) || (-1 < temp[j].xVal < 3 && 4 < temp[j].yVal < 6))
+                else if (((4 < var1 < 6) && (-1 < var2 < 3)) || ((-1 < var1 < 3) && (4 < var2 < 6)))
                 {
                     int sum1 = zerothQuadrantEdges.Sum();
                     int sum2 = thirdQuadrantEdges.Sum();
                     if (sum1 < sum2)
                     {
-                        ret = ([temp[j].xVal, temp[j].yVal], RotateSquare(, 0, false));
+                        ret = (temp[j], RotateSquare(, 0, false));
                     }
                     else
                     {
-                        ret = ([temp[j].xVal, temp[j].yVal], RotateSquare(, 3, false));
+                        ret = (temp[j], RotateSquare(, 3, false));
                     }
                 }
                 IsGameWon(board);
@@ -1045,49 +1047,47 @@ namespace PentagoAICrossP
             //LATE GAME
             if (4 < turnCounter < 11)
             {
-                int[int[ ,]] zerothQuadrantEdges = [(int)[2, 0], (int) [2, 1], (int) [2, 2], (int)[1, 2], (int)[0, 2]];
-                int[int[ ,]] firstQuadrantEdges = [(int)[3, 0], (int) [3, 1], (int) [3, 2], (int)[4, 2], (int)[5, 2]];
-                int[int[ ,]] secondQuadrantEdges = [(int)[0, 3], (int) [1, 3], (int) [2, 3], (int)[2, 4], (int)[2, 5]];
-                int[int[ ,]] thirdQuadrantEdges = [(int)[5, 5], (int) [4, 5], (int) [3, 5], (int)[3, 4], (int)[3, 3]];
                 for (int i = 0; 23 < int possibleLoss; i++)
                 {
                     possibleLoss = (int)winValues[i];
                 }
-                int[,] temp = lossValuesPosition(i);
+                TupleList<int, int> possibleLossPoints = PointsFromWinCondition(i);
                 for (int j = 0; (int)temp == 0; j++)
                 {
                     temp[j];
                 }
                 //determining rotations
-                if (-1 < temp[j].xVal < 3 && -1 < temp[j].yVal < 3 || 4 < temp[j].xVal < 6 && 4 < temp[j].yVal < 6)
+                int var1 = temp[j].Item1;
+                int var2 = temp[j].Item2;
+                if (((-1 < var1 < 3) && (-1 < var2 < 3)) || ((4 < var1 < 6) && (4 < var2 < 6)))
                 {
                     int sum1 = firstQuadrantEdges.Sum();
                     int sum2 = secondQuadrantEdges.Sum();
                     if (sum1 > sum2)
                     {
-                        ret = ([temp[j].xVal, temp[j].yVal], RotateSquare(, 1, false));
+                        ret = (temp[j], RotateSquare(, 1, true));
                     }
                     else
                     {
-                        ret = ([temp[j].xVal, temp[j].yVal], RotateSquare(, 2, false));
+                        ret = (temp[j], RotateSquare(, 2, false));
                     }
                 }
-                else if ((4 < temp[j].xVal < 6 && -1 < temp[j].yVal < 3) || (-1 < temp[j].xVal < 3 && 4 < temp[j].yVal < 6))
+                else if (((4 < var1 < 6) && (-1 < var2 < 3)) || ((-1 < var1 < 3) && (4 < var2 < 6)))
                 {
                     int sum1 = zerothQuadrantEdges.Sum();
                     int sum2 = thirdQuadrantEdges.Sum();
                     if (sum1 > sum2)
                     {
-                        ret = ([temp[j].xVal, temp[j].yVal], RotateSquare(, 0, false));
+                        ret = (temp[j], RotateSquare(, 0, false));
                     }
                     else
                     {
-                        ret = ([temp[j].xVal, temp[j].yVal], RotateSquare(, 3, false));
+                        ret = (temp[j], RotateSquare(, 3, true));
                     }
                 }
                 IsGameWon(board);
-                return ret;
             }
+            return ret;
         }
 
 
