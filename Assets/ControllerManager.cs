@@ -1,7 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using PentagoAICrossP;
 
 public class ControllerManager : MonoBehaviour {
 
@@ -51,7 +50,5 @@ public class ControllerManager : MonoBehaviour {
         blockArray[5, 3] = blocks[3].transform.GetChild(1).GetChild(6).GetComponent<StationaryController>().DetectPoint();
         blockArray[5, 4] = blocks[3].transform.GetChild(1).GetChild(7).GetComponent<StationaryController>().DetectPoint();
         blockArray[5, 5] = blocks[3].transform.GetChild(1).GetChild(8).GetComponent<StationaryController>().DetectPoint();
-
-        Logic.callUpdate();
     }
 }

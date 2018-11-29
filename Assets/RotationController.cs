@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using PentagoAICrossP;
 
 public class RotationController : MonoBehaviour {
 
@@ -25,6 +26,7 @@ public class RotationController : MonoBehaviour {
     {
         if (GameController.isRotating)
         {
+            cm.ScanBlocks();
             if (isRight)
             {
                 GameController.lastBlockNumber = blockNumber;
@@ -39,7 +41,7 @@ public class RotationController : MonoBehaviour {
                 rotation.transform.Rotate(0, 0, 90);
                 GameController.SwitchPlayer();
             }
-            cm.ScanBlocks();
+            Logic.callUpdate();
         }
     }
 }

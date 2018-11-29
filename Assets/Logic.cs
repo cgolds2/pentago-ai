@@ -309,20 +309,20 @@ namespace PentagoAICrossP
                 var xVal = GameController.xVal;
                 var yVal = GameController.yVal;
 
-                while (true)
-                {
-                    //make sure the value selected is actually open
-                    if (gameBoard[xVal, yVal] != TileVals.Blank)
-                    {
-                        //PrintBoard(gameBoard);
-                        //Console.WriteLine("Square already taken\n");
-                        return;
-                    }
-                    else
-                    {
-                        break;
-                    }
-                }
+                //while (true)
+                //{
+                //    //make sure the value selected is actually open
+                //    if (gameBoard[xVal, yVal] != TileVals.Blank)
+                //    {
+                //        //PrintBoard(gameBoard);
+                //        //Console.WriteLine("Square already taken\n");
+                //        return;
+                //    }
+                //    else
+                //    {
+                //        break;
+                //    }
+                //}
                 
                 //place an X or O depending on whos turn it is
                 gameBoard[xVal, yVal] = isXTurn ? TileVals.X : TileVals.O;
