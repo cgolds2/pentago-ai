@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -60,6 +60,92 @@ namespace PentagoAICrossP
 
         //keeps track of which player is allowed to move
         static bool isXTurn = false;
+
+        static TupleList<int, int> PointsFromWinCondition(int index)
+        {
+            TupleList<int, int> returnValues = new TupleList<int, int>();
+            if (index <= 11)
+            {
+                //horizontal
+                int additive = index % 2;
+                for (int i = 0; i < 5; i++)
+                {
+                    returnValues.Add(new MyTuple<int, int>(i + additive,index / 2));
+                }
+            }
+            else if (index <= 23)
+            {
+                //verticle
+                int additive = index % 2;
+                for (int i = 0; i < 5; i++)
+                {
+                    returnValues.Add(new MyTuple<int, int>((index-12) / 2, i + additive));
+                }
+            }
+            else if (index <= 27)
+            {
+                //diag 1
+                int x = -1;
+                int y = -1;
+                switch (index)
+                {
+                    case 24:
+                        x = 0;
+                        y = 1;
+                        break;
+                    case 25:
+                        x = 0;
+                        y = 0;
+                        break;
+                    case 26:
+                        x = 1;
+                        y = 1;
+                        break;
+                    case 27:
+                        x = 1;
+                        y = 0;
+                        break;
+                    default:
+                        break;
+                }
+                return DiagFromPoint(x, y, true);
+
+            }
+            else if (index <= 31)
+            {
+                //diag 2        
+                int x = -1;
+                int y = -1;
+                switch (index)
+                {
+                    case 28:
+                        x = 4;
+                        y = 0;
+                        break;
+                    case 29:
+                        x = 5;
+                        y = 0;
+                        break;
+                    case 30:
+                        x = 4;
+                        y = 1;
+                        break;
+                    case 31:
+                        x = 5;
+                        y = 1;
+                        break;
+                    default:
+                        break;
+                }
+                return DiagFromPoint(x, y, false);
+
+            }
+            else
+            {
+                throw new Exception("Out of bounds of win array");
+            }
+            return returnValues;
+        }
 
         static int[] winValues = new int[32];
         /*
@@ -604,6 +690,13 @@ public class CustomArray<T>
 
 public class TupleList<T1, T2> : List<MyTuple<T1, T2>>
 {
+    public TupleList()
+    {
+    }
+    public TupleList(T1 one, T2 two)
+    {
+        Add(one, two);
+    }
     public void Add(T1 item, T2 item2)
     {
         Add(new MyTuple<T1, T2>(item, item2));
