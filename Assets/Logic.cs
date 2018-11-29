@@ -291,9 +291,11 @@ namespace PentagoAICrossP
             }
         }
         #endregion
+
+        private static TileVals[,] gameBoard = new TileVals[6, 6];
+
         public static void callUpdate()
         {
-            TileVals[,] gameBoard = new TileVals[6, 6];
             PrintBoard(gameBoard);
 
             //main game loop
