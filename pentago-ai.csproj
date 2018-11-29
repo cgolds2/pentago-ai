@@ -308,6 +308,7 @@
   <ItemGroup>
     <Compile Include="Assets\ControllerManager.cs" />
     <Compile Include="Assets\GameController.cs" />
+    <Compile Include="Assets\Logic.cs" />
     <Compile Include="Assets\PointController.cs" />
     <Compile Include="Assets\RotationController.cs" />
     <Compile Include="Assets\StationaryController.cs" />

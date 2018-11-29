@@ -5,7 +5,7 @@ using System.Linq;
 
 namespace PentagoAICrossP
 {
-    class Logic : MonoBehaviour
+    public class Logic : MonoBehaviour
     {
         static int[] lastTurn = new int[85];
         static List<int[]> turns = new List<int[]>();
@@ -291,56 +291,58 @@ namespace PentagoAICrossP
             }
         }
         #endregion
-        static void Main(string[] args)
+        public static void callUpdate()
         {
             TileVals[,] gameBoard = new TileVals[6, 6];
             PrintBoard(gameBoard);
 
             //main game loop
-            while (true)
-            {
+            //while (true)
+            //{
                 //change turn
                 isXTurn = !isXTurn;
                 PrintBoard(gameBoard);
 
                 //set vals to illegal by default
-                var xVal = -1;
-                var yVal = -1;
+                var xVal = GameController.xVal;
+                var yVal = GameController.yVal;
 
                 while (true)
                 {
                     //make sure the value selected is actually open
                     if (gameBoard[xVal, yVal] != TileVals.Blank)
                     {
-                        PrintBoard(gameBoard);
-                        Console.WriteLine("Square already taken\n");
+                        //PrintBoard(gameBoard);
+                        //Console.WriteLine("Square already taken\n");
+                        return;
                     }
                     else
                     {
                         break;
                     }
                 }
+                
                 //place an X or O depending on whos turn it is
                 gameBoard[xVal, yVal] = isXTurn ? TileVals.X : TileVals.O;
                 UpdatePoint(gameBoard, xVal, yVal);
                 TrackPlacement(xVal, yVal);
-                int square = TryGetInt("index of square to rotate:\n0 1\n2 3", 0, 3);
+                int square = GameController.lastBlockNumber;
                 string rot = "";
-                Console.WriteLine("Enter (L)eft or (R)ight for rotation");
-                rot = Console.ReadLine();
+                //Console.WriteLine("Enter (L)eft or (R)ight for rotation");
+                //rot = Console.ReadLine();
 
+                rot = GameController.lastRotation;
                 //list of valid values for rotation
                 var rotationInput = new List<string> { "right", "left", "r", "l" };
-
-                while (!rotationInput.Contains(rot.ToLower()))
-                {
-                    Console.WriteLine("rotate not valid");
-                    rot = Console.ReadLine();
-                }
-
-                Console.WriteLine("You entered " + rot);
+                
+                //break;
+                //while (!rotationInput.Contains(rot.ToLower()))
+                //{
+                //    Console.WriteLine("rotate not valid");
+                //    rot = Console.ReadLine();
+                //}
+                //Debug.Log("You entered " + rot + " at block: " + GameController.lastBlockNumber);
                 TrackRotation(square, rot);
-
                 //rotation
                 int baseForIndex = 0;
 
@@ -374,6 +376,7 @@ namespace PentagoAICrossP
                         int x = (leftRotIndex[i] + baseForIndex) % 6;
                         int y = (leftRotIndex[i] + baseForIndex) / 6;
                         gameBoard[x, y] = tempTiles[i];
+
                     }
                 }
                 else
@@ -392,10 +395,10 @@ namespace PentagoAICrossP
                 if (IsGameWon(gameBoard))
                 {
                     PrintBoard(gameBoard);
-                    Console.Write("Game Over.\n");
-                    break;
+                    Debug.Log("Game Over.");
+                    //break;
                 }
-            }
+            //}
         }
 
         static int SumDiag(TileVals[,] board, TupleList<int, int> diags)
@@ -439,15 +442,16 @@ namespace PentagoAICrossP
             bool didOWin = false;
             foreach (var item in winValues)
             {
+                Debug.Log(item);
                 if (item == 50)
                 {
                     didOWin = true;
-                    Console.WriteLine("O won");
+                    Debug.Log("O won");
                 }
                 if (item == 5)
                 {
                     didXWin = true;
-                    Console.WriteLine("X won");
+                    Debug.Log("X won");
                 }
             }
 
@@ -603,29 +607,29 @@ public class CustomArray<T>
     }
 }
 
-public class TupleList<T1, T2> : List<MyTuple<T1, T2>>
+public class TupleList<T1, T2> : List<MyTuple<int, int>>
 {
-    public void Add(T1 item, T2 item2)
+    public void Add(int item, int item2)
     {
-        Add(new MyTuple<T1, T2>(item, item2));
+        Add(new MyTuple<int, int>(item, item2));
     }
 }
 
 public class MyTuple<T1, T2>
 {
-    public T1 Item1;
-    public T2 Item2;
-    public MyTuple(T1 item1, T2 item2)
+    public int Item1;
+    public int Item2;
+    public MyTuple(int item1, int item2)
     {
         this.Item1 = item1;
         this.Item2 = item2;
     }
 
 
-    public void Add(T1 item1, T2 item2)
+    public void Add(int item1, int item2)
     {
-        this.Item1 = item1;
-        this.Item2 = item2;
+        this.Item1 += item1;
+        this.Item1 += item2;
     }
 }
 #endregion

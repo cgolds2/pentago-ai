@@ -7,6 +7,10 @@ public class GameController {
     public static bool isPlayer1 = true;
     public static bool isPointFrozen = false;
     public static bool isRotating = false;
+    public static int xVal = -1;
+    public static int yVal = -1;
+    public static int lastBlockNumber;
+    public static string lastRotation = "";
 
     public static void SwitchPlayer()
     {

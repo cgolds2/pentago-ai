@@ -7,6 +7,7 @@ public class PointController : MonoBehaviour {
     public char type;
     private Renderer _matColor;
     private ControllerManager cm;
+    private bool recent = false;
 
     private void Start()
     {
@@ -19,6 +20,7 @@ public class PointController : MonoBehaviour {
     {
         if (!GameController.isPointFrozen && type == ' ')
         {
+            recent = true;
             if (GameController.isPlayer1)
             {
                 type = 'X';
@@ -33,12 +35,24 @@ public class PointController : MonoBehaviour {
                 GameController.isRotating = true;
                 GameController.isPointFrozen = true;
             }
-            cm.ScanBlocks();
         }
     }
 
     public char ReturnType()
     {
         return type;
+    }
+
+    public bool ReturnRecent()
+    {
+        if (recent == true)
+        {
+            recent = false;
+            return true;
+        }
+        else
+        {
+            return false;
+        }
     }
 }

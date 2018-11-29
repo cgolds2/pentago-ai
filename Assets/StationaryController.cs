@@ -4,6 +4,11 @@ using UnityEngine;
 
 public class StationaryController : MonoBehaviour {
 
+    [SerializeField]
+    private int xVal;
+    [SerializeField]
+    private int yVal;
+
     private void Start()
     {
         transform.Translate(0, 0, -1f);
@@ -15,7 +20,12 @@ public class StationaryController : MonoBehaviour {
 
         if (Physics.Raycast(transform.position, transform.TransformDirection(Vector3.forward), out hit, 1f) && hit.transform.tag == "Point")
         {
-            Debug.Log(hit.transform.GetComponent<PointController>().ReturnType());
+            if (hit.transform.GetComponent<PointController>().ReturnRecent()) //Most recent value
+            {
+                GameController.xVal = this.xVal;
+                GameController.yVal = this.yVal;
+            }
+            //Debug.Log(hit.transform.GetComponent<PointController>().ReturnType());
             return hit.transform.GetComponent<PointController>().ReturnType();
         }
         else
