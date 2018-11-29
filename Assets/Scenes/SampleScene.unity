@@ -1712,7 +1712,7 @@ Prefab:
     - target: {fileID: 114719599447637058, guid: 63cc34972f17ca041bb5ada0bd5398b6,
         type: 2}
       propertyPath: yVal
-      value: 3
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 114147031935593200, guid: 63cc34972f17ca041bb5ada0bd5398b6,
         type: 2}
@@ -1728,6 +1728,11 @@ Prefab:
         type: 2}
       propertyPath: xVal
       value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 114792258701274742, guid: 63cc34972f17ca041bb5ada0bd5398b6,
+        type: 2}
+      propertyPath: yVal
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 63cc34972f17ca041bb5ada0bd5398b6, type: 2}

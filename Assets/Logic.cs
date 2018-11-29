@@ -444,7 +444,7 @@ namespace PentagoAICrossP
             bool didOWin = false;
             foreach (var item in winValues)
             {
-                Debug.Log(item);
+                //Debug.Log(item);
                 if (item == 50)
                 {
                     didOWin = true;
