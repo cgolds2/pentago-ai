@@ -600,7 +600,495 @@ namespace PentagoAICrossP
                     return "error";
             }
         }
-    }
+        static MyTuple<T1, T2>(item1, item2) pentagoHeuristic(board)
+        {
+            MyTuple<T1, T2> ret = new MyTuple<T1, T2>(int[xVal, yval], RotateSquare(board, int i, bool b));
+            //EARLY GAME
+            //first turn
+            if (turnCounter == 1)
+            {
+                board[xVal, yVal] == TileVals.X;
+                Random startQuadrant = new Random()
+                for (int i = 0; i < 1; i++)
+                {
+                    startQuadrant.Next(0, 4) = startQuadrant;
+                }
+                if (startQuadrant == 0)
+                {
+                    /*
+                    xVal = 2;
+                    yVal = 2;
+                    RotateSquare(board, 3, true);
+                    */
+                    ret = ([2, 2], RotateSquare(, 3, true));
+                }
+                else if (startQuadrant == 1)
+                {
+                    /*
+                    xVal = 3;
+                    yVal = 2;
+                    RotateSquare(board, 2, true);
+                    */
+                    ret = ([3, 2], RotateSquare(, 2, true));
+                }
+                else if (startQuadrant == 2)
+                {
+                    /*
+                    xVal = 2;
+                    yVal = 3;
+                    RotateSquare(board, 1, true);
+                    */
+                    ret = ([2, 3], RotateSquare(, 1, true));
+                }
+                else if (startQuadrant == 3)
+                {
+                    /*
+                    xVal = 3;
+                    yVal = 3;
+                    RotateSquare(board, 0, true);
+                    */
+                    ret = ([3, 3], RotateSquare(, 0, true));
+                }
+            }
+            //second turn
+            if (turnCounter == 2)
+            {
+                if (startQuadrant == 0)
+                {
+                    if ((int)board[2, 0] == 0)
+                    {
+                        ret = ([2, 0], RotateSquare(, 3, true));
+                    }
+                    else
+                    {
+                        ret = ([0, 2], RotateSquare(, 3, true));
+                    }
+                }
+                if (startQuadrant == 1)
+                {
+                    if ((int)board[3, 0] == 0)
+                    {
+                        ret = ([3, 0], RotateSquare(, 2, true));
+                    }
+                    else
+                    {
+                        ret = ([5, 2], RotateSquare(, 2, true));
+                    }
+                }
+                if (startQuadrant == 2)
+                {
+                    if ((int)board[2, 5] == 0)
+                    {
+                        ret = ([2, 5], RotateSquare(, 1, true));
+                    }
+                    else
+                    {
+                        ret = ([0, 3], RotateSquare(, 1, true));
+                    }
+                }
+                if (startQuadrant == 3)
+                {
+                    if ((int)board[3, 5] == 0)
+                    {
+                        ret = ([3, 5], RotateSquare(, 0, true));
+                    }
+                    else
+                    {
+                        ret = ([5, 3], RotateSquare(, 0, true));
+                    }
+                }
+            }
+            //third turn
+            if (turnCounter == 3)
+            {
+                if (startQuadrant == 0)
+                {
+                    if ((int)board[0, 0] == 0)
+                    {
+                        /*
+                        xVal = 0;
+                        yVal = 0;
+                        RotateSquare(board, 1, true);
+                        */
+                        ret = ([0, 0], RotateSquare(, 1, true));
+                    }
+                    else if ((int)board[0, 2] == 0)
+                    {
+                        /*
+                        xVal = 0;
+                        yVal = 2;
+                        RotateSquare(board, 1, true);
+                        */
+                        ret = ([0, 2], RotateSquare(, 1, true));
+                    }
+                    else
+                    {
+                        /*
+                        xVal = 0;
+                        yVal = 5;
+                        RotateSquare(board, 2, true);
+                        */
+                        ret = ([0, 5], RotateSquare(, 2, true));
+                    }
+                }
+                if (startQuadrant == 1)
+                {
+                    if ((int)board[5, 0] == 0)
+                    {
+                        /*
+                        xVal = 5;
+                        yVal = 0;
+                        RotateSquare(board, 2, true);
+                        */
+                        ret = ([5, 0], RotateSquare(, 2, true));
+                    }
+                    else if ((int)board[5, 2] == 0)
+                    {
+                        /*
+                        xVal = 5;
+                        yVal = 2;
+                        RotateSquare(board, 2, true);
+                        */
+                        ret = ([5, 2], RotateSquare(, 2, true));
+                    }
+                    else
+                    {
+                        /*
+                        xVal = 5;
+                        yVal = 5;
+                        RotateSquare(board, 3, false);
+                        */
+                        ret = ([5, 5], RotateSquare(, 3, false));
+                    }
+                }
+                if (startQuadrant == 2)
+                {
+                    if ((int)board[0, 5] == 0)
+                    {
+                        /*
+                        xVal = 0;
+                        yVal = 5;
+                        RotateSquare(board, 1, true);
+                        */
+                        ret = ([0, 5], RotateSquare(, 1, true));
+                    }
+                    else if ((int)board[0, 3] == 0)
+                    {
+                        /*
+                        xVal = 5;
+                        yVal = 2;
+                        RotateSquare(board, 1, true);
+                        */
+                        ret = ([5, 2], RotateSquare(, 1, true));
+                    }
+                    else
+                    {
+                        /*
+                        xVal = 0;
+                        yVal = 0;
+                        RotateSquare(board, 0, false);
+                        */
+                        ret = ([0, 0], RotateSquare(, 0, false));
+                    }
+                }
+                if (startQuadrant == 3)
+                {
+                    if ((int)board[5, 5] == 0)
+                    {
+                        /*
+                        xVal = 5;
+                        yVal = 5;
+                        RotateSquare(board, 2, true);
+                        */
+                        ret = ([5, 5], RotateSquare(, 2, true));
+                    }
+                    else if ((int)board[5, 3] == 0)
+                    {
+                        /*
+                        xVal = 5;
+                        yVal = 2;
+                        RotateSquare(board, 2, true);
+                        */
+                        ret = ([5, 2], RotateSquare(, 2, true));
+                    }
+                    else
+                    {
+                        /*
+                        xVal = 5;
+                        yVal = 0;
+                        RotateSquare(board, 3, true);
+                        */
+                        ret = ([5, 0], RotateSquare(, 3, true));
+                    }
+                }
+            }
+            //fourth turn
+            if (turnCounter == 4)
+            {
+                if (startQuadrant == 0 || startQuadrant == 3)
+                {
+                    //half of diagonal edge cases
+                    if ((int)board[3, 2] + (int)board[2, 3] == 20)
+                    {
+                        if ((int)board[4, 1] == 10)
+                        {
+                            /*
+                            xVal = 1;
+                            yVal = 4;
+                            RotateSquare(board, 2, true);
+                            */
+                            ret = ([1, 4], RotateSquare(, 2, true));
+                        }
+                        else if ((int)board[1, 4] == 10)
+                        {
+                            /*
+                            xVal = 4;
+                            yVal = 1;
+                            RotateSquare(board, 1, true);
+                            */
+                            ret = ([4, 1], RotateSquare(, 1, true));
+                        }
+                    }
+                    else if (startQuadrant == 0)
+                    {
+                        if ((int)board[2, 1] == 0)
+                        {
+                            /*
+                            xVal = 2;
+                            yval = 1;
+                            RotateSquare(board, 3, true);
+                            */
+                            ret = ([2, 1], RotateSquare(, 3, true));
+                        }
+                        else if ((int)board[1, 0] == 0)
+                        {
+                            /*
+                            xVal = 1;
+                            yval = 0;
+                            RotateSquare(board, 0, false);
+                            */
+                            ret = ([1, 0, RotateSquare(, 0, false));
+                        }
+                        else
+                        {
+                            /*
+                            xVal = 2;
+                            yval = 4;
+                            RotateSquare(board, 0, false);
+                            */
+                            ret = ([2, 4], RotateSquare(, 0, false));
+                        }
+                    }
+                    else
+                    {
+                        if ((int)board[3, 4] == 0)
+                        {
+                            /*
+                            xVal = 3;
+                            yval = 4;
+                            RotateSquare(board, 0, true);
+                            */
+                            ret = ([3, 4], RotateSquare(, 0, true));
+                        }
+                        else if ((int)board[4, 5] == 0)
+                        {
+                            /*
+                            xVal = 4;
+                            yval = 5;
+                            RotateSquare(board, 3, false);
+                            */
+                            ret = ([4, 5], RotateSquare(, 3, false));
+                        }
+                        else
+                        {
+                            /*
+                            xVal = 3;
+                            yval = 1;
+                            RotateSquare(board, 0, true);
+                            */
+                            ret = ([3, 1], RotateSquare(, 0, true));
+                        }
+                    }
+                }
+                else
+                {
+                    //second half of diagonal edge cases
+                    if ((int)board[2, 2] + (int)board[3, 3] == 20)
+                    {
+                        if ((int)board[4, 4] == 10)
+                        {
+                            /*
+                            xVal = 1;
+                            yVal = 1;
+                            RotateSquare(board, 0, true);
+                            */
+                            ret = ([1, 1], RotateSquare(, 0, true));
+                        }
+                        else if ((int)board[1, 1] == 10)
+                        {
+                            /*
+                            xVal = 4;
+                            yVal = 4;
+                            RotateSquare(board, 3, true);
+                            */
+                            ret = ([4, 4], RotateSquare(, 3, true));
+                        }
+                    }
+                    else if (startQuadrant == 1)
+                    {
+                        if ((int)board[2, 1] == 0)
+                        {
+                            /*
+                            xVal = 2;
+                            yval = 1;
+                            RotateSquare(board, 3, true);
+                            */
+                            ret = ([2, 1], RotateSquare(, 3, true));
+                        }
+                        else if ((int)board[1, 0] == 0)
+                        {
+                            /*
+                            xVal = 1;
+                            yval = 0;
+                            RotateSquare(board, 0, false);
+                            */
+                            ret = ([1, 0], RotateSquare(, 0, false));
+                        }
+                        else
+                        {
+                            /*
+                            xVal = 2;
+                            yval = 4;
+                            RotateSquare(board, 0, false);
+                            */
+                            ret = ([2, 4], RotateSquare(, 0, false));
+                        }
+                    }
+                    else
+                    {
+                        if ((int)board[3, 4] == 0)
+                        {
+                            /*
+                            xVal = 3;
+                            yval = 4;
+                            RotateSquare(board, 0, true);
+                            */
+                            ret = ([3, 4], RotateSquare(, 0, true));
+                        }
+                        else if ((int)board[4, 5] == 0)
+                        {
+                            /*
+                            xVal = 4;
+                            yval = 5;
+                            RotateSquare(board, 3, false);
+                            */
+                            ret = ([4, 5], RotateSquare(, 3, false));
+                        }
+                        else
+                        {
+                            /*
+                            xVal = 3;
+                            yval = 1;
+                            RotateSquare(board, 0, true);
+                            */
+                            ret = ([3, 1], RotateSquare(, 0, true));
+                        }
+                    }
+                }
+            }
+            //MID GAME
+            if (4 < turnCounter < 11)
+            {
+                int[int[ ,]] zerothQuadrantEdges = [(int)[2, 0], (int) [2, 1], (int) [2, 2], (int)[1, 2], (int)[0, 2]];
+                int[int[ ,]] firstQuadrantEdges = [(int)[3, 0], (int) [3, 1], (int) [3, 2], (int)[4, 2], (int)[5, 2]];
+                int[int[ ,]] secondQuadrantEdges = [(int)[0, 3], (int) [1, 3], (int) [2, 3], (int)[2, 4], (int)[2, 5]];
+                int[int[ ,]] thirdQuadrantEdges = [(int)[5, 5], (int) [4, 5], (int) [3, 5], (int)[3, 4], (int)[3, 3]];
+                for (int i = 0; 2 < int possibleWin < 23; i++)
+                {
+                    possibleWin = (int)winValues[i];
+                }
+                int[,] temp = winValuesPosition(i);
+                //winValuesPosition does not exist, but something like it needs to
+                for (int j = 0; (int)temp == 0; j++)
+                {
+                    temp[j];
+                }
+                //determining rotations
+                if (-1 < temp[j].xVal < 3 && -1 < temp[j].yVal < 3 || 4 < temp[j].xVal < 6 && 4 < temp[j].yVal < 6)
+                {
+                    int sum1 = firstQuadrantEdges.Sum();
+                    int sum2 = secondQuadrantEdges.Sum();
+                    if (sum1 < sum2)
+                    {
+                        ret = ([temp[j].xVal, temp[j].yVal], RotateSquare(, 1, false));
+                    }
+                    else
+                    {
+                        ret = ([temp[j].xVal, temp[j].yVal], RotateSquare(, 2, false));
+                    }
+                }
+                else if ((4 < temp[j].xVal < 6 && -1 < temp[j].yVal < 3) || (-1 < temp[j].xVal < 3 && 4 < temp[j].yVal < 6))
+                {
+                    int sum1 = zerothQuadrantEdges.Sum();
+                    int sum2 = thirdQuadrantEdges.Sum();
+                    if (sum1 < sum2)
+                    {
+                        ret = ([temp[j].xVal, temp[j].yVal], RotateSquare(, 0, false));
+                    }
+                    else
+                    {
+                        ret = ([temp[j].xVal, temp[j].yVal], RotateSquare(, 3, false));
+                    }
+                }
+                IsGameWon(board);
+            }
+            //LATE GAME
+            if (4 < turnCounter < 11)
+            {
+                int[int[ ,]] zerothQuadrantEdges = [(int)[2, 0], (int) [2, 1], (int) [2, 2], (int)[1, 2], (int)[0, 2]];
+                int[int[ ,]] firstQuadrantEdges = [(int)[3, 0], (int) [3, 1], (int) [3, 2], (int)[4, 2], (int)[5, 2]];
+                int[int[ ,]] secondQuadrantEdges = [(int)[0, 3], (int) [1, 3], (int) [2, 3], (int)[2, 4], (int)[2, 5]];
+                int[int[ ,]] thirdQuadrantEdges = [(int)[5, 5], (int) [4, 5], (int) [3, 5], (int)[3, 4], (int)[3, 3]];
+                for (int i = 0; 23 < int possibleLoss; i++)
+                {
+                    possibleLoss = (int)winValues[i];
+                }
+                int[,] temp = lossValuesPosition(i);
+                for (int j = 0; (int)temp == 0; j++)
+                {
+                    temp[j];
+                }
+                //determining rotations
+                if (-1 < temp[j].xVal < 3 && -1 < temp[j].yVal < 3 || 4 < temp[j].xVal < 6 && 4 < temp[j].yVal < 6)
+                {
+                    int sum1 = firstQuadrantEdges.Sum();
+                    int sum2 = secondQuadrantEdges.Sum();
+                    if (sum1 > sum2)
+                    {
+                        ret = ([temp[j].xVal, temp[j].yVal], RotateSquare(, 1, false));
+                    }
+                    else
+                    {
+                        ret = ([temp[j].xVal, temp[j].yVal], RotateSquare(, 2, false));
+                    }
+                }
+                else if ((4 < temp[j].xVal < 6 && -1 < temp[j].yVal < 3) || (-1 < temp[j].xVal < 3 && 4 < temp[j].yVal < 6))
+                {
+                    int sum1 = zerothQuadrantEdges.Sum();
+                    int sum2 = thirdQuadrantEdges.Sum();
+                    if (sum1 > sum2)
+                    {
+                        ret = ([temp[j].xVal, temp[j].yVal], RotateSquare(, 0, false));
+                    }
+                    else
+                    {
+                        ret = ([temp[j].xVal, temp[j].yVal], RotateSquare(, 3, false));
+                    }
+                }
+                IsGameWon(board);
+                return ret;
+            }
+        }
 
 
     enum TileVals
