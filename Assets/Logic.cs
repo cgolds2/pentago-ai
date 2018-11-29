@@ -629,7 +629,7 @@ public class MyTuple<T1, T2>
     public void Add(int item1, int item2)
     {
         this.Item1 += item1;
-        this.Item1 += item2;
+        this.Item2 += item2;
     }
 }
 #endregion
