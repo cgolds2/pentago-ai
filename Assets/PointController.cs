@@ -5,6 +5,8 @@ using UnityEngine;
 public class PointController : MonoBehaviour {
 
     public char type;
+    public Material green;
+    public Material red;
     private Renderer _matColor;
     private ControllerManager cm;
     private bool recent = false;
@@ -24,14 +26,14 @@ public class PointController : MonoBehaviour {
             if (GameController.isPlayer1)
             {
                 type = 'X';
-                _matColor.material.color = Color.green;
+                _matColor.material = green;
                 GameController.isRotating = true;
                 GameController.isPointFrozen = true;
             }
             else
             {
                 type = 'O';
-                _matColor.material.color = Color.red;
+                _matColor.material = red;
                 GameController.isRotating = true;
                 GameController.isPointFrozen = true;
             }

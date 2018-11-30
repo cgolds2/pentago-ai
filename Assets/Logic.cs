@@ -2,14 +2,23 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using UnityEngine.UI;
 
 namespace PentagoAICrossP
 {
     public class Logic : MonoBehaviour
     {
+        public static Canvas canvas;
         static int[] lastTurn = new int[85];
         static List<int[]> turns = new List<int[]>();
         static int turnCounter = 0;
+
+        public void Start()
+        {
+            canvas = GameObject.FindGameObjectWithTag("Canvas").GetComponent<Canvas>();
+            canvas.gameObject.SetActive(false);
+        }
+
         static List<int[]> GetTurns()
         {
             return turns;
@@ -397,9 +406,11 @@ namespace PentagoAICrossP
                 if (IsGameWon(gameBoard))
                 {
                     PrintBoard(gameBoard);
-                    Debug.Log("Game Over.");
+                    canvas.gameObject.SetActive(true);
+                    GameObject.FindGameObjectWithTag("GameController").SetActive(false);
+                    //Debug.Log("Game Over.");
                     //break;
-                }
+            }
             //}
         }
 
@@ -448,12 +459,15 @@ namespace PentagoAICrossP
                 if (item == 50)
                 {
                     didOWin = true;
-                    Debug.Log("O won");
+                    //Debug.Log("O won");
+                    canvas.gameObject.transform.GetChild(2).GetChild(0).GetComponent<Text>().text = "Red Won!";
                 }
                 if (item == 5)
                 {
                     didXWin = true;
-                    Debug.Log("X won");
+                    //Debug.Log("X won");
+                    canvas.gameObject.transform.GetChild(2).GetChild(0).GetComponent<Text>().text = "Green Won!";
+
                 }
             }
 

@@ -22,7 +22,7 @@ public class StationaryController : MonoBehaviour {
         {
             if (hit.transform.GetComponent<PointController>().ReturnRecent()) //Most recent value
             {
-                Debug.Log("X: " + this.xVal + ", Y: " + this.yVal);
+                //Debug.Log("X: " + this.xVal + ", Y: " + this.yVal);
                 GameController.xVal = this.xVal;
                 GameController.yVal = this.yVal;
             }
