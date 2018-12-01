@@ -648,7 +648,7 @@ namespace PentagoAICrossP
                     yVal = 3;
                     RotateSquare(board, 0, true);
                     */
-                    ret = ([3, 3], RotateSquare(, 0, true));
+                    ret = new GameMove(3, 3, 0, true);
                 }
             }
             //second turn
@@ -658,44 +658,44 @@ namespace PentagoAICrossP
                 {
                     if ((int)board[2, 0] == 0)
                     {
-                        ret = ([2, 0], RotateSquare(, 3, true));
+                        ret = new GameMove(2, 0, 3, true);
                     }
                     else
                     {
-                        ret = ([0, 2], RotateSquare(, 3, true));
+                        ret = new GameMove(0, 2, 3, true);
                     }
                 }
                 if (startQuadrant == 1)
                 {
                     if ((int)board[3, 0] == 0)
                     {
-                        ret = ([3, 0], RotateSquare(, 2, true));
+                        ret = new GameMove(3, 0, true);
                     }
                     else
                     {
-                        ret = ([5, 2], RotateSquare(, 2, true));
+                        ret = new GameMove(5, 2, 2, true);
                     }
                 }
                 if (startQuadrant == 2)
                 {
                     if ((int)board[2, 5] == 0)
                     {
-                        ret = ([2, 5], RotateSquare(, 1, true));
+                        ret = new GameMove(2, 5, 1, true);
                     }
                     else
                     {
-                        ret = ([0, 3], RotateSquare(, 1, true));
+                        ret = new GameMove(0, 3, 1, true);
                     }
                 }
                 if (startQuadrant == 3)
                 {
                     if ((int)board[3, 5] == 0)
                     {
-                        ret = ([3, 5], RotateSquare(, 0, true));
+                        ret = new GameMove(3, 5, 0 true);
                     }
                     else
                     {
-                        ret = ([5, 3], RotateSquare(, 0, true));
+                        ret = new GameMove(5, 3, 0 true);
                     }
                 }
             }
@@ -711,7 +711,7 @@ namespace PentagoAICrossP
                         yVal = 0;
                         RotateSquare(board, 1, true);
                         */
-                        ret = ([0, 0], RotateSquare(, 1, true));
+                        ret = new GameMove(0, 0, 1, true);
                     }
                     else if ((int)board[0, 2] == 0)
                     {
@@ -720,7 +720,7 @@ namespace PentagoAICrossP
                         yVal = 2;
                         RotateSquare(board, 1, true);
                         */
-                        ret = ([0, 2], RotateSquare(, 1, true));
+                        ret = new GameMove(0, 2, 1, true);
                     }
                     else
                     {
@@ -729,7 +729,7 @@ namespace PentagoAICrossP
                         yVal = 5;
                         RotateSquare(board, 2, true);
                         */
-                        ret = ([0, 5], RotateSquare(, 2, true));
+                        ret = new GameMove(0, 5, 2, true);
                     }
                 }
                 if (startQuadrant == 1)
@@ -741,7 +741,7 @@ namespace PentagoAICrossP
                         yVal = 0;
                         RotateSquare(board, 2, true);
                         */
-                        ret = ([5, 0], RotateSquare(, 2, true));
+                        ret = new GameMove(5, 0, 2, true);
                     }
                     else if ((int)board[5, 2] == 0)
                     {
@@ -750,7 +750,7 @@ namespace PentagoAICrossP
                         yVal = 2;
                         RotateSquare(board, 2, true);
                         */
-                        ret = ([5, 2], RotateSquare(, 2, true));
+                        ret = new GameMove(5, 2, 2, true);
                     }
                     else
                     {
@@ -759,7 +759,7 @@ namespace PentagoAICrossP
                         yVal = 5;
                         RotateSquare(board, 3, false);
                         */
-                        ret = ([5, 5], RotateSquare(, 3, false));
+                        ret = new GameMove(5, 5, 3, false);
                     }
                 }
                 if (startQuadrant == 2)
@@ -771,7 +771,7 @@ namespace PentagoAICrossP
                         yVal = 5;
                         RotateSquare(board, 1, true);
                         */
-                        ret = ([0, 5], RotateSquare(, 1, true));
+                        ret = new GameMove(0, 5, 1, true);
                     }
                     else if ((int)board[0, 3] == 0)
                     {
@@ -780,7 +780,7 @@ namespace PentagoAICrossP
                         yVal = 2;
                         RotateSquare(board, 1, true);
                         */
-                        ret = ([5, 2], RotateSquare(, 1, true));
+                        ret = new GameMove(5, 2, 1, true);
                     }
                     else
                     {
@@ -789,7 +789,7 @@ namespace PentagoAICrossP
                         yVal = 0;
                         RotateSquare(board, 0, false);
                         */
-                        ret = ([0, 0], RotateSquare(, 0, false));
+                        ret = new GameMove(0, 0, 0, false);
                     }
                 }
                 if (startQuadrant == 3)
@@ -801,7 +801,7 @@ namespace PentagoAICrossP
                         yVal = 5;
                         RotateSquare(board, 2, true);
                         */
-                        ret = ([5, 5], RotateSquare(, 2, true));
+                        ret = new GameMove(5, 5, 2, true);
                     }
                     else if ((int)board[5, 3] == 0)
                     {
@@ -810,7 +810,7 @@ namespace PentagoAICrossP
                         yVal = 2;
                         RotateSquare(board, 2, true);
                         */
-                        ret = ([5, 2], RotateSquare(, 2, true));
+                        ret = new GameMove(5, 2, 2, true);
                     }
                     else
                     {
@@ -819,7 +819,7 @@ namespace PentagoAICrossP
                         yVal = 0;
                         RotateSquare(board, 3, true);
                         */
-                        ret = ([5, 0], RotateSquare(, 3, true));
+                        ret = new GameMove(5, 0, 3, true);
                     }
                 }
             }
@@ -838,7 +838,7 @@ namespace PentagoAICrossP
                             yVal = 4;
                             RotateSquare(board, 2, true);
                             */
-                            ret = ([1, 4], RotateSquare(, 2, true));
+                            ret = new GameMove(1, 4, 2, true);
                         }
                         else if ((int)board[1, 4] == 10)
                         {
@@ -847,7 +847,7 @@ namespace PentagoAICrossP
                             yVal = 1;
                             RotateSquare(board, 1, true);
                             */
-                            ret = ([4, 1], RotateSquare(, 1, true));
+                            ret = new GameMove(4, 1, 1, true);
                         }
                     }
                     else if (startQuadrant == 0)
@@ -859,7 +859,7 @@ namespace PentagoAICrossP
                             yval = 1;
                             RotateSquare(board, 3, true);
                             */
-                            ret = ([2, 1], RotateSquare(, 3, true));
+                            ret = new GameMove(2, 1, 3, true);
                         }
                         else if ((int)board[1, 0] == 0)
                         {
@@ -868,7 +868,7 @@ namespace PentagoAICrossP
                             yval = 0;
                             RotateSquare(board, 0, false);
                             */
-                            ret = ([1, 0, RotateSquare(, 0, false));
+                            ret = new GameMove(1, 0, 0, false);
                         }
                         else
                         {
@@ -877,7 +877,7 @@ namespace PentagoAICrossP
                             yval = 4;
                             RotateSquare(board, 0, false);
                             */
-                            ret = ([2, 4], RotateSquare(, 0, false));
+                            ret = new GameMove(2, 4, 0, false);
                         }
                     }
                     else
@@ -889,7 +889,7 @@ namespace PentagoAICrossP
                             yval = 4;
                             RotateSquare(board, 0, true);
                             */
-                            ret = ([3, 4], RotateSquare(, 0, true));
+                            ret = new GameMove(3, 4, 0, true);
                         }
                         else if ((int)board[4, 5] == 0)
                         {
@@ -898,7 +898,7 @@ namespace PentagoAICrossP
                             yval = 5;
                             RotateSquare(board, 3, false);
                             */
-                            ret = ([4, 5], RotateSquare(, 3, false));
+                            ret = new GameMove(4, 5, 3, false);
                         }
                         else
                         {
@@ -907,7 +907,7 @@ namespace PentagoAICrossP
                             yval = 1;
                             RotateSquare(board, 0, true);
                             */
-                            ret = ([3, 1], RotateSquare(, 0, true));
+                            ret = new GameMove(3, 1, 0, true);
                         }
                     }
                 }
@@ -923,7 +923,7 @@ namespace PentagoAICrossP
                             yVal = 1;
                             RotateSquare(board, 0, true);
                             */
-                            ret = ([1, 1], RotateSquare(, 0, true));
+                            ret = new GameMove(1, 1, 0, true);
                         }
                         else if ((int)board[1, 1] == 10)
                         {
@@ -932,7 +932,7 @@ namespace PentagoAICrossP
                             yVal = 4;
                             RotateSquare(board, 3, true);
                             */
-                            ret = ([4, 4], RotateSquare(, 3, true));
+                            ret = new GameMove(4, 4, 3, true);
                         }
                     }
                     else if (startQuadrant == 1)
@@ -944,7 +944,7 @@ namespace PentagoAICrossP
                             yval = 1;
                             RotateSquare(board, 3, true);
                             */
-                            ret = ([2, 1], RotateSquare(, 3, true));
+                            ret = new GameMove(2, 1, 3, true);
                         }
                         else if ((int)board[1, 0] == 0)
                         {
@@ -953,7 +953,7 @@ namespace PentagoAICrossP
                             yval = 0;
                             RotateSquare(board, 0, false);
                             */
-                            ret = ([1, 0], RotateSquare(, 0, false));
+                            ret = new GameMove(1, 0, 0, false);
                         }
                         else
                         {
@@ -962,7 +962,7 @@ namespace PentagoAICrossP
                             yval = 4;
                             RotateSquare(board, 0, false);
                             */
-                            ret = ([2, 4], RotateSquare(, 0, false));
+                            ret = new GameMove(2, 4, 0, false);
                         }
                     }
                     else
@@ -974,7 +974,7 @@ namespace PentagoAICrossP
                             yval = 4;
                             RotateSquare(board, 0, true);
                             */
-                            ret = ([3, 4], RotateSquare(, 0, true));
+                            ret = new GameMove(3, 4, 0, true);
                         }
                         else if ((int)board[4, 5] == 0)
                         {
@@ -983,7 +983,7 @@ namespace PentagoAICrossP
                             yval = 5;
                             RotateSquare(board, 3, false);
                             */
-                            ret = ([4, 5], RotateSquare(, 3, false));
+                            ret = new GameMove(4, 5, 3, false);
                         }
                         else
                         {
@@ -992,17 +992,20 @@ namespace PentagoAICrossP
                             yval = 1;
                             RotateSquare(board, 0, true);
                             */
-                            ret = ([3, 1], RotateSquare(, 0, true));
+                            ret = new GameMove(3, 1, 0, true);
                         }
                     }
                 }
             }
             //MID GAME
-            int[,] zerthQuad = { { 2, 0 }, { 2, 1 }, { 2, 2 }, { 1, 2 }, { 0, 2 } };
-            int zthInt = GetSumFromPoints(board, zerthQuad);
-            int[int[ ,]] firstQuadrantEdges = [(int)[3, 0], (int)[3, 1], (int)[3, 2], (int)[4, 2], (int)[5, 2]];
-            int[int[ ,]] secondQuadrantEdges = [(int)[0, 3], (int)[1, 3], (int)[2, 3], (int)[2, 4], (int)[2, 5]];
-            int[int[ ,]] thirdQuadrantEdges = [(int)[5, 5], (int)[4, 5], (int)[3, 5], (int)[3, 4], (int)[3, 3]];
+            int[,] zerothQuad = { { 2, 0 }, { 2, 1 }, { 2, 2 }, { 1, 2 }, { 0, 2 } };
+            int zerothInt = GetSumFromPoints(board, zerothQuad);
+            int[,] firstQuad = { { 3, 0 }, { 3, 1 }, { 3, 2 }, { 4, 2 }, { 5, 2 } };
+            int firstInt GetSumFromPoints(board, firstQuad);
+            int[,] secondQuad = { { 0, 3 }, { 1, 3 }, { 2, 3 }, { 2, 4 }, { 2, 5 } };
+            int secondInt GetSumFromPoints(board, secondQuad);
+            int[,] thirdQuad = { { 5, 5 }, { 4, 5 }, { 3, 5 }, { 3, 4 }, { 3, 3 } };
+            int thirdInt GetSumFromPoints(board, thirdQuad);
             if (4 < turnCounter && turnCounter < 11)
             {
                 List<TupleList<int, int>> possibleWinPoints = new List<TupleList<int, int>>();
@@ -1018,81 +1021,73 @@ namespace PentagoAICrossP
                                     foreach (var point in pointArr)
                     {
 
-                        if (((-1 < point.Item1 && point.Item1 < 3) && (-1 < point.Item2 && point.Item2 < 3)) || ((4 < point.Item1 && point.Item1 < 6) && (4 < point.Item2 && point.Item2 < 6)))
+                        if (((-1 < point.Item1 && point.Item1 < 3) && (-1 < point.Item2 && point.Item2 < 3)) || ((2 < point.Item1 && point.Item1 < 6) && (2 < point.Item2 && point.Item2 < 6)))
                         {
-                            int sum1 = firstQuadrantEdges.Sum();
-                            int sum2 = secondQuadrantEdges.Sum();
-                            if (sum1 < sum2)
+                            if (firstQuad < secondQuad)
                             {
-                                ret = (temp[j], RotateSquare(, 1, false));
+                                ret = new GameMove(point.Item1, point.Item2, 1, false);
                             }
                             else
                             {
-                                ret = (temp[j], RotateSquare(, 2, false));
+                                ret = new GameMove(point.Item1, point.Item2, 2, false);
                             }
                         }
-                        else if (((4 < point.Item1 && point.Item1 < 6) && (-1 < point.Item2 && point.Item2 < 3)) || ((-1 < point.Item1 && point.Item1 < 3) && (4 < point.Item2 && point.Item2 < 6)))
+                        else if (((2 < point.Item1 && point.Item1 < 6) && (-1 < point.Item2 && point.Item2 < 3)) || ((-1 < point.Item1 && point.Item1 < 3) && (2 < point.Item2 && point.Item2 < 6)))
+                        {
+                            if (zerothInt < thirdInt)
+                            {
+                                ret = new GameMove(point.Item1, point.Item2, 0 false);
+                            }
+                            else
+                            {
+                                ret = new GameMove(point.Item1, point.Item2, 3, false);
+                            }
+                        }
+                    }
+                }
+            }
+            //LATE GAME
+            if (turnCounter > 10)
+            {
+                List<TupleList<int, int>> possibleWinPoints = new List<TupleList<int, int>>();
+                for (int i = 0; i < winValues.Length; i++)
+                {
+                    if (winValues[i] >= 23)
+                    {
+                        possibleWinPoints.Add(PointsFromWinCondition(i));
+                    }
+                }
+                foreach (var pointArr in possibleWinPoints)
+                {
+                    foreach (var point in pointArr)
+                    {
+
+                        if (((-1 < point.Item1 && point.Item1 < 3) && (-1 < point.Item2 && point.Item2 < 3)) || ((2 < point.Item1 && point.Item1 < 6) && (2 < point.Item2 && point.Item2 < 6)))
+                        {
+                            if (firstQuad > secondQuad)
+                            {
+                                ret = new GameMove(point.Item1, point.Item2, 1, true);
+                            }
+                            else
+                            {
+                                ret = new GameMove(point.Item1, point.Item2, 2, false);
+                            }
+                        }
+                        else if (((2 < point.Item1 && point.Item1 < 6) && (-1 < point.Item2 && point.Item2 < 3)) || ((-1 < point.Item1 && point.Item1 < 3) && (2 < point.Item2 && point.Item2 < 6)))
                         {
                             int sum1 = zerothQuadrantEdges.Sum();
                             int sum2 = thirdQuadrantEdges.Sum();
-                            if (sum1 < sum2)
+                            if (zerothQuad > thirdQuad)
                             {
-                                ret = (temp[j], RotateSquare(, 0, false));
+                                ret = new GameMove(point.Item1, point.Item2, 0, false);
                             }
                             else
                             {
-                                ret = (temp[j], RotateSquare(, 3, false));
+                                ret = new GameMove(point.Item1, point.Item2, 3, false);
                             }
                         }
                     }
                 }
-
-
-
-                IsGameWon(board);
-            }
-            //LATE GAME
-            if (4 < turnCounter < 11)
-            {
-                for (int i = 0; 23 < int possibleLoss; i++)
-                {
-                    possibleLoss = (int)winValues[i];
-                }
-                TupleList<int, int> possibleLossPoints = PointsFromWinCondition(i);
-                for (int j = 0; (int)temp == 0; j++)
-                {
-                    temp[j];
-                }
-                //determining rotations
-                int var1 = temp[j].Item1;
-                int var2 = temp[j].Item2;
-                if (((-1 < var1 < 3) && (-1 < var2 < 3)) || ((4 < var1 < 6) && (4 < var2 < 6)))
-                {
-                    int sum1 = firstQuadrantEdges.Sum();
-                    int sum2 = secondQuadrantEdges.Sum();
-                    if (sum1 > sum2)
-                    {
-                        ret = (temp[j], RotateSquare(, 1, true));
-                    }
-                    else
-                    {
-                        ret = (temp[j], RotateSquare(, 2, false));
-                    }
-                }
-                else if (((4 < var1 < 6) && (-1 < var2 < 3)) || ((-1 < var1 < 3) && (4 < var2 < 6)))
-                {
-                    int sum1 = zerothQuadrantEdges.Sum();
-                    int sum2 = thirdQuadrantEdges.Sum();
-                    if (sum1 > sum2)
-                    {
-                        ret = (temp[j], RotateSquare(, 0, false));
-                    }
-                    else
-                    {
-                        ret = (temp[j], RotateSquare(, 3, true));
-                    }
-                }
-                IsGameWon(board);
             }
             return ret;
         }
