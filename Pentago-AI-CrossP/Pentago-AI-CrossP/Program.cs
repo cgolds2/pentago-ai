@@ -27,9 +27,21 @@ namespace PentagoAICrossP
         static void TrackRotation(int x, String y)
         {
             if (y == "right" || y == "Right" || y == "r" || y == "R")
-                lastTurn[84 - (x * 2)] = 1;
+                TrackRotation(x, false);
             else
+                TrackRotation(x, true);
+        }
+        static void TrackRotation(int x, bool rotLeft)
+        {
+            if(rotLeft){
                 lastTurn[84 - ((x * 2) + 1)] = 1;
+
+            }
+            else
+            {
+                lastTurn[84 - (x * 2)] = 1;
+
+            }
         }
         static void UpdateTurn()
         {
@@ -422,27 +434,24 @@ namespace PentagoAICrossP
         {
             TileVals[,] gameBoard = new TileVals[6, 6];
             PrintBoard(gameBoard);
-            Console.WriteLine("Play against CPU: 1 \nPlay against another player: 2");
             bool useAI;
             while (true)
             {
-                int choice = Console.ReadLine();
+                int choice = TryGetInt("Play against CPU: 1 \nPlay against another player: 2", 1, 2);
 
-                bool UseAI = (choice == 1);
                 if (choice == 1)
                 {
-                    UseAI = true;
+                    useAI = true;
                     break;
                 }
-                else if (choice = 2)
+                else if (choice == 2)
                 {
-                    UseAI = false;
+                    useAI = false;
                     break;
                 }
                 else
                 {
                     Console.WriteLine("choice not valid");
-                    choice = Console.ReadLine();
                 }
             }
             //main game loop
@@ -463,17 +472,17 @@ namespace PentagoAICrossP
                     g = PlayerTurn(gameBoard);
                 }
 
+                gameBoard[g.xCord, g.yCord] = isXTurn ? TileVals.X : TileVals.O;
+                UpdatePoint(gameBoard, g.xCord,g.yCord);
+                TrackPlacement(g.xCord, g.yCord);
 
-                UpdatePoint(gameBoard, xVal, yVal);
-                TrackPlacement(xVal, yVal);
-
-                TrackRotation(square, rot);
+                TrackRotation(g.rotIndex, g.rotLeft);
 
                 //rotation
-                gameBoard = RotateSquare(gameBoard, square, rot.ToLower() == "left" || rot.ToLower() == "l");
+                gameBoard = RotateSquare(gameBoard, g.rotIndex, g.rotLeft);
 
 
-                UpdateRotation(gameBoard, square);
+                UpdateRotation(gameBoard, g.rotIndex);
                 UpdateTurn();
                 if (IsGameWon(gameBoard))
                 {
@@ -484,12 +493,12 @@ namespace PentagoAICrossP
             }
         }
 
-    }
+    
 
 
 
 
-    static GameMove PlayerTurn(TileVals[,])
+    static GameMove PlayerTurn(TileVals[,] gameBoard)
     {
         GameMove playerMove = new GameMove();
         //set vals to illegal by default
@@ -659,7 +668,8 @@ namespace PentagoAICrossP
     {
         int turnCounter = GetTurns().Count / 2;
         turnCounter++;
-        GameMove ret;
+            GameMove ret = new GameMove();
+            ret.rotIndex = -1;
         int startQuadrant = r.Next(4);
         //EARLY GAME
         //first turn
@@ -721,7 +731,7 @@ namespace PentagoAICrossP
             {
                 if ((int)board[3, 0] == 0)
                 {
-                    ret = new GameMove(3, 0, true);
+                    ret = new GameMove(3, 0, 0,true);
                 }
                 else
                 {
@@ -743,11 +753,11 @@ namespace PentagoAICrossP
             {
                 if ((int)board[3, 5] == 0)
                 {
-                    ret = new GameMove(3, 5, 0 true);
+                    ret = new GameMove(3, 5, 0 ,true);
                 }
                 else
                 {
-                    ret = new GameMove(5, 3, 0 true);
+                    ret = new GameMove(5, 3, 0,true);
                 }
             }
         }
@@ -1053,11 +1063,11 @@ namespace PentagoAICrossP
         int[,] zerothQuad = { { 2, 0 }, { 2, 1 }, { 2, 2 }, { 1, 2 }, { 0, 2 } };
         int zerothInt = GetSumFromPoints(board, zerothQuad);
         int[,] firstQuad = { { 3, 0 }, { 3, 1 }, { 3, 2 }, { 4, 2 }, { 5, 2 } };
-        int firstInt GetSumFromPoints(board, firstQuad);
+        int firstInt =GetSumFromPoints(board, firstQuad);
         int[,] secondQuad = { { 0, 3 }, { 1, 3 }, { 2, 3 }, { 2, 4 }, { 2, 5 } };
-        int secondInt GetSumFromPoints(board, secondQuad);
+        int secondInt =GetSumFromPoints(board, secondQuad);
         int[,] thirdQuad = { { 5, 5 }, { 4, 5 }, { 3, 5 }, { 3, 4 }, { 3, 3 } };
-        int thirdInt GetSumFromPoints(board, thirdQuad);
+        int thirdInt =GetSumFromPoints(board, thirdQuad);
         if (4 < turnCounter && turnCounter < 11)
         {
             List<TupleList<int, int>> possibleWinPoints = new List<TupleList<int, int>>();
@@ -1075,7 +1085,7 @@ namespace PentagoAICrossP
 
                     if (((-1 < point.Item1 && point.Item1 < 3) && (-1 < point.Item2 && point.Item2 < 3)) || ((2 < point.Item1 && point.Item1 < 6) && (2 < point.Item2 && point.Item2 < 6)))
                     {
-                        if (firstQuad < secondQuad)
+                        if (firstInt < secondInt)
                         {
                             ret = new GameMove(point.Item1, point.Item2, 1, false);
                         }
@@ -1088,7 +1098,7 @@ namespace PentagoAICrossP
                     {
                         if (zerothInt < thirdInt)
                         {
-                            ret = new GameMove(point.Item1, point.Item2, 0 false);
+                            ret = new GameMove(point.Item1, point.Item2, 0 ,false);
                         }
                         else
                         {
@@ -1116,7 +1126,7 @@ namespace PentagoAICrossP
 
                     if (((-1 < point.Item1 && point.Item1 < 3) && (-1 < point.Item2 && point.Item2 < 3)) || ((2 < point.Item1 && point.Item1 < 6) && (2 < point.Item2 && point.Item2 < 6)))
                     {
-                        if (firstQuad > secondQuad)
+                        if (firstInt > secondInt)
                         {
                             ret = new GameMove(point.Item1, point.Item2, 1, true);
                         }
@@ -1127,9 +1137,8 @@ namespace PentagoAICrossP
                     }
                     else if (((2 < point.Item1 && point.Item1 < 6) && (-1 < point.Item2 && point.Item2 < 3)) || ((-1 < point.Item1 && point.Item1 < 3) && (2 < point.Item2 && point.Item2 < 6)))
                     {
-                        int sum1 = zerothQuadrantEdges.Sum();
-                        int sum2 = thirdQuadrantEdges.Sum();
-                        if (zerothQuad > thirdQuad)
+                        
+                        if (zerothInt > thirdInt)
                         {
                             ret = new GameMove(point.Item1, point.Item2, 0, false);
                         }
@@ -1141,6 +1150,9 @@ namespace PentagoAICrossP
                 }
             }
         }
+            if(ret.rotIndex == -1){
+                throw new Exception("Ret was never initalized in the heuristic");
+            }
         return ret;
     }
 
@@ -1285,7 +1297,11 @@ public class GameMove
     public int rotIndex;
     public bool rotLeft;
 
-    public GameMove(int xCord, int yCord, int rotIndex, bool rotLeft)
+        public GameMove()
+        {
+        }
+
+        public GameMove(int xCord, int yCord, int rotIndex, bool rotLeft)
     {
         this.xCord = xCord;
         this.yCord = yCord;
