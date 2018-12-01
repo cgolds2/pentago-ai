@@ -33,7 +33,8 @@ namespace PentagoAICrossP
         }
         static void TrackRotation(int x, bool rotLeft)
         {
-            if(rotLeft){
+            if (rotLeft)
+            {
                 lastTurn[84 - ((x * 2) + 1)] = 1;
 
             }
@@ -190,14 +191,14 @@ namespace PentagoAICrossP
             if (y != 0)
             {
                 //update topmost to bot
-                TileVals[] yTiles = CustomArray<TileVals>.GetColumnMinusFirst(board, y);
+                TileVals[] yTiles = CustomArray<TileVals>.GetColumnMinusFirst(board, x);
                 var ySum = Array.ConvertAll(yTiles, value => (int)value).Sum();
                 winValues[12 + x * 2] = ySum;
             }
             if (y != 5)
             {
                 //update top to botmost
-                TileVals[] yTiles = CustomArray<TileVals>.GetColumnMinusLast(board, y);
+                TileVals[] yTiles = CustomArray<TileVals>.GetColumnMinusLast(board, x);
                 var ySum = Array.ConvertAll(yTiles, value => (int)value).Sum();
                 winValues[12 + x * 2 + 1] = ySum;
             }
@@ -364,6 +365,27 @@ namespace PentagoAICrossP
             }
 
         }
+
+        static int GetQuadFromPoint(int x, int y)
+        {
+            if (x <= 2 && y <= 2)
+            {
+                return 0;
+            }
+            else if (x <= 2)
+            {
+                return 2;
+            }
+            else if (y <= 2)
+            {
+                return 1;
+            }
+            else
+            {
+                return 3;
+            }
+        }
+
         static void UpdateOther(TileVals[,] board, int quad)
         {
             switch (quad)
@@ -471,9 +493,9 @@ namespace PentagoAICrossP
                 {
                     g = PlayerTurn(gameBoard);
                 }
-
+              
                 gameBoard[g.xCord, g.yCord] = isXTurn ? TileVals.X : TileVals.O;
-                UpdatePoint(gameBoard, g.xCord,g.yCord);
+                UpdatePoint(gameBoard, g.xCord, g.yCord);
                 TrackPlacement(g.xCord, g.yCord);
 
                 TrackRotation(g.rotIndex, g.rotLeft);
@@ -493,820 +515,855 @@ namespace PentagoAICrossP
             }
         }
 
-    
 
 
 
 
-    static GameMove PlayerTurn(TileVals[,] gameBoard)
-    {
-        GameMove playerMove = new GameMove();
-        //set vals to illegal by default
-        var xVal = -1;
-        var yVal = -1;
-        while (true)
+
+        static GameMove PlayerTurn(TileVals[,] gameBoard)
         {
-            xVal = TryGetInt("x value", 0, 5);
-            yVal = TryGetInt("y value", 0, 5);
-            //make sure the value selected is actually open
-            if (gameBoard[xVal, yVal] != TileVals.Blank)
+            GameMove playerMove = new GameMove();
+            //set vals to illegal by default
+            var xVal = -1;
+            var yVal = -1;
+            while (true)
             {
-                PrintBoard(gameBoard);
-                Console.WriteLine("Square already taken\n");
-            }
-            else
-            {
-                break;
-            }
-        }
-        //place an X or O depending on whos turn it is
-        playerMove.xCord = xVal;
-        playerMove.yCord = yVal;
-
-        int square = TryGetInt("index of square to rotate:\n0 1\n2 3", 0, 3);
-        string rot = "";
-        Console.WriteLine("Enter (L)eft or (R)ight for rotation");
-        rot = Console.ReadLine();
-
-        //list of valid values for rotation
-        var rotationInput = new List<string> { "right", "left", "r", "l" };
-
-        while (!rotationInput.Contains(rot.ToLower()))
-        {
-            Console.WriteLine("rotate not valid");
-            rot = Console.ReadLine();
-        }
-
-        Console.WriteLine("You entered " + rot);
-        playerMove.rotIndex = square;
-        playerMove.rotLeft = (rot.ToLower() == "left" || rot.ToLower() == "l");
-        return playerMove;
-    }
-
-
-
-    static int SumDiag(TileVals[,] board, TupleList<int, int> diags)
-    {
-        int retVal = 0;
-
-        foreach (var item in diags)
-        {
-            retVal += (int)board[item.Item1, item.Item2];
-        }
-        return retVal;
-    }
-    static TupleList<int, int> DiagFromPoint(int x, int y, bool leftToRight)
-    {
-        var diag = new TupleList<int, int>();
-        diag.Add(x, y);
-        for (int i = 0; i < 4; i++)
-        {
-            x = leftToRight ? x + 1 : x - 1;
-            y++;
-            diag.Add(x, y);
-        }
-        return diag;
-
-    }
-    static TileVals[,] RotateBoard(TileVals[,] board, int n)
-    {
-        TileVals[,] ret = new TileVals[n, n];
-        for (int i = 0; i < n; i++)
-        {
-            for (int j = 0; j < n; j++)
-            {
-                ret[i, j] = board[n - j - 1, i];
-            }
-        }
-        return ret;
-    }
-    static bool IsGameWon(TileVals[,] board)
-    {
-        bool didXWin = false;
-        bool didOWin = false;
-        foreach (var item in winValues)
-        {
-            if (item == 50)
-            {
-                didOWin = true;
-                Console.WriteLine("O won");
-            }
-            if (item == 5)
-            {
-                didXWin = true;
-                Console.WriteLine("X won");
-            }
-        }
-
-        return didXWin || didOWin;
-    }
-    static void PrintBoard(TileVals[,] board)
-    {
-        Console.Clear();
-        Console.WriteLine("   0 1 2     3 4 5");
-        for (int i = 0; i < 6; i++)
-        {
-            for (int j = 0; j < 6; j++)
-            {
-                if (j == 0)
+                xVal = TryGetInt("x value", 0, 5);
+                yVal = TryGetInt("y value", 0, 5);
+                //make sure the value selected is actually open
+                if (gameBoard[xVal, yVal] != TileVals.Blank)
                 {
-                    Console.Write(i + " ");
+                    PrintBoard(gameBoard);
+                    Console.WriteLine("Square already taken\n");
                 }
-                if (j == 3)
-                {
-                    Console.Write("|   ");
-
-                }
-                Console.Write("|" + TileToString(board[j, i]));
-            }
-            Console.WriteLine("|");
-            if (i == 2)
-            {
-                Console.WriteLine("");
-            }
-        }
-        Console.WriteLine("\n--------------");
-        Console.WriteLine((isXTurn ? "Player 1" : "Player 2") + "'s turn");
-        Console.WriteLine("--------------\n");
-    }
-    static int TryGetInt(string prompt, int min, int max)
-    {
-        int ret;
-        Console.WriteLine("Enter " + prompt);
-        while (true)
-        {
-            bool successfullyParsed = int.TryParse(Console.ReadLine(), out ret);
-            if (successfullyParsed)
-            {
-                if (ret >= min && ret <= max)
+                else
                 {
                     break;
                 }
             }
-            Console.WriteLine("Enter valid " + prompt);
+            //place an X or O depending on whos turn it is
+            playerMove.xCord = xVal;
+            playerMove.yCord = yVal;
+
+            int square = TryGetInt("index of square to rotate:\n0 1\n2 3", 0, 3);
+            string rot = "";
+            Console.WriteLine("Enter (L)eft or (R)ight for rotation");
+            rot = Console.ReadLine();
+
+            //list of valid values for rotation
+            var rotationInput = new List<string> { "right", "left", "r", "l" };
+
+            while (!rotationInput.Contains(rot.ToLower()))
+            {
+                Console.WriteLine("rotate not valid");
+                rot = Console.ReadLine();
+            }
+
+            Console.WriteLine("You entered " + rot);
+            playerMove.rotIndex = square;
+            playerMove.rotLeft = (rot.ToLower() == "left" || rot.ToLower() == "l");
+            return playerMove;
         }
-        Console.WriteLine("You entered " + ret);
-        return ret;
-    }
-    static string TileToString(TileVals t)
-    {
-        switch (t)
+
+
+
+        static int SumDiag(TileVals[,] board, TupleList<int, int> diags)
         {
-            case TileVals.X:
-                return "X";
-            case TileVals.O:
-                return "O";
-            case TileVals.Blank:
-                return " ";
-            default:
-                return "error";
+            int retVal = 0;
+
+            foreach (var item in diags)
+            {
+                retVal += (int)board[item.Item1, item.Item2];
+            }
+            return retVal;
         }
-    }
-    static Random r = new Random();
+        static TupleList<int, int> DiagFromPoint(int x, int y, bool leftToRight)
+        {
+            var diag = new TupleList<int, int>();
+            diag.Add(x, y);
+            for (int i = 0; i < 4; i++)
+            {
+                x = leftToRight ? x + 1 : x - 1;
+                y++;
+                diag.Add(x, y);
+            }
+            return diag;
+
+        }
+        static TileVals[,] RotateBoard(TileVals[,] board, int n)
+        {
+            TileVals[,] ret = new TileVals[n, n];
+            for (int i = 0; i < n; i++)
+            {
+                for (int j = 0; j < n; j++)
+                {
+                    ret[i, j] = board[n - j - 1, i];
+                }
+            }
+            return ret;
+        }
+        static bool IsGameWon(TileVals[,] board)
+        {
+            bool didXWin = false;
+            bool didOWin = false;
+            foreach (var item in winValues)
+            {
+                if (item == 50)
+                {
+                    didOWin = true;
+                    Console.WriteLine("O won");
+                }
+                if (item == 5)
+                {
+                    didXWin = true;
+                    Console.WriteLine("X won");
+                }
+            }
+
+            return didXWin || didOWin;
+        }
+        static void PrintBoard(TileVals[,] board)
+        {
+            Console.Clear();
+            Console.WriteLine("   0 1 2     3 4 5");
+            for (int i = 0; i < 6; i++)
+            {
+                for (int j = 0; j < 6; j++)
+                {
+                    if (j == 0)
+                    {
+                        Console.Write(i + " ");
+                    }
+                    if (j == 3)
+                    {
+                        Console.Write("|   ");
+
+                    }
+                    Console.Write("|" + TileToString(board[j, i]));
+                }
+                Console.WriteLine("|");
+                if (i == 2)
+                {
+                    Console.WriteLine("");
+                }
+            }
+            Console.WriteLine("\n--------------");
+            Console.WriteLine((isXTurn ? "Player 1" : "Player 2") + "'s turn");
+            Console.WriteLine("--------------\n");
+        }
+        static int TryGetInt(string prompt, int min, int max)
+        {
+            int ret;
+            Console.WriteLine("Enter " + prompt);
+            while (true)
+            {
+                bool successfullyParsed = int.TryParse(Console.ReadLine(), out ret);
+                if (successfullyParsed)
+                {
+                    if (ret >= min && ret <= max)
+                    {
+                        break;
+                    }
+                }
+                Console.WriteLine("Enter valid " + prompt);
+            }
+            Console.WriteLine("You entered " + ret);
+            return ret;
+        }
+        static string TileToString(TileVals t)
+        {
+            switch (t)
+            {
+                case TileVals.X:
+                    return "X";
+                case TileVals.O:
+                    return "O";
+                case TileVals.Blank:
+                    return " ";
+                default:
+                    return "error";
+            }
+        }
+        static Random r = new Random();
         static int startQuadrant = -1;
-    static GameMove PentagoHeuristic(TileVals[,] board)
-    {
-        int turnCounter = GetTurns().Count / 2;
-        turnCounter++;
+        static GameMove PentagoHeuristic(TileVals[,] board)
+        {
+
+            for (int i = 0; i < winValues.Length; i++)
+            {
+                if (winValues[i] == 4 || winValues[i] == 40)
+                {
+                    var points = PointsFromWinCondition(i);
+                    foreach (var item in points)
+                    {
+                        if (board[item.Item1, item.Item2] == TileVals.Blank)
+                        {
+                            int quad = GetQuadFromPoint(item.Item1, item.Item2);
+                            return new GameMove(item.Item1, item.Item2, quad, false);
+                        }
+
+                    }
+                }
+            }
+            int turnCounter = GetTurns().Count / 2;
+            turnCounter++;
             GameMove ret = new GameMove();
             ret.rotIndex = -1;
-        //EARLY GAME
-        //first turn
-        if (turnCounter == 1)
-        {
+            //EARLY GAME
+            //first turn
+            if (turnCounter == 1)
+            {
                 startQuadrant = r.Next(4);
-            if (startQuadrant == 0)
-            {
-                /*
-                xVal = 2;
-                yVal = 2;
-                RotateSquare(board, 3, true);
-                */
-                ret = new GameMove(2, 2, 3, true);
-            }
-            else if (startQuadrant == 1)
-            {
-                /*
-                xVal = 3;
-                yVal = 2;
-                RotateSquare(board, 2, true);
-                */
-                ret = new GameMove(3, 2, 2, true);
-            }
-            else if (startQuadrant == 2)
-            {
-                /*
-                xVal = 2;
-                yVal = 3;
-                RotateSquare(board, 1, true);
-                */
-                ret = new GameMove(2, 3, 1, true);
-            }
-            else if (startQuadrant == 3)
-            {
-                /*
-                xVal = 3;
-                yVal = 3;
-                RotateSquare(board, 0, true);
-                */
-                ret = new GameMove(3, 3, 0, true);
-            }
-        }
-        //second turn
-        if (turnCounter == 2)
-        {
-            if (startQuadrant == 0)
-            {
-                if ((int)board[2, 0] == 0)
-                {
-                    ret = new GameMove(2, 0, 3, true);
-                }
-                else
-                {
-                    ret = new GameMove(0, 2, 3, true);
-                }
-            }
-            if (startQuadrant == 1)
-            {
-                if ((int)board[3, 0] == 0)
-                {
-                    ret = new GameMove(3, 0, 0,true);
-                }
-                else
-                {
-                    ret = new GameMove(5, 2, 2, true);
-                }
-            }
-            if (startQuadrant == 2)
-            {
-                if ((int)board[2, 5] == 0)
-                {
-                    ret = new GameMove(2, 5, 1, true);
-                }
-                else
-                {
-                    ret = new GameMove(0, 3, 1, true);
-                }
-            }
-            if (startQuadrant == 3)
-            {
-                if ((int)board[3, 5] == 0)
-                {
-                    ret = new GameMove(3, 5, 0 ,true);
-                }
-                else
-                {
-                    ret = new GameMove(5, 3, 0,true);
-                }
-            }
-        }
-        //third turn
-        if (turnCounter == 3)
-        {
-            if (startQuadrant == 0)
-            {
-                if ((int)board[0, 0] == 0)
+                if (startQuadrant == 0)
                 {
                     /*
-                    xVal = 0;
-                    yVal = 0;
-                    RotateSquare(board, 1, true);
-                    */
-                    ret = new GameMove(0, 0, 1, true);
-                }
-                else if ((int)board[0, 2] == 0)
-                {
-                    /*
-                    xVal = 0;
+                    xVal = 2;
                     yVal = 2;
-                    RotateSquare(board, 1, true);
-                    */
-                    ret = new GameMove(0, 2, 1, true);
-                }
-                else
-                {
-                    /*
-                    xVal = 0;
-                    yVal = 5;
-                    RotateSquare(board, 2, true);
-                    */
-                    ret = new GameMove(0, 5, 2, true);
-                }
-            }
-            if (startQuadrant == 1)
-            {
-                if ((int)board[5, 0] == 0)
-                {
-                    /*
-                    xVal = 5;
-                    yVal = 0;
-                    RotateSquare(board, 2, true);
-                    */
-                    ret = new GameMove(5, 0, 2, true);
-                }
-                else if ((int)board[5, 2] == 0)
-                {
-                    /*
-                    xVal = 5;
-                    yVal = 2;
-                    RotateSquare(board, 2, true);
-                    */
-                    ret = new GameMove(5, 2, 2, true);
-                }
-                else
-                {
-                    /*
-                    xVal = 5;
-                    yVal = 5;
-                    RotateSquare(board, 3, false);
-                    */
-                    ret = new GameMove(5, 5, 3, false);
-                }
-            }
-            if (startQuadrant == 2)
-            {
-                if ((int)board[0, 5] == 0)
-                {
-                    /*
-                    xVal = 0;
-                    yVal = 5;
-                    RotateSquare(board, 1, true);
-                    */
-                    ret = new GameMove(0, 5, 1, true);
-                }
-                else if ((int)board[0, 3] == 0)
-                {
-                    /*
-                    xVal = 5;
-                    yVal = 2;
-                    RotateSquare(board, 1, true);
-                    */
-                    ret = new GameMove(5, 2, 1, true);
-                }
-                else
-                {
-                    /*
-                    xVal = 0;
-                    yVal = 0;
-                    RotateSquare(board, 0, false);
-                    */
-                    ret = new GameMove(0, 0, 0, false);
-                }
-            }
-            if (startQuadrant == 3)
-            {
-                if ((int)board[5, 5] == 0)
-                {
-                    /*
-                    xVal = 5;
-                    yVal = 5;
-                    RotateSquare(board, 2, true);
-                    */
-                    ret = new GameMove(5, 5, 2, true);
-                }
-                else if ((int)board[5, 3] == 0)
-                {
-                    /*
-                    xVal = 5;
-                    yVal = 2;
-                    RotateSquare(board, 2, true);
-                    */
-                    ret = new GameMove(5, 2, 2, true);
-                }
-                else
-                {
-                    /*
-                    xVal = 5;
-                    yVal = 0;
                     RotateSquare(board, 3, true);
                     */
-                    ret = new GameMove(5, 0, 3, true);
+                    ret = new GameMove(2, 2, 3, true);
+                }
+                else if (startQuadrant == 1)
+                {
+                    /*
+                    xVal = 3;
+                    yVal = 2;
+                    RotateSquare(board, 2, true);
+                    */
+                    ret = new GameMove(3, 2, 2, true);
+                }
+                else if (startQuadrant == 2)
+                {
+                    /*
+                    xVal = 2;
+                    yVal = 3;
+                    RotateSquare(board, 1, true);
+                    */
+                    ret = new GameMove(2, 3, 1, true);
+                }
+                else if (startQuadrant == 3)
+                {
+                    /*
+                    xVal = 3;
+                    yVal = 3;
+                    RotateSquare(board, 0, true);
+                    */
+                    ret = new GameMove(3, 3, 0, true);
                 }
             }
-        }
-        //fourth turn
-        if (turnCounter == 4)
-        {
-            if (startQuadrant == 0 || startQuadrant == 3)
+            //second turn
+            else if (turnCounter == 2)
             {
-                //half of diagonal edge cases
-                if ((int)board[3, 2] + (int)board[2, 3] == 20)
+                if (startQuadrant == 0)
                 {
-                    if ((int)board[4, 1] == 10)
+                    if ((int)board[2, 0] == 0)
                     {
-                        /*
-                        xVal = 1;
-                        yVal = 4;
-                        RotateSquare(board, 2, true);
-                        */
-                        ret = new GameMove(1, 4, 2, true);
+                        ret = new GameMove(2, 0, 3, true);
                     }
-                    else if ((int)board[1, 4] == 10)
+                    else
                     {
-                        /*
-                        xVal = 4;
-                        yVal = 1;
-                        RotateSquare(board, 1, true);
-                        */
-                        ret = new GameMove(4, 1, 1, true);
+                        ret = new GameMove(0, 2, 3, true);
                     }
                 }
-                else if (startQuadrant == 0)
+                if (startQuadrant == 1)
                 {
-                    if ((int)board[2, 1] == 0)
+                    if ((int)board[3, 0] == 0)
                     {
-                        /*
-                        xVal = 2;
-                        yval = 1;
-                        RotateSquare(board, 3, true);
-                        */
-                        ret = new GameMove(2, 1, 3, true);
+                        ret = new GameMove(3, 0, 0, true);
                     }
-                    else if ((int)board[1, 0] == 0)
+                    else
+                    {
+                        ret = new GameMove(5, 2, 2, true);
+                    }
+                }
+                if (startQuadrant == 2)
+                {
+                    if ((int)board[2, 5] == 0)
+                    {
+                        ret = new GameMove(2, 5, 1, true);
+                    }
+                    else
+                    {
+                        ret = new GameMove(0, 3, 1, true);
+                    }
+                }
+                if (startQuadrant == 3)
+                {
+                    if ((int)board[3, 5] == 0)
+                    {
+                        ret = new GameMove(3, 5, 0, true);
+                    }
+                    else
+                    {
+                        ret = new GameMove(5, 3, 0, true);
+                    }
+                }
+            }
+            //third turn
+            else if (turnCounter == 3)
+            {
+                if (startQuadrant == 0)
+                {
+                    if ((int)board[0, 0] == 0)
                     {
                         /*
-                        xVal = 1;
-                        yval = 0;
-                        RotateSquare(board, 0, false);
+                        xVal = 0;
+                        yVal = 0;
+                        RotateSquare(board, 1, true);
                         */
-                        ret = new GameMove(1, 0, 0, false);
+                        ret = new GameMove(0, 0, 1, true);
+                    }
+                    else if ((int)board[0, 2] == 0)
+                    {
+                        /*
+                        xVal = 0;
+                        yVal = 2;
+                        RotateSquare(board, 1, true);
+                        */
+                        ret = new GameMove(0, 2, 1, true);
                     }
                     else
                     {
                         /*
-                        xVal = 2;
-                        yval = 4;
+                        xVal = 0;
+                        yVal = 5;
+                        RotateSquare(board, 2, true);
+                        */
+                        ret = new GameMove(0, 5, 2, true);
+                    }
+                }
+                if (startQuadrant == 1)
+                {
+                    if ((int)board[5, 0] == 0)
+                    {
+                        /*
+                        xVal = 5;
+                        yVal = 0;
+                        RotateSquare(board, 2, true);
+                        */
+                        ret = new GameMove(5, 0, 2, true);
+                    }
+                    else if ((int)board[5, 2] == 0)
+                    {
+                        /*
+                        xVal = 5;
+                        yVal = 2;
+                        RotateSquare(board, 2, true);
+                        */
+                        ret = new GameMove(5, 2, 2, true);
+                    }
+                    else
+                    {
+                        /*
+                        xVal = 5;
+                        yVal = 5;
+                        RotateSquare(board, 3, false);
+                        */
+                        ret = new GameMove(5, 5, 3, false);
+                    }
+                }
+                if (startQuadrant == 2)
+                {
+                    if ((int)board[0, 5] == 0)
+                    {
+                        /*
+                        xVal = 0;
+                        yVal = 5;
+                        RotateSquare(board, 1, true);
+                        */
+                        ret = new GameMove(0, 5, 1, true);
+                    }
+                    else if ((int)board[0, 3] == 0)
+                    {
+                        /*
+                        xVal = 5;
+                        yVal = 2;
+                        RotateSquare(board, 1, true);
+                        */
+                        ret = new GameMove(5, 2, 1, true);
+                    }
+                    else
+                    {
+                        /*
+                        xVal = 0;
+                        yVal = 0;
                         RotateSquare(board, 0, false);
                         */
-                        ret = new GameMove(2, 4, 0, false);
+                        ret = new GameMove(0, 0, 0, false);
+                    }
+                }
+                if (startQuadrant == 3)
+                {
+                    if ((int)board[5, 5] == 0)
+                    {
+                        /*
+                        xVal = 5;
+                        yVal = 5;
+                        RotateSquare(board, 2, true);
+                        */
+                        ret = new GameMove(5, 5, 2, true);
+                    }
+                    else if ((int)board[5, 3] == 0)
+                    {
+                        /*
+                        xVal = 5;
+                        yVal = 2;
+                        RotateSquare(board, 2, true);
+                        */
+                        ret = new GameMove(5, 2, 2, true);
+                    }
+                    else
+                    {
+                        /*
+                        xVal = 5;
+                        yVal = 0;
+                        RotateSquare(board, 3, true);
+                        */
+                        ret = new GameMove(5, 0, 3, true);
+                    }
+                }
+            }
+            //fourth turn
+            else if (turnCounter == 4)
+            {
+                if (startQuadrant == 0 || startQuadrant == 3)
+                {
+                    //half of diagonal edge cases
+                    if ((int)board[3, 2] + (int)board[2, 3] == 20)
+                    {
+                        if ((int)board[4, 1] == 10)
+                        {
+                            /*
+                            xVal = 1;
+                            yVal = 4;
+                            RotateSquare(board, 2, true);
+                            */
+                            ret = new GameMove(1, 4, 2, true);
+                        }
+                        else if ((int)board[1, 4] == 10)
+                        {
+                            /*
+                            xVal = 4;
+                            yVal = 1;
+                            RotateSquare(board, 1, true);
+                            */
+                            ret = new GameMove(4, 1, 1, true);
+                        }
+                    }
+                    else if (startQuadrant == 0)
+                    {
+                        if ((int)board[2, 1] == 0)
+                        {
+                            /*
+                            xVal = 2;
+                            yval = 1;
+                            RotateSquare(board, 3, true);
+                            */
+                            ret = new GameMove(2, 1, 3, true);
+                        }
+                        else if ((int)board[1, 0] == 0)
+                        {
+                            /*
+                            xVal = 1;
+                            yval = 0;
+                            RotateSquare(board, 0, false);
+                            */
+                            ret = new GameMove(1, 0, 0, false);
+                        }
+                        else
+                        {
+                            /*
+                            xVal = 2;
+                            yval = 4;
+                            RotateSquare(board, 0, false);
+                            */
+                            ret = new GameMove(2, 4, 0, false);
+                        }
+                    }
+                    else
+                    {
+                        if ((int)board[3, 4] == 0)
+                        {
+                            /*
+                            xVal = 3;
+                            yval = 4;
+                            RotateSquare(board, 0, true);
+                            */
+                            ret = new GameMove(3, 4, 0, true);
+                        }
+                        else if ((int)board[4, 5] == 0)
+                        {
+                            /*
+                            xVal = 4;
+                            yval = 5;
+                            RotateSquare(board, 3, false);
+                            */
+                            ret = new GameMove(4, 5, 3, false);
+                        }
+                        else
+                        {
+                            /*
+                            xVal = 3;
+                            yval = 1;
+                            RotateSquare(board, 0, true);
+                            */
+                            ret = new GameMove(3, 1, 0, true);
+                        }
                     }
                 }
                 else
                 {
-                    if ((int)board[3, 4] == 0)
+                    //second half of diagonal edge cases
+                    if ((int)board[2, 2] + (int)board[3, 3] == 20)
                     {
-                        /*
-                        xVal = 3;
-                        yval = 4;
-                        RotateSquare(board, 0, true);
-                        */
-                        ret = new GameMove(3, 4, 0, true);
+                        if ((int)board[4, 4] == 10)
+                        {
+                            /*
+                            xVal = 1;
+                            yVal = 1;
+                            RotateSquare(board, 0, true);
+                            */
+                            ret = new GameMove(1, 1, 0, true);
+                        }
+                        else if ((int)board[1, 1] == 10)
+                        {
+                            /*
+                            xVal = 4;
+                            yVal = 4;
+                            RotateSquare(board, 3, true);
+                            */
+                            ret = new GameMove(4, 4, 3, true);
+                        }
                     }
-                    else if ((int)board[4, 5] == 0)
+                    else if (startQuadrant == 1)
                     {
-                        /*
-                        xVal = 4;
-                        yval = 5;
-                        RotateSquare(board, 3, false);
-                        */
-                        ret = new GameMove(4, 5, 3, false);
+                        if ((int)board[2, 1] == 0)
+                        {
+                            /*
+                            xVal = 2;
+                            yval = 1;
+                            RotateSquare(board, 3, true);
+                            */
+                            ret = new GameMove(2, 1, 3, true);
+                        }
+                        else if ((int)board[1, 0] == 0)
+                        {
+                            /*
+                            xVal = 1;
+                            yval = 0;
+                            RotateSquare(board, 0, false);
+                            */
+                            ret = new GameMove(1, 0, 0, false);
+                        }
+                        else
+                        {
+                            /*
+                            xVal = 2;
+                            yval = 4;
+                            RotateSquare(board, 0, false);
+                            */
+                            ret = new GameMove(2, 4, 0, false);
+                        }
                     }
                     else
                     {
-                        /*
-                        xVal = 3;
-                        yval = 1;
-                        RotateSquare(board, 0, true);
-                        */
-                        ret = new GameMove(3, 1, 0, true);
+                        if ((int)board[3, 4] == 0)
+                        {
+                            /*
+                            xVal = 3;
+                            yval = 4;
+                            RotateSquare(board, 0, true);
+                            */
+                            ret = new GameMove(3, 4, 0, true);
+                        }
+                        else if ((int)board[4, 5] == 0)
+                        {
+                            /*
+                            xVal = 4;
+                            yval = 5;
+                            RotateSquare(board, 3, false);
+                            */
+                            ret = new GameMove(4, 5, 3, false);
+                        }
+                        else
+                        {
+                            /*
+                            xVal = 3;
+                            yval = 1;
+                            RotateSquare(board, 0, true);
+                            */
+                            ret = new GameMove(3, 1, 0, true);
+                        }
                     }
                 }
             }
             else
             {
-                //second half of diagonal edge cases
-                if ((int)board[2, 2] + (int)board[3, 3] == 20)
+
+
+
+
+                    int[,] zerothQuad = { { 2, 0 }, { 2, 1 }, { 2, 2 }, { 1, 2 }, { 0, 2 } };
+                    int zerothInt = GetSumFromPoints(board, zerothQuad);
+                    int[,] firstQuad = { { 3, 0 }, { 3, 1 }, { 3, 2 }, { 4, 2 }, { 5, 2 } };
+                    int firstInt = GetSumFromPoints(board, firstQuad);
+                    int[,] secondQuad = { { 0, 3 }, { 1, 3 }, { 2, 3 }, { 2, 4 }, { 2, 5 } };
+                    int secondInt = GetSumFromPoints(board, secondQuad);
+                    int[,] thirdQuad = { { 5, 5 }, { 4, 5 }, { 3, 5 }, { 3, 4 }, { 3, 3 } };
+                    int thirdInt = GetSumFromPoints(board, thirdQuad);
+                if (turnCounter < 11)
                 {
-                    if ((int)board[4, 4] == 10)
+                    if (4 < turnCounter && turnCounter < 11)
                     {
-                        /*
-                        xVal = 1;
-                        yVal = 1;
-                        RotateSquare(board, 0, true);
-                        */
-                        ret = new GameMove(1, 1, 0, true);
-                    }
-                    else if ((int)board[1, 1] == 10)
-                    {
-                        /*
-                        xVal = 4;
-                        yVal = 4;
-                        RotateSquare(board, 3, true);
-                        */
-                        ret = new GameMove(4, 4, 3, true);
+                        List<TupleList<int, int>> possibleWinPoints = new List<TupleList<int, int>>();
+                        for (int i = 0; i < winValues.Length; i++)
+                        {
+                            if (winValues[i] >= 2 && winValues[i] <= 23)
+                            {
+                                possibleWinPoints.Add(PointsFromWinCondition(i));
+                            }
+                        }
+                        foreach (var pointArr in possibleWinPoints)
+                        {
+                            foreach (var point in pointArr)
+                            {
+                                if(board[point.Item1,point.Item2] != TileVals.Blank){
+                                    continue;
+                                }
+                                if (((-1 < point.Item1 && point.Item1 < 3) && (-1 < point.Item2 && point.Item2 < 3)) || ((2 < point.Item1 && point.Item1 < 6) && (2 < point.Item2 && point.Item2 < 6)))
+                                {
+                                    if (firstInt < secondInt)
+                                    {
+                                        ret = new GameMove(point.Item1, point.Item2, 1, false);
+                                    }
+                                    else
+                                    {
+                                        ret = new GameMove(point.Item1, point.Item2, 2, false);
+                                    }
+                                }
+                                else if (((2 < point.Item1 && point.Item1 < 6) && (-1 < point.Item2 && point.Item2 < 3)) || ((-1 < point.Item1 && point.Item1 < 3) && (2 < point.Item2 && point.Item2 < 6)))
+                                {
+                                    if (zerothInt < thirdInt)
+                                    {
+                                        ret = new GameMove(point.Item1, point.Item2, 0, false);
+                                    }
+                                    else
+                                    {
+                                        ret = new GameMove(point.Item1, point.Item2, 3, false);
+                                    }
+                                }
+                            }
+                        }
                     }
                 }
-                else if (startQuadrant == 1)
-                {
-                    if ((int)board[2, 1] == 0)
-                    {
-                        /*
-                        xVal = 2;
-                        yval = 1;
-                        RotateSquare(board, 3, true);
-                        */
-                        ret = new GameMove(2, 1, 3, true);
-                    }
-                    else if ((int)board[1, 0] == 0)
-                    {
-                        /*
-                        xVal = 1;
-                        yval = 0;
-                        RotateSquare(board, 0, false);
-                        */
-                        ret = new GameMove(1, 0, 0, false);
-                    }
-                    else
-                    {
-                        /*
-                        xVal = 2;
-                        yval = 4;
-                        RotateSquare(board, 0, false);
-                        */
-                        ret = new GameMove(2, 4, 0, false);
-                    }
-                }
+                //LATE GAME
+
                 else
                 {
-                    if ((int)board[3, 4] == 0)
+                    List<TupleList<int, int>> possibleWinPoints = new List<TupleList<int, int>>();
+                    for (int i = 0; i < winValues.Length; i++)
                     {
-                        /*
-                        xVal = 3;
-                        yval = 4;
-                        RotateSquare(board, 0, true);
-                        */
-                        ret = new GameMove(3, 4, 0, true);
+                        if (winValues[i] >= 23)
+                        {
+                            possibleWinPoints.Add(PointsFromWinCondition(i));
+                        }
                     }
-                    else if ((int)board[4, 5] == 0)
+                    foreach (var pointArr in possibleWinPoints)
                     {
-                        /*
-                        xVal = 4;
-                        yval = 5;
-                        RotateSquare(board, 3, false);
-                        */
-                        ret = new GameMove(4, 5, 3, false);
-                    }
-                    else
-                    {
-                        /*
-                        xVal = 3;
-                        yval = 1;
-                        RotateSquare(board, 0, true);
-                        */
-                        ret = new GameMove(3, 1, 0, true);
+                        foreach (var point in pointArr)
+                        {
+
+                            if (((-1 < point.Item1 && point.Item1 < 3) && (-1 < point.Item2 && point.Item2 < 3)) || ((2 < point.Item1 && point.Item1 < 6) && (2 < point.Item2 && point.Item2 < 6)))
+                            {
+                                if (firstInt > secondInt)
+                                {
+                                    ret = new GameMove(point.Item1, point.Item2, 1, true);
+                                }
+                                else
+                                {
+                                    ret = new GameMove(point.Item1, point.Item2, 2, false);
+                                }
+                            }
+                            else if (((2 < point.Item1 && point.Item1 < 6) && (-1 < point.Item2 && point.Item2 < 3)) || ((-1 < point.Item1 && point.Item1 < 3) && (2 < point.Item2 && point.Item2 < 6)))
+                            {
+
+                                if (zerothInt > thirdInt)
+                                {
+                                    ret = new GameMove(point.Item1, point.Item2, 0, false);
+                                }
+                                else
+                                {
+                                    ret = new GameMove(point.Item1, point.Item2, 3, false);
+                                }
+                            }
+                        }
                     }
                 }
+                if (ret.rotIndex == -1)
+                {
+                    throw new Exception("Ret was never initalized in the heuristic");
+                }
+
             }
+            if (board[ret.xCord, ret.yCord] != TileVals.Blank)
+            {
+                throw new Exception("The AI overwrote a user tile...");
+            }
+            return ret;
         }
-        //MID GAME
-        int[,] zerothQuad = { { 2, 0 }, { 2, 1 }, { 2, 2 }, { 1, 2 }, { 0, 2 } };
-        int zerothInt = GetSumFromPoints(board, zerothQuad);
-        int[,] firstQuad = { { 3, 0 }, { 3, 1 }, { 3, 2 }, { 4, 2 }, { 5, 2 } };
-        int firstInt =GetSumFromPoints(board, firstQuad);
-        int[,] secondQuad = { { 0, 3 }, { 1, 3 }, { 2, 3 }, { 2, 4 }, { 2, 5 } };
-        int secondInt =GetSumFromPoints(board, secondQuad);
-        int[,] thirdQuad = { { 5, 5 }, { 4, 5 }, { 3, 5 }, { 3, 4 }, { 3, 3 } };
-        int thirdInt =GetSumFromPoints(board, thirdQuad);
-        if (4 < turnCounter && turnCounter < 11)
+
+
+        enum TileVals
         {
-            List<TupleList<int, int>> possibleWinPoints = new List<TupleList<int, int>>();
-            for (int i = 0; i < winValues.Length; i++)
-            {
-                if (winValues[i] >= 2 && winValues[i] <= 23)
-                {
-                    possibleWinPoints.Add(PointsFromWinCondition(i));
-                }
-            }
-            foreach (var pointArr in possibleWinPoints)
-            {
-                foreach (var point in pointArr)
-                {
-
-                    if (((-1 < point.Item1 && point.Item1 < 3) && (-1 < point.Item2 && point.Item2 < 3)) || ((2 < point.Item1 && point.Item1 < 6) && (2 < point.Item2 && point.Item2 < 6)))
-                    {
-                        if (firstInt < secondInt)
-                        {
-                            ret = new GameMove(point.Item1, point.Item2, 1, false);
-                        }
-                        else
-                        {
-                            ret = new GameMove(point.Item1, point.Item2, 2, false);
-                        }
-                    }
-                    else if (((2 < point.Item1 && point.Item1 < 6) && (-1 < point.Item2 && point.Item2 < 3)) || ((-1 < point.Item1 && point.Item1 < 3) && (2 < point.Item2 && point.Item2 < 6)))
-                    {
-                        if (zerothInt < thirdInt)
-                        {
-                            ret = new GameMove(point.Item1, point.Item2, 0 ,false);
-                        }
-                        else
-                        {
-                            ret = new GameMove(point.Item1, point.Item2, 3, false);
-                        }
-                    }
-                }
-            }
+            X = 1,
+            O = 10,
+            Blank = 0
         }
-        //LATE GAME
-        if (turnCounter > 10)
+
+        static int GetSumFromPoints(TileVals[,] gameboard, int[,] pointsToSum)
         {
-            List<TupleList<int, int>> possibleWinPoints = new List<TupleList<int, int>>();
-            for (int i = 0; i < winValues.Length; i++)
+            int ret = 0;
+            for (int i = 0; i < pointsToSum.GetLength(0); i++)
             {
-                if (winValues[i] >= 23)
+                for (int j = 0; j < pointsToSum.GetLength(1); j++)
                 {
-                    possibleWinPoints.Add(PointsFromWinCondition(i));
+                    ret += (int)gameboard[i, j];
                 }
             }
-            foreach (var pointArr in possibleWinPoints)
-            {
-                foreach (var point in pointArr)
-                {
-
-                    if (((-1 < point.Item1 && point.Item1 < 3) && (-1 < point.Item2 && point.Item2 < 3)) || ((2 < point.Item1 && point.Item1 < 6) && (2 < point.Item2 && point.Item2 < 6)))
-                    {
-                        if (firstInt > secondInt)
-                        {
-                            ret = new GameMove(point.Item1, point.Item2, 1, true);
-                        }
-                        else
-                        {
-                            ret = new GameMove(point.Item1, point.Item2, 2, false);
-                        }
-                    }
-                    else if (((2 < point.Item1 && point.Item1 < 6) && (-1 < point.Item2 && point.Item2 < 3)) || ((-1 < point.Item1 && point.Item1 < 3) && (2 < point.Item2 && point.Item2 < 6)))
-                    {
-                        
-                        if (zerothInt > thirdInt)
-                        {
-                            ret = new GameMove(point.Item1, point.Item2, 0, false);
-                        }
-                        else
-                        {
-                            ret = new GameMove(point.Item1, point.Item2, 3, false);
-                        }
-                    }
-                }
-            }
+            return ret;
         }
-            if(ret.rotIndex == -1){
-                throw new Exception("Ret was never initalized in the heuristic");
-            }
-        return ret;
+
     }
 
 
-    enum TileVals
+    #region Classes for helping with win conditions
+    public class CustomArray<T>
     {
-        X = 1,
-        O = 10,
-        Blank = 0
-    }
-
-    static int GetSumFromPoints(TileVals[,] gameboard, int[,] pointsToSum)
-    {
-        int ret = 0;
-        for (int i = 0; i < pointsToSum.GetLength(0); i++)
+        public static T[] GetColumn(T[,] matrix, int columnNumber)
         {
-            for (int j = 0; j < pointsToSum.GetLength(1); j++)
-            {
-                ret += (int)gameboard[i, j];
-            }
+            return Enumerable.Range(0, matrix.GetLength(0) - 1)
+                    .Select(x => matrix[x, columnNumber])
+                    .ToArray();
         }
-        return ret;
+
+        public static T[] GetRow(T[,] matrix, int rowNumber)
+        {
+            return Enumerable.Range(0, matrix.GetLength(1) - 1)
+                    .Select(x => matrix[rowNumber, x])
+                    .ToArray();
+        }
+
+        public static T[] GetColumnMinusLast(T[,] matrix, int columnNumber)
+        {
+            //return Enumerable.Range(0, matrix.GetLength(0) - 1)
+            //.Select(x => matrix[x, columnNumber])
+            //.ToArray();
+            var colLength = matrix.GetLength(0) - 1;
+            var colVector = new T[colLength];
+
+            for (var i = 0; i < colLength; i++)
+                colVector[i] = matrix[columnNumber, i];
+
+            return colVector;
+        }
+
+        public static T[] GetRowMinusLast(T[,] matrix, int rowNumber)
+        {
+            //return Enumerable.Range(0, matrix.GetLength(1) - 1)
+            //.Select(x => matrix[rowNumber, x])
+            //.ToArray();
+            var rowLength = matrix.GetLength(1) - 1;
+            var rowVector = new T[rowLength];
+
+            for (var i = 0; i < rowLength; i++)
+                rowVector[i] = matrix[i, rowNumber];
+
+            return rowVector;
+        }
+
+
+        public static T[] GetColumnMinusFirst(T[,] matrix, int columnNumber)
+        {
+            //return Enumerable.Range(1, matrix.GetLength(0) - 1)
+            //.Select(x => matrix[x, columnNumber])
+            //.ToArray();
+            var colLength = matrix.GetLength(0) - 1;
+            var colVector = new T[colLength];
+
+            for (var i = 0; i < colLength; i++)
+                colVector[i] = matrix[columnNumber, i + 1];
+
+            return colVector;
+        }
+
+        public static T[] GetRowMinusFirst(T[,] matrix, int rowNumber)
+        {
+            //return Enumerable.Range(1, matrix.GetLength(1) - 1)
+            //.Select(x => matrix[rowNumber, x])
+            //.ToArray();
+            var rowLength = matrix.GetLength(1) - 1;
+            var rowVector = new T[rowLength];
+
+            for (var i = 0; i < rowLength; i++)
+                rowVector[i] = matrix[i + 1, rowNumber];
+
+            return rowVector;
+        }
     }
 
-}
-
-
-#region Classes for helping with win conditions
-public class CustomArray<T>
-{
-    public static T[] GetColumn(T[,] matrix, int columnNumber)
+    public class TupleList<T1, T2> : List<MyTuple<T1, T2>>
     {
-        return Enumerable.Range(0, matrix.GetLength(0) - 1)
-                .Select(x => matrix[x, columnNumber])
-                .ToArray();
+        public TupleList()
+        {
+        }
+        public TupleList(T1 one, T2 two)
+        {
+            Add(one, two);
+        }
+        public void Add(T1 item, T2 item2)
+        {
+            Add(new MyTuple<T1, T2>(item, item2));
+        }
     }
 
-    public static T[] GetRow(T[,] matrix, int rowNumber)
+    public class MyTuple<T1, T2>
     {
-        return Enumerable.Range(0, matrix.GetLength(1) - 1)
-                .Select(x => matrix[rowNumber, x])
-                .ToArray();
+        private T1 _item1;
+        private T2 _item2;
+        public MyTuple(T1 item1, T2 item2)
+        {
+            _item1 = item1;
+            _item2 = item2;
+        }
+
+        public T1 Item1 { get => _item1; set => _item1 = value; }
+        public T2 Item2 { get => _item2; set => _item2 = value; }
+
+        public void Add(T1 item1, T2 item2)
+        {
+            this.Item1 = item1;
+            this.Item2 = item2;
+        }
     }
 
-    public static T[] GetColumnMinusLast(T[,] matrix, int columnNumber)
+    public class GameMove
     {
-        //return Enumerable.Range(0, matrix.GetLength(0) - 1)
-        //.Select(x => matrix[x, columnNumber])
-        //.ToArray();
-        var colLength = matrix.GetLength(0) - 1;
-        var colVector = new T[colLength];
-
-        for (var i = 0; i < colLength; i++)
-            colVector[i] = matrix[columnNumber, i];
-
-        return colVector;
-    }
-
-    public static T[] GetRowMinusLast(T[,] matrix, int rowNumber)
-    {
-        //return Enumerable.Range(0, matrix.GetLength(1) - 1)
-        //.Select(x => matrix[rowNumber, x])
-        //.ToArray();
-        var rowLength = matrix.GetLength(1) - 1;
-        var rowVector = new T[rowLength];
-
-        for (var i = 0; i < rowLength; i++)
-            rowVector[i] = matrix[i, rowNumber];
-
-        return rowVector;
-    }
-
-
-    public static T[] GetColumnMinusFirst(T[,] matrix, int columnNumber)
-    {
-        //return Enumerable.Range(1, matrix.GetLength(0) - 1)
-        //.Select(x => matrix[x, columnNumber])
-        //.ToArray();
-        var colLength = matrix.GetLength(0) - 1;
-        var colVector = new T[colLength];
-
-        for (var i = 0; i < colLength; i++)
-            colVector[i] = matrix[columnNumber, i + 1];
-
-        return colVector;
-    }
-
-    public static T[] GetRowMinusFirst(T[,] matrix, int rowNumber)
-    {
-        //return Enumerable.Range(1, matrix.GetLength(1) - 1)
-        //.Select(x => matrix[rowNumber, x])
-        //.ToArray();
-        var rowLength = matrix.GetLength(1) - 1;
-        var rowVector = new T[rowLength];
-
-        for (var i = 0; i < rowLength; i++)
-            rowVector[i] = matrix[i + 1, rowNumber];
-
-        return rowVector;
-    }
-}
-
-public class TupleList<T1, T2> : List<MyTuple<T1, T2>>
-{
-    public TupleList()
-    {
-    }
-    public TupleList(T1 one, T2 two)
-    {
-        Add(one, two);
-    }
-    public void Add(T1 item, T2 item2)
-    {
-        Add(new MyTuple<T1, T2>(item, item2));
-    }
-}
-
-public class MyTuple<T1, T2>
-{
-    private T1 _item1;
-    private T2 _item2;
-    public MyTuple(T1 item1, T2 item2)
-    {
-        _item1 = item1;
-        _item2 = item2;
-    }
-
-    public T1 Item1 { get => _item1; set => _item1 = value; }
-    public T2 Item2 { get => _item2; set => _item2 = value; }
-
-    public void Add(T1 item1, T2 item2)
-    {
-        this.Item1 = item1;
-        this.Item2 = item2;
-    }
-}
-
-public class GameMove
-{
-    public int xCord;
-    public int yCord;
-    public int rotIndex;
-    public bool rotLeft;
+        public int xCord;
+        public int yCord;
+        public int rotIndex;
+        public bool rotLeft;
 
         public GameMove()
         {
         }
 
         public GameMove(int xCord, int yCord, int rotIndex, bool rotLeft)
-    {
-        this.xCord = xCord;
-        this.yCord = yCord;
-        this.rotIndex = rotIndex;
-        this.rotLeft = rotLeft;
+        {
+            this.xCord = xCord;
+            this.yCord = yCord;
+            this.rotIndex = rotIndex;
+            this.rotLeft = rotLeft;
+        }
     }
-}
 }
 #endregion
