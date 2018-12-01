@@ -70,7 +70,7 @@ namespace PentagoAICrossP
                 int additive = index % 2;
                 for (int i = 0; i < 5; i++)
                 {
-                    returnValues.Add(new MyTuple<int, int>(i + additive,index / 2));
+                    returnValues.Add(new MyTuple<int, int>(i + additive, index / 2));
                 }
             }
             else if (index <= 23)
@@ -79,7 +79,7 @@ namespace PentagoAICrossP
                 int additive = index % 2;
                 for (int i = 0; i < 5; i++)
                 {
-                    returnValues.Add(new MyTuple<int, int>((index-12) / 2, i + additive));
+                    returnValues.Add(new MyTuple<int, int>((index - 12) / 2, i + additive));
                 }
             }
             else if (index <= 27)
@@ -173,7 +173,7 @@ namespace PentagoAICrossP
                 winValues[y * 2] = xSum;
             }
             #endregion
-           
+
             #region Update Verticle
             if (y != 0)
             {
@@ -224,7 +224,7 @@ namespace PentagoAICrossP
 
             }
             #endregion
-            
+
             #region Update Top right to Bot left diag
             tmpX = x;
             tmpY = y;
@@ -375,6 +375,49 @@ namespace PentagoAICrossP
             }
         }
         #endregion
+
+        static TileVals[,] RotateSquare(TileVals[,] board, int squareToRotate, bool rotLeft)
+        {
+            int baseForIndex = 0;
+            if (squareToRotate > 1)
+            {
+                baseForIndex += 18;
+            }
+            if (squareToRotate == 1 || squareToRotate == 3)
+            {
+                baseForIndex += 3;
+            }
+            TileVals[] tempTiles = new TileVals[9];
+            for (int i = 0; i < 9; i++)
+            {
+                int fromSpot = rotIndex[i] + baseForIndex;
+                int fromX = fromSpot % 6;
+                int fromY = fromSpot / 6;
+                tempTiles[i] = board[fromX, fromY];
+            }
+            if (rotLeft)
+            {
+                for (int i = 0; i < 9; i++)
+                {
+                    int x = (leftRotIndex[i] + baseForIndex) % 6;
+                    int y = (leftRotIndex[i] + baseForIndex) / 6;
+                    board[x, y] = tempTiles[i];
+                }
+            }
+            else
+            {
+                for (int i = 0; i < 9; i++)
+                {
+                    int x = (rightRotIndex[i] + baseForIndex) % 6;
+                    int y = (rightRotIndex[i] + baseForIndex) / 6;
+                    board[x, y] = tempTiles[i];
+
+                }
+            }
+            return board;
+
+        }
+
         static void Main(string[] args)
         {
             TileVals[,] gameBoard = new TileVals[6, 6];
@@ -427,51 +470,9 @@ namespace PentagoAICrossP
                 TrackRotation(square, rot);
 
                 //rotation
-                int baseForIndex = 0;
+                gameBoard = RotateSquare(gameBoard, square, rot.ToLower() == "left" || rot.ToLower() == "l");
 
-                //if its the lower 2 squares
-                if (square > 1)
-                {
-                    baseForIndex += 18;
-                }
 
-                //if its the right 2 squeares
-                if (square == 1 || square == 3)
-                {
-                    baseForIndex += 3;
-                }
-
-                //initilize a temp square to map to and 
-                //dup the values to it
-                TileVals[] tempTiles = new TileVals[9];
-                for (int i = 0; i < 9; i++)
-                {
-                    int fromSpot = rotIndex[i] + baseForIndex;
-                    int fromX = fromSpot % 6;
-                    int fromY = fromSpot / 6;
-                    tempTiles[i] = gameBoard[fromX, fromY];
-                }
-                if (rot == "left" || rot == "Left" || rot == "l" || rot == "L")
-                {
-                    //rotate board left
-                    for (int i = 0; i < 9; i++)
-                    {
-                        int x = (leftRotIndex[i] + baseForIndex) % 6;
-                        int y = (leftRotIndex[i] + baseForIndex) / 6;
-                        gameBoard[x, y] = tempTiles[i];
-                    }
-                }
-                else
-                {
-                    //rotate board right
-                    for (int i = 0; i < 9; i++)
-                    {
-                        int x = (rightRotIndex[i] + baseForIndex) % 6;
-                        int y = (rightRotIndex[i] + baseForIndex) / 6;
-                        gameBoard[x, y] = tempTiles[i];
-
-                    }
-                }
                 UpdateRotation(gameBoard, square);
                 UpdateTurn();
                 if (IsGameWon(gameBoard))
@@ -600,19 +601,19 @@ namespace PentagoAICrossP
                     return "error";
             }
         }
-        static TupleList<T1, T2>(item1, item2) PentagoHeuristic(board)
+        static Random r = new Random();
+
+        static GameMove PentagoHeuristic(TileVals[,] board)
         {
-            TupleList<T1, T2> ret = new TupleList<T1, T2>(int[xVal, yval], RotateSquare(board, int i, bool b));
+            int turnCounter = GetTurns().Count / 2;
+            turnCounter++;
+            GameMove ret;
+            int startQuadrant = r.Next(4);
             //EARLY GAME
             //first turn
             if (turnCounter == 1)
             {
-                board[xVal, yVal] == TileVals.X;
-                Random startQuadrant = new Random()
-                for (int i = 0; i < 1; i++)
-                {
-                    startQuadrant.Next(0, 4) = startQuadrant;
-                }
+
                 if (startQuadrant == 0)
                 {
                     /*
@@ -620,7 +621,7 @@ namespace PentagoAICrossP
                     yVal = 2;
                     RotateSquare(board, 3, true);
                     */
-                    ret = ([2, 2], RotateSquare(, 3, true));
+                    ret = new GameMove(2, 2, 3, true);
                 }
                 else if (startQuadrant == 1)
                 {
@@ -629,7 +630,7 @@ namespace PentagoAICrossP
                     yVal = 2;
                     RotateSquare(board, 2, true);
                     */
-                    ret = ([3, 2], RotateSquare(, 2, true));
+                    ret = new GameMove(3, 2, 2, true);
                 }
                 else if (startQuadrant == 2)
                 {
@@ -638,7 +639,7 @@ namespace PentagoAICrossP
                     yVal = 3;
                     RotateSquare(board, 1, true);
                     */
-                    ret = ([2, 3], RotateSquare(, 1, true));
+                    ret = new GameMove(2, 3, 1, true);
                 }
                 else if (startQuadrant == 3)
                 {
@@ -997,51 +998,57 @@ namespace PentagoAICrossP
                 }
             }
             //MID GAME
-            int[int[ ,]] zerothQuadrantEdges = [(int)[2, 0], (int)[2, 1], (int)[2, 2], (int)[1, 2], (int)[0, 2]];
+            int[,] zerthQuad = { { 2, 0 }, { 2, 1 }, { 2, 2 }, { 1, 2 }, { 0, 2 } };
+            int zthInt = GetSumFromPoints(board, zerthQuad);
             int[int[ ,]] firstQuadrantEdges = [(int)[3, 0], (int)[3, 1], (int)[3, 2], (int)[4, 2], (int)[5, 2]];
             int[int[ ,]] secondQuadrantEdges = [(int)[0, 3], (int)[1, 3], (int)[2, 3], (int)[2, 4], (int)[2, 5]];
             int[int[ ,]] thirdQuadrantEdges = [(int)[5, 5], (int)[4, 5], (int)[3, 5], (int)[3, 4], (int)[3, 3]];
-            if (4 < turnCounter < 11)
+            if (4 < turnCounter && turnCounter < 11)
             {
-                for (int i = 0; 2 < int possibleWin < 23; i++)
+                List<TupleList<int, int>> possibleWinPoints = new List<TupleList<int, int>>();
+                for (int i = 0; i < winValues.Length; i++)
                 {
-                    possibleWin = (int)winValues[i];
-                }
-                TupleList<int, int> possibleWinPoints = PointsFromWinCondition(i);
-                //winValuesPosition does not exist, but something like it needs to
-                for (int j = 0; (int)temp[j] == 0; j++)
-                {
-                    temp[j];
-                }
-                //determining rotations
-                int var1 = temp[j].Item1;
-                int var2 = temp[j].Item2;
-                if (((-1 < var1 < 3) && (-1 < var2 < 3)) || ((4 < var1 < 6) && (4 < var2 < 6)))
-                {
-                    int sum1 = firstQuadrantEdges.Sum();
-                    int sum2 = secondQuadrantEdges.Sum();
-                    if (sum1 < sum2)
+                    if (winValues[i] >= 2 && winValues[i] <= 23)
                     {
-                        ret = (temp[j], RotateSquare(, 1, false));
-                    }
-                    else
-                    {
-                        ret = (temp[j], RotateSquare(, 2, false));
+                        possibleWinPoints.Add(PointsFromWinCondition(i));
                     }
                 }
-                else if (((4 < var1 < 6) && (-1 < var2 < 3)) || ((-1 < var1 < 3) && (4 < var2 < 6)))
+                                foreach (var pointArr in possibleWinPoints)
                 {
-                    int sum1 = zerothQuadrantEdges.Sum();
-                    int sum2 = thirdQuadrantEdges.Sum();
-                    if (sum1 < sum2)
+                                    foreach (var point in pointArr)
                     {
-                        ret = (temp[j], RotateSquare(, 0, false));
-                    }
-                    else
-                    {
-                        ret = (temp[j], RotateSquare(, 3, false));
+
+                        if (((-1 < point.Item1 && point.Item1 < 3) && (-1 < point.Item2 && point.Item2 < 3)) || ((4 < point.Item1 && point.Item1 < 6) && (4 < point.Item2 && point.Item2 < 6)))
+                        {
+                            int sum1 = firstQuadrantEdges.Sum();
+                            int sum2 = secondQuadrantEdges.Sum();
+                            if (sum1 < sum2)
+                            {
+                                ret = (temp[j], RotateSquare(, 1, false));
+                            }
+                            else
+                            {
+                                ret = (temp[j], RotateSquare(, 2, false));
+                            }
+                        }
+                        else if (((4 < point.Item1 && point.Item1 < 6) && (-1 < point.Item2 && point.Item2 < 3)) || ((-1 < point.Item1 && point.Item1 < 3) && (4 < point.Item2 && point.Item2 < 6)))
+                        {
+                            int sum1 = zerothQuadrantEdges.Sum();
+                            int sum2 = thirdQuadrantEdges.Sum();
+                            if (sum1 < sum2)
+                            {
+                                ret = (temp[j], RotateSquare(, 0, false));
+                            }
+                            else
+                            {
+                                ret = (temp[j], RotateSquare(, 3, false));
+                            }
+                        }
                     }
                 }
+
+
+
                 IsGameWon(board);
             }
             //LATE GAME
@@ -1091,122 +1098,153 @@ namespace PentagoAICrossP
         }
 
 
-    enum TileVals
-    {
-        X = 1,
-        O = 10,
-        Blank = 0
+        enum TileVals
+        {
+            X = 1,
+            O = 10,
+            Blank = 0
+        }
+
+        static int GetSumFromPoints(TileVals[,] gameboard, int[,] pointsToSum)
+        {
+            int ret = 0;
+            for (int i = 0; i < pointsToSum.GetLength(0); i++)
+            {
+                for (int j = 0; j < pointsToSum.GetLength(1); j++)
+                {
+                    ret += (int)gameboard[i, j];
+                }
+            }
+            return ret;
+        }
+
     }
 
 
-}
-
-#region Classes for helping with win conditions
-public class CustomArray<T>
-{
-    public static T[] GetColumn(T[,] matrix, int columnNumber)
+    #region Classes for helping with win conditions
+    public class CustomArray<T>
     {
-        return Enumerable.Range(0, matrix.GetLength(0) - 1)
-                .Select(x => matrix[x, columnNumber])
-                .ToArray();
+        public static T[] GetColumn(T[,] matrix, int columnNumber)
+        {
+            return Enumerable.Range(0, matrix.GetLength(0) - 1)
+                    .Select(x => matrix[x, columnNumber])
+                    .ToArray();
+        }
+
+        public static T[] GetRow(T[,] matrix, int rowNumber)
+        {
+            return Enumerable.Range(0, matrix.GetLength(1) - 1)
+                    .Select(x => matrix[rowNumber, x])
+                    .ToArray();
+        }
+
+        public static T[] GetColumnMinusLast(T[,] matrix, int columnNumber)
+        {
+            //return Enumerable.Range(0, matrix.GetLength(0) - 1)
+            //.Select(x => matrix[x, columnNumber])
+            //.ToArray();
+            var colLength = matrix.GetLength(0) - 1;
+            var colVector = new T[colLength];
+
+            for (var i = 0; i < colLength; i++)
+                colVector[i] = matrix[columnNumber, i];
+
+            return colVector;
+        }
+
+        public static T[] GetRowMinusLast(T[,] matrix, int rowNumber)
+        {
+            //return Enumerable.Range(0, matrix.GetLength(1) - 1)
+            //.Select(x => matrix[rowNumber, x])
+            //.ToArray();
+            var rowLength = matrix.GetLength(1) - 1;
+            var rowVector = new T[rowLength];
+
+            for (var i = 0; i < rowLength; i++)
+                rowVector[i] = matrix[i, rowNumber];
+
+            return rowVector;
+        }
+
+
+        public static T[] GetColumnMinusFirst(T[,] matrix, int columnNumber)
+        {
+            //return Enumerable.Range(1, matrix.GetLength(0) - 1)
+            //.Select(x => matrix[x, columnNumber])
+            //.ToArray();
+            var colLength = matrix.GetLength(0) - 1;
+            var colVector = new T[colLength];
+
+            for (var i = 0; i < colLength; i++)
+                colVector[i] = matrix[columnNumber, i + 1];
+
+            return colVector;
+        }
+
+        public static T[] GetRowMinusFirst(T[,] matrix, int rowNumber)
+        {
+            //return Enumerable.Range(1, matrix.GetLength(1) - 1)
+            //.Select(x => matrix[rowNumber, x])
+            //.ToArray();
+            var rowLength = matrix.GetLength(1) - 1;
+            var rowVector = new T[rowLength];
+
+            for (var i = 0; i < rowLength; i++)
+                rowVector[i] = matrix[i + 1, rowNumber];
+
+            return rowVector;
+        }
     }
 
-    public static T[] GetRow(T[,] matrix, int rowNumber)
+    public class TupleList<T1, T2> : List<MyTuple<T1, T2>>
     {
-        return Enumerable.Range(0, matrix.GetLength(1) - 1)
-                .Select(x => matrix[rowNumber, x])
-                .ToArray();
+        public TupleList()
+        {
+        }
+        public TupleList(T1 one, T2 two)
+        {
+            Add(one, two);
+        }
+        public void Add(T1 item, T2 item2)
+        {
+            Add(new MyTuple<T1, T2>(item, item2));
+        }
     }
 
-    public static T[] GetColumnMinusLast(T[,] matrix, int columnNumber)
+    public class MyTuple<T1, T2>
     {
-        //return Enumerable.Range(0, matrix.GetLength(0) - 1)
-        //.Select(x => matrix[x, columnNumber])
-        //.ToArray();
-        var colLength = matrix.GetLength(0) - 1;
-        var colVector = new T[colLength];
+        private T1 _item1;
+        private T2 _item2;
+        public MyTuple(T1 item1, T2 item2)
+        {
+            _item1 = item1;
+            _item2 = item2;
+        }
 
-        for (var i = 0; i < colLength; i++)
-            colVector[i] = matrix[columnNumber, i];
+        public T1 Item1 { get => _item1; set => _item1 = value; }
+        public T2 Item2 { get => _item2; set => _item2 = value; }
 
-        return colVector;
+        public void Add(T1 item1, T2 item2)
+        {
+            this.Item1 = item1;
+            this.Item2 = item2;
+        }
     }
 
-    public static T[] GetRowMinusLast(T[,] matrix, int rowNumber)
+    public class GameMove
     {
-        //return Enumerable.Range(0, matrix.GetLength(1) - 1)
-        //.Select(x => matrix[rowNumber, x])
-        //.ToArray();
-        var rowLength = matrix.GetLength(1) - 1;
-        var rowVector = new T[rowLength];
+        public int xCord;
+        public int yCord;
+        public int rotIndex;
+        public bool rotLeft;
 
-        for (var i = 0; i < rowLength; i++)
-            rowVector[i] = matrix[i, rowNumber];
-
-        return rowVector;
-    }
-
-
-    public static T[] GetColumnMinusFirst(T[,] matrix, int columnNumber)
-    {
-        //return Enumerable.Range(1, matrix.GetLength(0) - 1)
-        //.Select(x => matrix[x, columnNumber])
-        //.ToArray();
-        var colLength = matrix.GetLength(0) - 1;
-        var colVector = new T[colLength];
-
-        for (var i = 0; i < colLength; i++)
-            colVector[i] = matrix[columnNumber, i + 1];
-
-        return colVector;
-    }
-
-    public static T[] GetRowMinusFirst(T[,] matrix, int rowNumber)
-    {
-        //return Enumerable.Range(1, matrix.GetLength(1) - 1)
-        //.Select(x => matrix[rowNumber, x])
-        //.ToArray();
-        var rowLength = matrix.GetLength(1) - 1;
-        var rowVector = new T[rowLength];
-
-        for (var i = 0; i < rowLength; i++)
-            rowVector[i] = matrix[i + 1, rowNumber];
-
-        return rowVector;
-    }
-}
-
-public class TupleList<T1, T2> : List<MyTuple<T1, T2>>
-{
-    public TupleList()
-    {
-    }
-    public TupleList(T1 one, T2 two)
-    {
-        Add(one, two);
-    }
-    public void Add(T1 item, T2 item2)
-    {
-        Add(new MyTuple<T1, T2>(item, item2));
-    }
-}
-
-public class MyTuple<T1, T2>
-{
-    private T1 _item1;
-    private T2 _item2;
-    public MyTuple(T1 item1, T2 item2)
-    {
-        _item1 = item1;
-        _item2 = item2;
-    }
-
-    public T1 Item1 { get => _item1; set => _item1 = value; }
-    public T2 Item2 { get => _item2; set => _item2 = value; }
-
-    public void Add(T1 item1, T2 item2){
-        this.Item1 = item1;
-        this.Item2 = item2;
+        public GameMove(int xCord, int yCord, int rotIndex, bool rotLeft)
+        {
+            this.xCord = xCord;
+            this.yCord = yCord;
+            this.rotIndex = rotIndex;
+            this.rotLeft = rotLeft;
+        }
     }
 }
 #endregion
