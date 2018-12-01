@@ -178,14 +178,14 @@ namespace PentagoAICrossP
             if (y != 0)
             {
                 //update topmost to bot
-                TileVals[] yTiles = CustomArray<TileVals>.GetColumnMinusFirst(board, y);
+                TileVals[] yTiles = CustomArray<TileVals>.GetColumnMinusFirst(board, x);
                 var ySum = Array.ConvertAll(yTiles, value => (int)value).Sum();
                 winValues[12 + x * 2] = ySum;
             }
             if (y != 5)
             {
                 //update top to botmost
-                TileVals[] yTiles = CustomArray<TileVals>.GetColumnMinusLast(board, y);
+                TileVals[] yTiles = CustomArray<TileVals>.GetColumnMinusLast(board, x);
                 var ySum = Array.ConvertAll(yTiles, value => (int)value).Sum();
                 winValues[12 + x * 2 + 1] = ySum;
             }
