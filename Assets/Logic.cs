@@ -8,15 +8,31 @@ namespace PentagoAICrossP
 {
     public class Logic : MonoBehaviour
     {
-        public static Canvas canvas;
+        public static Transform canvas;
         static int[] lastTurn = new int[85];
         static List<int[]> turns = new List<int[]>();
         static int turnCounter = 0;
+        public static GameObject whoWon;
+        public static GameObject leftRotation;
+        public static GameObject rightRotation;
+        public static GameObject greenPlayer;
+        public static GameObject redPlayer;
 
         public void Start()
         {
-            canvas = GameObject.FindGameObjectWithTag("Canvas").GetComponent<Canvas>();
-            canvas.gameObject.SetActive(false);
+            canvas = GameObject.FindGameObjectWithTag("Canvas").transform;
+
+            whoWon = canvas.GetChild(0).gameObject;
+            leftRotation = canvas.GetChild(1).gameObject;
+            rightRotation = canvas.GetChild(2).gameObject;
+            greenPlayer = canvas.GetChild(3).gameObject;
+            redPlayer = canvas.GetChild(4).gameObject;
+
+            whoWon.gameObject.SetActive(false);
+            leftRotation.gameObject.SetActive(false);
+            rightRotation.gameObject.SetActive(false);
+            greenPlayer.gameObject.SetActive(true);
+            redPlayer.gameObject.SetActive(false);
         }
 
         static List<int[]> GetTurns()
@@ -312,7 +328,19 @@ namespace PentagoAICrossP
             //{
                 //change turn
                 isXTurn = !isXTurn;
-                PrintBoard(gameBoard);
+
+                if (isXTurn)
+                {
+                    greenPlayer.gameObject.SetActive(false);
+                    redPlayer.gameObject.SetActive(true);
+                }
+                else
+                {
+                    greenPlayer.gameObject.SetActive(true);
+                    redPlayer.gameObject.SetActive(false);
+                }
+
+            PrintBoard(gameBoard);
 
                 //set vals to illegal by default
                 var xVal = GameController.xVal;
@@ -343,6 +371,18 @@ namespace PentagoAICrossP
                 //rot = Console.ReadLine();
 
                 rot = GameController.lastRotation;
+
+                if (rot == "left" || rot == "Left" || rot == "l" || rot == "L")
+                {
+                    leftRotation.gameObject.SetActive(true);
+                    rightRotation.gameObject.SetActive(false);
+                    
+                }
+                else
+                {
+                    leftRotation.gameObject.SetActive(false);
+                    rightRotation.gameObject.SetActive(true);
+                }
                 //list of valid values for rotation
                 var rotationInput = new List<string> { "right", "left", "r", "l" };
                 
@@ -407,8 +447,12 @@ namespace PentagoAICrossP
                 if (g)
                 {
                     PrintBoard(gameBoard);
-                    canvas.gameObject.SetActive(true);
-                    GameObject.FindGameObjectWithTag("GameController").SetActive(false);
+                    whoWon.gameObject.SetActive(true);
+                    leftRotation.gameObject.SetActive(false);
+                    rightRotation.gameObject.SetActive(false);
+                    greenPlayer.gameObject.SetActive(false);
+                    redPlayer.gameObject.SetActive(false);
+                GameObject.FindGameObjectWithTag("GameController").SetActive(false);
                     Debug.Log("Game Over.");
                     //break;
             }
