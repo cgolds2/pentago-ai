@@ -103,14 +103,14 @@ namespace PentagoAICrossP
             if (y != 0)
             {
                 //update topmost to bot
-                TileVals[] yTiles = CustomArray<TileVals>.GetColumnMinusFirst(board, y);
+                TileVals[] yTiles = CustomArray<TileVals>.GetColumnMinusFirst(board, x);
                 var ySum = Array.ConvertAll(yTiles, value => (int)value).Sum();
                 winValues[12 + x * 2] = ySum;
             }
             if (y != 5)
             {
                 //update top to botmost
-                TileVals[] yTiles = CustomArray<TileVals>.GetColumnMinusLast(board, y);
+                TileVals[] yTiles = CustomArray<TileVals>.GetColumnMinusLast(board, x);
                 var ySum = Array.ConvertAll(yTiles, value => (int)value).Sum();
                 winValues[12 + x * 2 + 1] = ySum;
             }
@@ -403,12 +403,13 @@ namespace PentagoAICrossP
                 }
                 UpdateRotation(gameBoard, square);
                 UpdateTurn();
-                if (IsGameWon(gameBoard))
+            var g = IsGameWon(gameBoard);
+                if (g)
                 {
                     PrintBoard(gameBoard);
                     canvas.gameObject.SetActive(true);
                     GameObject.FindGameObjectWithTag("GameController").SetActive(false);
-                    //Debug.Log("Game Over.");
+                    Debug.Log("Game Over.");
                     //break;
             }
             //}
@@ -476,6 +477,8 @@ namespace PentagoAICrossP
         static void PrintBoard(TileVals[,] board)
         {
             //Console.Clear();
+            string outStr = "";
+            outStr += ("   0 1 2     3 4 5") + Environment.NewLine;
             Console.WriteLine("   0 1 2     3 4 5");
             for (int i = 0; i < 6; i++)
             {
@@ -483,21 +486,30 @@ namespace PentagoAICrossP
                 {
                     if (j == 0)
                     {
+                        outStr += (i + " ");
                         Console.Write(i + " ");
                     }
                     if (j == 3)
                     {
+                        outStr += ("|   ");
                         Console.Write("|   ");
 
                     }
+                    outStr += ("|" + TileToString(board[j, i]));
                     Console.Write("|" + TileToString(board[j, i]));
                 }
+                outStr += ("|") + Environment.NewLine;
                 Console.WriteLine("|");
                 if (i == 2)
                 {
+                    outStr += ("") + Environment.NewLine;
                     Console.WriteLine("");
                 }
             }
+            outStr += ("\n--------------") + Environment.NewLine;
+            outStr += ((isXTurn ? "Player 1" : "Player 2") + "'s turn");
+            outStr += ("--------------\n");
+            Debug.Log(outStr);
             Console.WriteLine("\n--------------");
             Console.WriteLine((isXTurn ? "Player 1" : "Player 2") + "'s turn");
             Console.WriteLine("--------------\n");
