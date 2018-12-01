@@ -663,19 +663,18 @@ namespace PentagoAICrossP
         }
     }
     static Random r = new Random();
-
+        static int startQuadrant = -1;
     static GameMove PentagoHeuristic(TileVals[,] board)
     {
         int turnCounter = GetTurns().Count / 2;
         turnCounter++;
             GameMove ret = new GameMove();
             ret.rotIndex = -1;
-        int startQuadrant = r.Next(4);
         //EARLY GAME
         //first turn
         if (turnCounter == 1)
         {
-
+                startQuadrant = r.Next(4);
             if (startQuadrant == 0)
             {
                 /*
