@@ -340,7 +340,7 @@ RectTransform:
   m_Children:
   - {fileID: 758813576}
   m_Father: {fileID: 1480043305}
-  m_RootOrder: 2
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -898,7 +898,7 @@ RectTransform:
   m_Children:
   - {fileID: 1620942576}
   m_Father: {fileID: 1480043305}
-  m_RootOrder: 6
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -938,7 +938,7 @@ MonoBehaviour:
     m_NormalColor: {r: 0.5754717, g: 0.29059562, b: 0.20901565, a: 1}
     m_HighlightedColor: {r: 0.5764706, g: 0.2901961, b: 0.20784315, a: 1}
     m_PressedColor: {r: 0.38679248, g: 0.19274807, b: 0.13683696, a: 1}
-    m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
+    m_DisabledColor: {r: 0.5764706, g: 0.2901961, b: 0.20784315, a: 1}
     m_ColorMultiplier: 1
     m_FadeDuration: 0.025
   m_SpriteState:
@@ -950,8 +950,8 @@ MonoBehaviour:
     m_HighlightedTrigger: Highlighted
     m_PressedTrigger: Pressed
     m_DisabledTrigger: Disabled
-  m_Interactable: 1
-  m_TargetGraphic: {fileID: 2057565059}
+  m_Interactable: 0
+  m_TargetGraphic: {fileID: 292126038}
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
@@ -1324,7 +1324,7 @@ RectTransform:
   m_Children:
   - {fileID: 1318510822}
   m_Father: {fileID: 1480043305}
-  m_RootOrder: 3
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -1364,7 +1364,7 @@ MonoBehaviour:
     m_NormalColor: {r: 0.39587042, g: 0.6037736, b: 0.41319567, a: 1}
     m_HighlightedColor: {r: 0.41960788, g: 0.62352943, b: 0.43529415, a: 1}
     m_PressedColor: {r: 0.20403804, g: 0.3207547, b: 0.19820221, a: 1}
-    m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
+    m_DisabledColor: {r: 0.41960788, g: 0.62352943, b: 0.43529415, a: 1}
     m_ColorMultiplier: 1
     m_FadeDuration: 0.025
   m_SpriteState:
@@ -1376,7 +1376,7 @@ MonoBehaviour:
     m_HighlightedTrigger: Highlighted
     m_PressedTrigger: Pressed
     m_DisabledTrigger: Disabled
-  m_Interactable: 1
+  m_Interactable: 0
   m_TargetGraphic: {fileID: 381963543}
   m_OnClick:
     m_PersistentCalls:
@@ -4430,7 +4430,7 @@ RectTransform:
   m_Children:
   - {fileID: 1933103643}
   m_Father: {fileID: 1480043305}
-  m_RootOrder: 4
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -4470,7 +4470,7 @@ MonoBehaviour:
     m_NormalColor: {r: 0.5754717, g: 0.29059562, b: 0.20901565, a: 1}
     m_HighlightedColor: {r: 0.5764706, g: 0.2901961, b: 0.20784315, a: 1}
     m_PressedColor: {r: 0.38679248, g: 0.19274807, b: 0.13683696, a: 1}
-    m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
+    m_DisabledColor: {r: 0.5764706, g: 0.2901961, b: 0.20784315, a: 1}
     m_ColorMultiplier: 1
     m_FadeDuration: 0.025
   m_SpriteState:
@@ -4482,8 +4482,8 @@ MonoBehaviour:
     m_HighlightedTrigger: Highlighted
     m_PressedTrigger: Pressed
     m_DisabledTrigger: Disabled
-  m_Interactable: 1
-  m_TargetGraphic: {fileID: 2057565059}
+  m_Interactable: 0
+  m_TargetGraphic: {fileID: 1323519615}
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
@@ -5060,13 +5060,13 @@ RectTransform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 0, y: 0, z: 0}
   m_Children:
-  - {fileID: 2111614598}
-  - {fileID: 2146203969}
   - {fileID: 126575823}
   - {fileID: 381963540}
   - {fileID: 1323519612}
   - {fileID: 2057565056}
   - {fileID: 292126035}
+  - {fileID: 2111614598}
+  - {fileID: 2146203969}
   m_Father: {fileID: 0}
   m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -6802,7 +6802,7 @@ RectTransform:
   m_Children:
   - {fileID: 1496634283}
   m_Father: {fileID: 1480043305}
-  m_RootOrder: 5
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -6839,10 +6839,10 @@ MonoBehaviour:
     m_SelectOnRight: {fileID: 0}
   m_Transition: 1
   m_Colors:
-    m_NormalColor: {r: 0.5754717, g: 0.29059562, b: 0.20901565, a: 1}
-    m_HighlightedColor: {r: 0.5764706, g: 0.2901961, b: 0.20784315, a: 1}
-    m_PressedColor: {r: 0.38679248, g: 0.19274807, b: 0.13683696, a: 1}
-    m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
+    m_NormalColor: {r: 0.39587042, g: 0.6037736, b: 0.41319567, a: 1}
+    m_HighlightedColor: {r: 0.41960788, g: 0.62352943, b: 0.43529415, a: 1}
+    m_PressedColor: {r: 0.20403804, g: 0.3207547, b: 0.19820221, a: 1}
+    m_DisabledColor: {r: 0.41960788, g: 0.62352943, b: 0.43529415, a: 1}
     m_ColorMultiplier: 1
     m_FadeDuration: 0.025
   m_SpriteState:
@@ -6854,13 +6854,13 @@ MonoBehaviour:
     m_HighlightedTrigger: Highlighted
     m_PressedTrigger: Pressed
     m_DisabledTrigger: Disabled
-  m_Interactable: 1
+  m_Interactable: 0
   m_TargetGraphic: {fileID: 2057565059}
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 2057565057}
-        m_MethodName: QuitGame
+      - m_Target: {fileID: 381963541}
+        m_MethodName: RestartGame
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -7133,7 +7133,7 @@ RectTransform:
   m_Children:
   - {fileID: 1830173232}
   m_Father: {fileID: 1480043305}
-  m_RootOrder: 0
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -7313,7 +7313,7 @@ RectTransform:
   m_Children:
   - {fileID: 635488833}
   m_Father: {fileID: 1480043305}
-  m_RootOrder: 1
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
