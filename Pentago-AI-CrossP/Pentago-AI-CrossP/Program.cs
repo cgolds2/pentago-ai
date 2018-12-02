@@ -928,7 +928,8 @@ namespace PentagoAICrossP
             {
                 if (startQuadrant == 0 || startQuadrant == 3)
                 {
-                    //half of diagonal edge cases
+                    //FIRST HALF OF DIAGONAL EDGE CASES
+                    //directly through the middle cases
                     if ((int)board[3, 2] + (int)board[2, 3] == 20)
                     {
                         if ((int)board[4, 1] == 10)
@@ -949,71 +950,73 @@ namespace PentagoAICrossP
                             */
                             ret = new GameMove(4, 1, 1, true);
                         }
+                        else if ((int)board[1, 4] + (int)board[2, 3] == 20)
+                        {
+                            /*
+                             xVal = 3;
+                             yVal = 2;
+                             RotateSquare(board, 2, true);                        
+                             */
+                            ret = new GameMove(3, 2, 2, true);
+                        }
+                        else if ((int)board[4, 1] + (int)board[3, 2] == 20)
+                        {
+                            /*
+                             xVal = 2;
+                             yVal = 3;
+                             RotateSquare(board, 1, true);                        
+                             */
+                            ret = new GameMove(2, 3, 1, true);
+                        }
                     }
+                    //oddball diagonal cases
                     else if (startQuadrant == 0)
                     {
-                        if ((int)board[2, 1] == 0)
-                        {
-                            /*
-                            xVal = 2;
-                            yval = 1;
-                            RotateSquare(board, 3, true);
-                            */
-                            ret = new GameMove(2, 1, 3, true);
-                        }
-                        else if ((int)board[1, 0] == 0)
-                        {
-                            /*
-                            xVal = 1;
-                            yval = 0;
-                            RotateSquare(board, 0, false);
-                            */
-                            ret = new GameMove(1, 0, 0, false);
-                        }
-                        else
-                        {
-                            /*
-                            xVal = 2;
-                            yval = 4;
-                            RotateSquare(board, 0, false);
-                            */
-                            ret = new GameMove(2, 4, 0, false);
-                        }
+                        List<TupleList<int, int>> possibleWinPoints = new List<TupleList<int, int>>();
+                        foreach (var item in PointsFromWinCondition(31))
+                            if (board[item.Item1, item.Item2] == TileVals.Blank)
+                            {
+                                ret = new GameMove(item.Item1, item.Item2, GetQuadFromPoint(item.Item1, item.Item2), false);
+                            }
                     }
+                    else if (startQuadrant == 3)
+                    {
+                        List<TupleList<int, int>> possibleWinPoints = new List<TupleList<int, int>>();
+                        foreach (var item in PointsFromWinCondition(28))
+                            if (board[item.Item1, item.Item2] == TileVals.Blank)
+                            {
+                                ret = new GameMove(item.Item1, item.Item2, GetQuadFromPoint(item.Item1, item.Item2), false);
+                            }
+                    }
+                    //parallel diagonal cases
                     else
                     {
-                        if ((int)board[3, 4] == 0)
+                        if (winValues[24] > winValues[27])
                         {
-                            /*
-                            xVal = 3;
-                            yval = 4;
-                            RotateSquare(board, 0, true);
-                            */
-                            ret = new GameMove(3, 4, 0, true);
-                        }
-                        else if ((int)board[4, 5] == 0)
-                        {
-                            /*
-                            xVal = 4;
-                            yval = 5;
-                            RotateSquare(board, 3, false);
-                            */
-                            ret = new GameMove(4, 5, 3, false);
+                            List<TupleList<int, int>> possibleWinPoints = new List<TupleList<int, int>>();
+                            possibleWinPoints.Add(PointsFromWinCondition(24));
+                            foreach (var item in PointsFromWinCondition(24))
+                                if (board[item.Item1, item.Item2] == TileVals.Blank)
+                                {
+                                    ret = new GameMove(item.Item1, item.Item2, GetQuadFromPoint(item.Item1, item.Item2), false);
+                                }
                         }
                         else
                         {
-                            /*
-                            xVal = 3;
-                            yval = 1;
-                            RotateSquare(board, 0, true);
-                            */
-                            ret = new GameMove(3, 1, 0, true);
+                            List<TupleList<int, int>> possibleWinPoints = new List<TupleList<int, int>>();
+                            possibleWinPoints.Add(PointsFromWinCondition(27));
+                            foreach (var item in PointsFromWinCondition(27))
+                                if (board[item.Item1, item.Item2] == TileVals.Blank)
+                                {
+                                    ret = new GameMove(item.Item1, item.Item2, GetQuadFromPoint(item.Item1, item.Item2), false);
+                                }
                         }
                     }
                 }
                 else
                 {
-                    //second half of diagonal edge cases
+                    //SECOND HALF OF DIAGONAL EDGE CASES
+                    //directly through the middle cases
                     if ((int)board[2, 2] + (int)board[3, 3] == 20)
                     {
                         if ((int)board[4, 4] == 10)
@@ -1034,75 +1037,70 @@ namespace PentagoAICrossP
                             */
                             ret = new GameMove(4, 4, 3, true);
                         }
+                        else if ((int)board[1, 1] + (int)board[2, 2] == 20)
+                        {
+                            /*
+                             xVal = 3;
+                             yVal = 3;
+                             RotateSquare(board, 2, true);                        
+                             */
+                            ret = new GameMove(3, 3, 3, true);
+                        }
+                        else if ((int)board[3, 3] + (int)board[4, 4] == 20)
+                        {
+                            /*
+                             xVal = 2;
+                             yVal = 2;
+                             RotateSquare(board, 0, true);                        
+                             */
+                            ret = new GameMove(2, 2, 0, true);
+                        }
                     }
-                    else if (startQuadrant == 1)
+                    //oddball diagonal cases
+                    else if (winValues[24] != 0)
                     {
-                        if ((int)board[2, 1] == 0)
-                        {
-                            /*
-                            xVal = 2;
-                            yval = 1;
-                            RotateSquare(board, 3, true);
-                            */
-                            ret = new GameMove(2, 1, 3, true);
-                        }
-                        else if ((int)board[1, 0] == 0)
-                        {
-                            /*
-                            xVal = 1;
-                            yval = 0;
-                            RotateSquare(board, 0, false);
-                            */
-                            ret = new GameMove(1, 0, 0, false);
-                        }
-                        else
-                        {
-                            /*
-                            xVal = 2;
-                            yval = 4;
-                            RotateSquare(board, 0, false);
-                            */
-                            ret = new GameMove(2, 4, 0, false);
-                        }
+                        List<TupleList<int, int>> possibleWinPoints = new List<TupleList<int, int>>();
+                        foreach (var item in PointsFromWinCondition(31))
+                            if (board[item.Item1, item.Item2] == TileVals.Blank)
+                            {
+                                ret = new GameMove(item.Item1, item.Item2, GetQuadFromPoint(item.Item1, item.Item2), false);
+                            }
                     }
+                    else if (winValues[27] != 0)
+                    {
+                        List<TupleList<int, int>> possibleWinPoints = new List<TupleList<int, int>>();
+                        foreach (var item in PointsFromWinCondition(31))
+                            if (board[item.Item1, item.Item2] == TileVals.Blank)
+                            {
+                                ret = new GameMove(item.Item1, item.Item2, GetQuadFromPoint(item.Item1, item.Item2), false);
+                            }
+                    }
+                    //parallel diagonal cases
                     else
                     {
-                        if ((int)board[3, 4] == 0)
+                        if (winValues[28] > winValues[31])
                         {
-                            /*
-                            xVal = 3;
-                            yval = 4;
-                            RotateSquare(board, 0, true);
-                            */
-                            ret = new GameMove(3, 4, 0, true);
-                        }
-                        else if ((int)board[4, 5] == 0)
-                        {
-                            /*
-                            xVal = 4;
-                            yval = 5;
-                            RotateSquare(board, 3, false);
-                            */
-                            ret = new GameMove(4, 5, 3, false);
+                            List<TupleList<int, int>> possibleWinPoints = new List<TupleList<int, int>>();
+                            foreach (var item in PointsFromWinCondition(28))
+                                if (board[item.Item1, item.Item2] == TileVals.Blank)
+                                {
+                                    ret = new GameMove(item.Item1, item.Item2, GetQuadFromPoint(item.Item1, item.Item2), false);
+                                }
                         }
                         else
                         {
-                            /*
-                            xVal = 3;
-                            yval = 1;
-                            RotateSquare(board, 0, true);
-                            */
-                            ret = new GameMove(3, 1, 0, true);
+                            List<TupleList<int, int>> possibleWinPoints = new List<TupleList<int, int>>();
+                            foreach (var item in PointsFromWinCondition(31))
+                                if (board[item.Item1, item.Item2] == TileVals.Blank)
+                                {
+                                    ret = new GameMove(item.Item1, item.Item2, GetQuadFromPoint(item.Item1, item.Item2), false);
+                                }
                         }
                     }
                 }
             }
             else
             {
-
-
-
-
                     int[,] zerothQuad = { { 2, 0 }, { 2, 1 }, { 2, 2 }, { 1, 2 }, { 0, 2 } };
                     int zerothInt = GetSumFromPoints(board, zerothQuad);
                     int[,] firstQuad = { { 3, 0 }, { 3, 1 }, { 3, 2 }, { 4, 2 }, { 5, 2 } };
