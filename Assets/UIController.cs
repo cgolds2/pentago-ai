@@ -10,13 +10,21 @@ public class UIController : MonoBehaviour
     public void RestartGame()
     {
         //SceneManager.LoadScene(SceneManager.GetActiveScene().name);
-        //Logic.canvas.gameObject.SetActive(false);
+    }
+
+    public void PlayerScene()
+    {
+        SceneManager.LoadScene("PlayerVsPlayer");
+    }
+
+    public void AIScene()
+    {
+        SceneManager.LoadScene("PlayerVsAI");
     }
 
     public void QuitGame()
     {
-        //Application.Quit();
-        //Logic.canvas.gameObject.SetActive(false);
+        Application.Quit();
     }
 
 }
