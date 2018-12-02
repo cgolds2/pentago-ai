@@ -969,48 +969,9 @@ namespace PentagoAICrossP
                             ret = new GameMove(2, 3, 1, true);
                         }
                     }
-                    //oddball diagonal cases
-                    else if (startQuadrant == 0)
-                    {
-                        List<TupleList<int, int>> possibleWinPoints = new List<TupleList<int, int>>();
-                        foreach (var item in PointsFromWinCondition(31))
-                            if (board[item.Item1, item.Item2] == TileVals.Blank)
-                            {
-                                ret = new GameMove(item.Item1, item.Item2, GetQuadFromPoint(item.Item1, item.Item2), false);
-                            }
-                    }
-                    else if (startQuadrant == 3)
-                    {
-                        List<TupleList<int, int>> possibleWinPoints = new List<TupleList<int, int>>();
-                        foreach (var item in PointsFromWinCondition(28))
-                            if (board[item.Item1, item.Item2] == TileVals.Blank)
-                            {
-                                ret = new GameMove(item.Item1, item.Item2, GetQuadFromPoint(item.Item1, item.Item2), false);
-                            }
-                    }
-                    //parallel diagonal cases
                     else
                     {
-                        if (winValues[24] > winValues[27])
-                        {
-                            List<TupleList<int, int>> possibleWinPoints = new List<TupleList<int, int>>();
-                            possibleWinPoints.Add(PointsFromWinCondition(24));
-                            foreach (var item in PointsFromWinCondition(24))
-                                if (board[item.Item1, item.Item2] == TileVals.Blank)
-                                {
-                                    ret = new GameMove(item.Item1, item.Item2, GetQuadFromPoint(item.Item1, item.Item2), false);
-                                }
-                        }
-                        else
-                        {
-                            List<TupleList<int, int>> possibleWinPoints = new List<TupleList<int, int>>();
-                            possibleWinPoints.Add(PointsFromWinCondition(27));
-                            foreach (var item in PointsFromWinCondition(27))
-                                if (board[item.Item1, item.Item2] == TileVals.Blank)
-                                {
-                                    ret = new GameMove(item.Item1, item.Item2, GetQuadFromPoint(item.Item1, item.Item2), false);
-                                }
-                        }
+
                     }
                 }
                 else
@@ -1056,46 +1017,9 @@ namespace PentagoAICrossP
                             ret = new GameMove(2, 2, 0, true);
                         }
                     }
-                    //oddball diagonal cases
-                    else if (winValues[24] != 0)
-                    {
-                        List<TupleList<int, int>> possibleWinPoints = new List<TupleList<int, int>>();
-                        foreach (var item in PointsFromWinCondition(31))
-                            if (board[item.Item1, item.Item2] == TileVals.Blank)
-                            {
-                                ret = new GameMove(item.Item1, item.Item2, GetQuadFromPoint(item.Item1, item.Item2), false);
-                            }
-                    }
-                    else if (winValues[27] != 0)
-                    {
-                        List<TupleList<int, int>> possibleWinPoints = new List<TupleList<int, int>>();
-                        foreach (var item in PointsFromWinCondition(31))
-                            if (board[item.Item1, item.Item2] == TileVals.Blank)
-                            {
-                                ret = new GameMove(item.Item1, item.Item2, GetQuadFromPoint(item.Item1, item.Item2), false);
-                            }
-                    }
-                    //parallel diagonal cases
                     else
                     {
-                        if (winValues[28] > winValues[31])
-                        {
-                            List<TupleList<int, int>> possibleWinPoints = new List<TupleList<int, int>>();
-                            foreach (var item in PointsFromWinCondition(28))
-                                if (board[item.Item1, item.Item2] == TileVals.Blank)
-                                {
-                                    ret = new GameMove(item.Item1, item.Item2, GetQuadFromPoint(item.Item1, item.Item2), false);
-                                }
-                        }
-                        else
-                        {
-                            List<TupleList<int, int>> possibleWinPoints = new List<TupleList<int, int>>();
-                            foreach (var item in PointsFromWinCondition(31))
-                                if (board[item.Item1, item.Item2] == TileVals.Blank)
-                                {
-                                    ret = new GameMove(item.Item1, item.Item2, GetQuadFromPoint(item.Item1, item.Item2), false);
-                                }
-                        }
+
                     }
                 }
             }
@@ -1109,6 +1033,7 @@ namespace PentagoAICrossP
                     int secondInt = GetSumFromPoints(board, secondQuad);
                     int[,] thirdQuad = { { 5, 5 }, { 4, 5 }, { 3, 5 }, { 3, 4 }, { 3, 3 } };
                     int thirdInt = GetSumFromPoints(board, thirdQuad);
+                //MID GAME
                 if (turnCounter < 11)
                 {
                     if (4 < turnCounter && turnCounter < 11)
@@ -1116,7 +1041,7 @@ namespace PentagoAICrossP
                         List<TupleList<int, int>> possibleWinPoints = new List<TupleList<int, int>>();
                         for (int i = 0; i < winValues.Length; i++)
                         {
-                            if (winValues[i] >= 2 && winValues[i] <= 23)
+                            if ((winValues[i] > 1 && winValues[i] <5) || (winValues[i] > 11 && winValues[i] < 15))
                             {
                                 possibleWinPoints.Add(PointsFromWinCondition(i));
                             }
