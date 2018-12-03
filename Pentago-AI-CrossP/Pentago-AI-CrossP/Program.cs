@@ -509,7 +509,7 @@ namespace PentagoAICrossP
                 if (IsGameWon(gameBoard))
                 {
                     PrintBoard(gameBoard);
-                    Console.Write("Game Over.\n");
+                    Console.Write("Game Over On Turn "+ GetTurns().Count + ".\n");
                     break;
                 }
             }
@@ -760,9 +760,13 @@ namespace PentagoAICrossP
                     {
                         ret = new GameMove(2, 0, 3, true);
                     }
-                    else
+                    else if ((int)board[0, 2] == 0)
                     {
                         ret = new GameMove(0, 2, 3, true);
+                    }
+                    else
+                    {
+                        ret = new GameMove(2, 2, 3, true);
                     }
                 }
                 if (startQuadrant == 1)
@@ -771,9 +775,13 @@ namespace PentagoAICrossP
                     {
                         ret = new GameMove(3, 0, 0, true);
                     }
-                    else
+                    else if ((int)board[5, 2] == 0)
                     {
                         ret = new GameMove(5, 2, 2, true);
+                    }
+                    else
+                    {
+                        ret = new GameMove(3, 2, 2, true);
                     }
                 }
                 if (startQuadrant == 2)
@@ -782,9 +790,13 @@ namespace PentagoAICrossP
                     {
                         ret = new GameMove(2, 5, 1, true);
                     }
-                    else
+                    else if((int)board[0, 3] == 0)
                     {
                         ret = new GameMove(0, 3, 1, true);
+                    }
+                    else
+                    {
+                        ret = new GameMove(2, 3, 1, true);
                     }
                 }
                 if (startQuadrant == 3)
@@ -793,9 +805,13 @@ namespace PentagoAICrossP
                     {
                         ret = new GameMove(3, 5, 0, true);
                     }
-                    else
+                    else if ((int)board[5, 3] == 0)
                     {
                         ret = new GameMove(5, 3, 0, true);
+                    }
+                    else
+                    {
+                        ret = new GameMove(3, 3, 0, true);
                     }
                 }
             }
