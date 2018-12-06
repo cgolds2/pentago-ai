@@ -14,6 +14,9 @@ namespace PentagoAICrossP
         static GameMove lastMove;
         static List<int[]> turns = new List<int[]>();
         static bool isXTurn = false;
+        static int gameCounter = -1;
+        static bool useHeu;
+        static bool useNN;
         /*
        * 00-11: horizontal
        * 12-23: verticle
@@ -474,8 +477,7 @@ namespace PentagoAICrossP
             startQuadrant = -1;
             TileVals[,] gameBoard = new TileVals[6, 6];
             PrintBoard(gameBoard);
-            bool useHeu;
-            bool useNN;
+
 
             useHeu = (choice == 1 || choice == 4);
             useNN = (choice == 3 || choice == 4);
@@ -560,8 +562,10 @@ namespace PentagoAICrossP
                 int x = Int32.Parse(args[0]);
                 int y = Int32.Parse(args[1]);
                 var outputs = new List<MyTuple<int, int>>();
+                gameCounter = 0;
                 for (int i = 0; i < y; i++)
                 {
+                    gameCounter++;
                     outputs.Add(GameLoop(x));
                 }
                 Console.WriteLine("---------");
@@ -765,9 +769,17 @@ namespace PentagoAICrossP
                               "Rotated square {2} {3}clockwise",
                                   lastMove.xCord, lastMove.yCord, lastMove.rotIndex, lastMove.rotLeft ? "counter" : "");
             }
-            Console.WriteLine("\n--------------");
-            Console.WriteLine((isXTurn ? "Player 1" : "Player 2") + "'s turn");
-            Console.WriteLine("--------------\n");
+            if(useNN && useHeu){
+                Console.WriteLine("\n--------------");
+                Console.WriteLine("Game number: " + gameCounter);
+                Console.WriteLine("--------------\n");
+            }
+            else{
+                Console.WriteLine("\n--------------");
+                Console.WriteLine((isXTurn ? "Player 1" : "Player 2") + "'s turn");
+                Console.WriteLine("--------------\n");
+            }
+        
 
         }
         static int TryGetInt(string prompt, int min, int max)
