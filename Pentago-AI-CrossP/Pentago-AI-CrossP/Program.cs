@@ -540,7 +540,7 @@ namespace PentagoAICrossP
         }
         static void Main(string[] args)
         {
-      
+            Console.Clear();
 
             if (args.Length == 0)
             {
@@ -769,7 +769,7 @@ namespace PentagoAICrossP
                               "Rotated square {2} {3}clockwise",
                                   lastMove.xCord, lastMove.yCord, lastMove.rotIndex, lastMove.rotLeft ? "counter" : "");
             }
-            if(useNN && useHeu){
+            if(useNN && useHeu && gameCounter != -1){
                 Console.WriteLine("\n--------------");
                 Console.WriteLine("Game number: " + gameCounter);
                 Console.WriteLine("--------------\n");
