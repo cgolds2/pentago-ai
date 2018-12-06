@@ -1,12 +1,17 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Diagnostics;
+using System.IO;
+using System.ComponentModel;
+
 
 namespace PentagoAICrossP
 {
     class Program
     {
         static int[] lastTurn = new int[85];
+        static GameMove lastMove;
         static List<int[]> turns = new List<int[]>();
         static List<int[]> GetTurns()
         {
@@ -454,28 +459,21 @@ namespace PentagoAICrossP
 
         static void Main(string[] args)
         {
+            var x = RunCmd.RunPythonThing();
             TileVals[,] gameBoard = new TileVals[6, 6];
             PrintBoard(gameBoard);
-            bool useAI;
-            while (true)
-            {
-                int choice = TryGetInt("Play against CPU: 1 \nPlay against another player: 2", 1, 2);
+            bool useHeu;
+            bool useNN;
 
-                if (choice == 1)
-                {
-                    useAI = true;
-                    break;
-                }
-                else if (choice == 2)
-                {
-                    useAI = false;
-                    break;
-                }
-                else
-                {
-                    Console.WriteLine("choice not valid");
-                }
-            }
+            int choice = TryGetInt("\n1: Play against Heuristic\n" +
+                                   "2: Play against another player\n" +
+                                   "3: Play against NN\n" +
+                                   "4: Play NN against Heuristic", 1, 4);
+
+            useHeu = (choice == 1 || choice == 4);
+            useNN = (choice == 3 || choice == 4);
+
+
             //main game loop
             while (true)
             {
@@ -484,16 +482,22 @@ namespace PentagoAICrossP
 
                 PrintBoard(gameBoard);
                 GameMove g;
-                if (isXTurn && useAI)
+                if (isXTurn && useHeu)
                 {
 
                     g = PentagoHeuristic(gameBoard);
+                }
+                else if (!isXTurn && useNN)
+                {
+                    g = NNTurn(gameBoard);
                 }
                 else
                 {
                     g = PlayerTurn(gameBoard);
                 }
-              
+                lastMove = g;
+
+
                 gameBoard[g.xCord, g.yCord] = isXTurn ? TileVals.X : TileVals.O;
                 UpdatePoint(gameBoard, g.xCord, g.yCord);
                 TrackPlacement(g.xCord, g.yCord);
@@ -509,7 +513,7 @@ namespace PentagoAICrossP
                 if (IsGameWon(gameBoard))
                 {
                     PrintBoard(gameBoard);
-                    Console.Write("Game Over On Turn "+ GetTurns().Count + ".\n");
+                    Console.Write("Game Over On Turn " + GetTurns().Count + ".\n");
                     break;
                 }
             }
@@ -565,6 +569,10 @@ namespace PentagoAICrossP
             return playerMove;
         }
 
+        static GameMove NNTurn(TileVals[,] gameBoard)
+        {
+            throw new Exception("fill this out");
+        }
 
 
         static int SumDiag(TileVals[,] board, TupleList<int, int> diags)
@@ -590,6 +598,25 @@ namespace PentagoAICrossP
             return diag;
 
         }
+
+        static int MatchArray(int[] basArr, List<int[]> matches)
+        {
+            for (int i = 0; i < matches.Count; i++)
+            {
+                if (basArr.SequenceEqual(matches[i]))
+                {
+                    return i;
+                }
+            }
+            return -1;
+        }
+
+        static int[] EnumArrToNNArr(TileVals[,] enumArr)
+        {
+            var x = enumArr.Cast<TileVals>().ToList().ToArray();
+            return Array.ConvertAll(x, value => (int)value);
+        }
+
         static TileVals[,] RotateBoard(TileVals[,] board, int n)
         {
             TileVals[,] ret = new TileVals[n, n];
@@ -647,9 +674,17 @@ namespace PentagoAICrossP
                     Console.WriteLine("");
                 }
             }
+            if (lastMove != null)
+            {
+                Console.WriteLine("\n--------------");
+                Console.Write("Previous move = ({0},{1}),\n" +
+                              "Rotated square {2} {3}clockwise",
+                                  lastMove.xCord, lastMove.yCord, lastMove.rotIndex, lastMove.rotLeft ? "counter" : "");
+            }
             Console.WriteLine("\n--------------");
             Console.WriteLine((isXTurn ? "Player 1" : "Player 2") + "'s turn");
             Console.WriteLine("--------------\n");
+
         }
         static int TryGetInt(string prompt, int min, int max)
         {
@@ -790,7 +825,7 @@ namespace PentagoAICrossP
                     {
                         ret = new GameMove(2, 5, 1, true);
                     }
-                    else if((int)board[0, 3] == 0)
+                    else if ((int)board[0, 3] == 0)
                     {
                         ret = new GameMove(0, 3, 1, true);
                     }
@@ -1119,14 +1154,14 @@ namespace PentagoAICrossP
 
 
 
-                    int[,] zerothQuad = { { 2, 0 }, { 2, 1 }, { 2, 2 }, { 1, 2 }, { 0, 2 } };
-                    int zerothInt = GetSumFromPoints(board, zerothQuad);
-                    int[,] firstQuad = { { 3, 0 }, { 3, 1 }, { 3, 2 }, { 4, 2 }, { 5, 2 } };
-                    int firstInt = GetSumFromPoints(board, firstQuad);
-                    int[,] secondQuad = { { 0, 3 }, { 1, 3 }, { 2, 3 }, { 2, 4 }, { 2, 5 } };
-                    int secondInt = GetSumFromPoints(board, secondQuad);
-                    int[,] thirdQuad = { { 5, 5 }, { 4, 5 }, { 3, 5 }, { 3, 4 }, { 3, 3 } };
-                    int thirdInt = GetSumFromPoints(board, thirdQuad);
+                int[,] zerothQuad = { { 2, 0 }, { 2, 1 }, { 2, 2 }, { 1, 2 }, { 0, 2 } };
+                int zerothInt = GetSumFromPoints(board, zerothQuad);
+                int[,] firstQuad = { { 3, 0 }, { 3, 1 }, { 3, 2 }, { 4, 2 }, { 5, 2 } };
+                int firstInt = GetSumFromPoints(board, firstQuad);
+                int[,] secondQuad = { { 0, 3 }, { 1, 3 }, { 2, 3 }, { 2, 4 }, { 2, 5 } };
+                int secondInt = GetSumFromPoints(board, secondQuad);
+                int[,] thirdQuad = { { 5, 5 }, { 4, 5 }, { 3, 5 }, { 3, 4 }, { 3, 3 } };
+                int thirdInt = GetSumFromPoints(board, thirdQuad);
                 if (turnCounter < 11)
                 {
                     if (4 < turnCounter && turnCounter < 11)
@@ -1143,7 +1178,8 @@ namespace PentagoAICrossP
                         {
                             foreach (var point in pointArr)
                             {
-                                if(board[point.Item1,point.Item2] != TileVals.Blank){
+                                if (board[point.Item1, point.Item2] != TileVals.Blank)
+                                {
                                     continue;
                                 }
                                 if (((-1 < point.Item1 && point.Item1 < 3) && (-1 < point.Item2 && point.Item2 < 3)) || ((2 < point.Item1 && point.Item1 < 6) && (2 < point.Item2 && point.Item2 < 6)))
@@ -1379,6 +1415,62 @@ namespace PentagoAICrossP
             this.yCord = yCord;
             this.rotIndex = rotIndex;
             this.rotLeft = rotLeft;
+        }
+    }
+
+
+    public class RunCmd
+    {
+        public static string Run(string cmd, string args)
+        {
+            ProcessStartInfo start = new ProcessStartInfo();
+            start.FileName = "python";
+            start.Arguments = string.Format("{0} {1}", cmd, args);
+            start.UseShellExecute = false;// Do not use OS shell
+            start.CreateNoWindow = true; // We don't need new window
+            start.RedirectStandardOutput = true;// Any output, generated by application will be redirected back
+            start.RedirectStandardError = true; // Any error in standard output will be redirected back (for example exceptions)
+            using (Process process = Process.Start(start))
+            {
+                using (StreamReader reader = process.StandardOutput)
+                {
+                    string stderr = process.StandardError.ReadToEnd(); // Here are the exceptions from our Python script
+                    string result = reader.ReadToEnd(); // Here is the result of StdOut(for example: print "test")
+                    return result;
+                }
+            }
+        }
+
+        public static GameMove RunPythonThing()
+        {
+            var res = Run("/Users/connorgoldsmith/Desktop/python-test/pytest.py", "hello there");
+            Console.WriteLine(res);
+            try
+            {
+                string[] rets = new string[4];
+                using (System.IO.StringReader reader = new System.IO.StringReader(res))
+                {
+                    for (int i = 0; i < 4; i++)
+                    {
+                        string line = reader.ReadLine();
+                        rets[i] = line;
+                    }
+
+                }
+                GameMove g = new GameMove
+                (
+                    Int32.Parse(rets[0]),
+                    Int32.Parse(rets[1]),
+                    Int32.Parse(rets[2]),
+                    rets[3] == "1"
+                    );
+                return g;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("NN did not return correct format");
+            }
+
         }
     }
 }
