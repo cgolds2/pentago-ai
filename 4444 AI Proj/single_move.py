@@ -524,7 +524,7 @@ def load_network(session, tf_variables, file_path):
             order matters, in must be the exact same order as was used to save and all of the same shape.
         file_path (str): path of the file we want to load from.
     """
-    with open("testnetworkP2.p", mode='rb') as f:
+    with open("testnetworkP24M.p", mode='rb') as f:
         variable_values = pickle.load(f)
 
     try:
@@ -545,7 +545,7 @@ def main(argv):
     session.run(tf.global_variables_initializer())
     input_layer, output_layer, variables = create_network(36, ((100), (100), (100)), 36)
 
-    load_network(session, variables, "testnetwork2P.p")
+    load_network(session, variables, "testnetworkP24M.p")
     
     input_board = argv[1:len(argv)] #input from the command line
     

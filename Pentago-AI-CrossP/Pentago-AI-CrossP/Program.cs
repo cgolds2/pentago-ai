@@ -4,7 +4,7 @@ using System.Linq;
 using System.Diagnostics;
 using System.IO;
 using System.ComponentModel;
-
+using System.Text.RegularExpressions;
 
 namespace PentagoAICrossP
 {
@@ -460,7 +460,6 @@ namespace PentagoAICrossP
         static void Main(string[] args)
         {
             TileVals[,] gameBoard = new TileVals[6, 6];
-            var x = RunPythonThing(gameBoard);
 
             PrintBoard(gameBoard);
             bool useHeu;
@@ -572,7 +571,8 @@ namespace PentagoAICrossP
 
         static GameMove NNTurn(TileVals[,] gameBoard)
         {
-            throw new Exception("fill this out");
+            return RunPythonThing(gameBoard);
+
         }
 
 
@@ -1338,7 +1338,7 @@ namespace PentagoAICrossP
             var dir = "/Users/connorgoldsmith/Documents/Git/pentago-ai/4444\\ AI\\ Proj";
             var cmdSetup = "cd " + dir;
             var condaEnvSetup = "conda activate tensorflow_env";
-            var pyFile = "user_input_game.py";
+            var pyFile = "single_move.py";
             var gameboardString = EnumArrToNNArr(board);
 
             var lineCmd = string.Format("python {0} {1}", pyFile, gameboardString);
@@ -1350,27 +1350,36 @@ namespace PentagoAICrossP
             try
             {
                 string[] rets = new string[4];
+                string input = "";
+             
+
                 using (System.IO.StringReader reader = new System.IO.StringReader(res))
                 {
                     for (int i = 0; i < 4; i++)
                     {
                         string line = reader.ReadLine();
-                        rets[i] = line;
+                        input += line;
+                        //rets[i] = line;
                     }
 
+
+
                 }
+                var matches = Regex.Match(input, @".*x: %s (\d*)y: %s (\d*)quarter:  (\d*)direction:  (\d*).*");
+
                 GameMove g = new GameMove
                 (
-                    Int32.Parse(rets[0]),
-                    Int32.Parse(rets[1]),
-                    Int32.Parse(rets[2]),
-                    rets[3] == "1"
+                    Int32.Parse(matches.Groups[1].Value),
+                    Int32.Parse(matches.Groups[2].Value),
+                    Int32.Parse(matches.Groups[3].Value),
+                    matches.Groups[4].Value == "1"
                     );
                 return g;
             }
             catch (Exception ex)
             {
-                throw new Exception("NN did not return correct format");
+                Console.WriteLine("NN did not return correct format");
+                throw ex;
             }
 
 
