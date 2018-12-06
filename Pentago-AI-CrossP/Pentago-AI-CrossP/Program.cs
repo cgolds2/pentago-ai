@@ -13,10 +13,24 @@ namespace PentagoAICrossP
         static int[] lastTurn = new int[85];
         static GameMove lastMove;
         static List<int[]> turns = new List<int[]>();
+        static bool isXTurn = false;
+        /*
+       * 00-11: horizontal
+       * 12-23: verticle
+       * 24-27: top left bot right diag
+       * 28-31: top right bot left diag
+       */
+        static int[] winValues = new int[32];
+        static Random r = new Random();
+        static int startQuadrant = -1;
+      
+
         static List<int[]> GetTurns()
         {
             return turns;
         }
+        //keeps track of which player is allowed to move
+
         static void AddTurn(int[] t)
         {
             if (t.Length != 85)
@@ -76,8 +90,7 @@ namespace PentagoAICrossP
                                         0, 6, 12
                                 };
 
-        //keeps track of which player is allowed to move
-        static bool isXTurn = false;
+
 
         static TupleList<int, int> PointsFromWinCondition(int index)
         {
@@ -165,13 +178,7 @@ namespace PentagoAICrossP
             return returnValues;
         }
 
-        static int[] winValues = new int[32];
-        /*
-         * 00-11: horizontal
-         * 12-23: verticle
-         * 24-27: top left bot right diag
-         * 28-31: top right bot left diag
-         */
+   
         static void UpdatePoint(TileVals[,] board, int x, int y)
         {
 
@@ -456,24 +463,22 @@ namespace PentagoAICrossP
             return board;
 
         }
-
-        static void Main(string[] args)
+        static MyTuple<int, int> GameLoop(int choice)
         {
+            lastTurn = new int[85];
+            lastMove = null;
+            turns = new List<int[]>();
+            isXTurn = false;
+            winValues = new int[32];
+            r = new Random();
+            startQuadrant = -1;
             TileVals[,] gameBoard = new TileVals[6, 6];
-
             PrintBoard(gameBoard);
             bool useHeu;
             bool useNN;
 
-            int choice = TryGetInt("\n1: Play against Heuristic\n" +
-                                   "2: Play against another player\n" +
-                                   "3: Play against NN\n" +
-                                   "4: Play NN against Heuristic", 1, 4);
-
             useHeu = (choice == 1 || choice == 4);
             useNN = (choice == 3 || choice == 4);
-
-
             //main game loop
             while (true)
             {
@@ -510,13 +515,67 @@ namespace PentagoAICrossP
 
                 UpdateRotation(gameBoard, g.rotIndex);
                 UpdateTurn();
-                if (IsGameWon(gameBoard))
+                int gameOver = IsGameWon(gameBoard);
+                if (gameOver > 0)
                 {
                     PrintBoard(gameBoard);
                     Console.Write("Game Over On Turn " + GetTurns().Count + ".\n");
-                    break;
+                    if (gameOver == 1)
+                    {
+                        Console.Write("X Won");
+                    }
+                    else if (gameOver == 2)
+                    {
+                        Console.Write("O Won");
+                    }
+                    else
+                    {
+                        Console.Write("Draw");
+                    }
+                    return new MyTuple<int, int>(gameOver, GetTurns().Count);
                 }
             }
+        }
+        static void Main(string[] args)
+        {
+      
+
+            if (args.Length == 0)
+            {
+                int choice = TryGetInt("\n1: Play against Heuristic\n" +
+                                 "2: Play against another player\n" +
+                                 "3: Play against NN\n" +
+                                 "4: Play NN against Heuristic", 1, 4);
+                GameLoop(choice);
+
+            }
+            else if (args.Length == 1)
+            {
+                int x = Int32.Parse(args[0]);
+                GameLoop(x);
+
+            }
+            else
+            {
+                int x = Int32.Parse(args[0]);
+                int y = Int32.Parse(args[1]);
+                var outputs = new List<MyTuple<int, int>>();
+                for (int i = 0; i < y; i++)
+                {
+                    outputs.Add(GameLoop(x));
+                }
+                Console.WriteLine("---------");
+                foreach (var item in outputs)
+                {
+                    Console.WriteLine(item.Item1 + ":" + item.Item2);
+                }
+
+            }
+
+
+
+
+
         }
 
 
@@ -643,7 +702,7 @@ namespace PentagoAICrossP
             }
             return ret;
         }
-        static bool IsGameWon(TileVals[,] board)
+        static int IsGameWon(TileVals[,] board)
         {
             bool didXWin = false;
             bool didOWin = false;
@@ -660,8 +719,19 @@ namespace PentagoAICrossP
                     Console.WriteLine("X won");
                 }
             }
-
-            return didXWin || didOWin;
+            if (didXWin && didOWin)
+            {
+                return 3;
+            }
+            if (didXWin)
+            {
+                return 1;
+            }
+            if (didOWin)
+            {
+                return 2;
+            }
+            return 0;
         }
         static void PrintBoard(TileVals[,] board)
         {
@@ -734,8 +804,7 @@ namespace PentagoAICrossP
             }
         }
 
-        static Random r = new Random();
-        static int startQuadrant = -1;
+       
         static GameMove PentagoHeuristic(TileVals[,] board)
         {
 
@@ -1351,7 +1420,7 @@ namespace PentagoAICrossP
             {
                 string[] rets = new string[4];
                 string input = "";
-             
+
 
                 using (System.IO.StringReader reader = new System.IO.StringReader(res))
                 {
