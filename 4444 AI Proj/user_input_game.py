@@ -488,7 +488,7 @@ def load_network(session, tf_variables, file_path):
             order matters, in must be the exact same order as was used to save and all of the same shape.
         file_path (str): path of the file we want to load from.
     """
-    with open("testnetwork.p", mode='rb') as f:
+    with open("testnetworkP2.p", mode='rb') as f:
         variable_values = pickle.load(f)
 
     try:
